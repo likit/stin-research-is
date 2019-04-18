@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.contrib.postgres.search import SearchVector
 from django.shortcuts import render, get_object_or_404
-from .models import Project
+from .models import Project, IRBRecord
 from .forms import ProjectSearchForm
 
 
@@ -30,6 +30,12 @@ def project_detail(request, year, month, day, project):
                                 publish__day=day)
     thai_status = {'began': 'เริ่มดำเนินการแล้ว',
                    'drafted': 'ร่างโครงการ'}
+    irb = project.irb_records.all()[0]
     return render(request,
                   'research/project/detail.html',
-                  {'project': project, 'thai_status': thai_status})
+                  {'project': project, 'thai_status': thai_status, 'irb': irb})
+
+
+def irb_detail(request, irbid):
+    irb = get_object_or_404(IRBRecord, pk=irbid)
+    return render(request, 'research/project/irb_detail.html', {'irb': irb})

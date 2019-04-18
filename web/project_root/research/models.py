@@ -54,3 +54,27 @@ class Project(models.Model):
                              self.publish.day,
                              self.slug
                              ])
+
+
+class IRBRecord(models.Model):
+    STATUS_CHOICES = (
+        ('approved', 'Approved'),
+        ('disapproved', 'Not approved'),
+        ('pending', 'Pending'),
+        ('submitted', 'Submitted'),
+        ('exempted', 'Exempted'),
+    )
+    irbcode = models.CharField(max_length=120)
+    status = models.CharField(max_length=32,
+                              choices=STATUS_CHOICES,
+                              default='exempted')
+
+    submitdate = models.DateField(default=timezone.now)
+    creator = models.ForeignKey(User,
+                                on_delete=models.CASCADE,
+                                related_name='irb_records'
+                                )
+    project = models.ForeignKey(Project,
+                                on_delete=models.CASCADE,
+                                related_name='irb_records')
+    updated = models.DateTimeField(auto_now_add=True)
