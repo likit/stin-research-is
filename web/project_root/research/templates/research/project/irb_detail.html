@@ -1,0 +1,36 @@
+{% extends "research/base.html" %}
+
+{% block title %}IRB Record Detail{% endblock %}
+
+{% block page_header %}IRB Record Detail{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-header-title">
+                    หมายเลข {{ irb.irbcode }}
+                </div>
+            </div>
+            <div class="card-content">
+                <h1 class="title is-size-4">
+                    {{ irb.project.en_title }}
+                </h1>
+                <h1 class="subtitle is-size-4">
+                    {{ irb.project.th_title }}
+                </h1>
+                <p>
+                    ส่งโดย {{ irb.creator }}
+                </p>
+                <p>
+                    ส่งเมื่อ {{ irb.submitdate }}
+                </p>
+                <p>
+                    สถานภาพ {{ irb.status }}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

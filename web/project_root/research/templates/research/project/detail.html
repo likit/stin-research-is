@@ -6,8 +6,8 @@
 {% block content %}
 <section class="section">
     <div class="container">
-        <p class="title">{{ project.en_title }}</p>
-        <p class="subtitle">{{ project.th_title }}</p>
+        <p class="title">{{ project.th_title }}</p>
+        <p class="subtitle">{{ project.en_title }}</p>
         <article class="notification">
             <h1 class="title">บทคัดย่อ</h1>
             <p class="has-text-justified">{{ project.th_abstract }}</p>
@@ -35,7 +35,9 @@
                 <td>ทุนสนับสนุน</td><td>None</td>
             </tr>
             <tr>
-                <td>สถานะการขออนุมัติทางจริยธรรมวิจัย</td><td>ผ่าน</td>
+                <td>สถานะการขออนุมัติทางจริยธรรมวิจัย</td>
+                <td><a href="{% url 'research:irb_detail' irb.pk %}">{{ irb.status }}</a>
+                </td>
             </tr>
         </table>
     </div>
