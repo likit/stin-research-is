@@ -2,60 +2,55 @@
 
 {% block title %}Ongoing Projects{% endblock %}
 
+{% block page_subheader %}All ongoing projects{% endblock %}
+
 {% block content %}
-<section class="hero is-primary is-bold">
-    <div class="hero-head">
-        <nav class="navbar">
-            <div class="container">
-                <div class="navbar-brand">
-                    <span class="navbar-burger burger" data-target="navbarMenuHeroA">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                      </span>
-                </div>
-                <div id="navbarMenuHeroA" class="navbar-menu">
-                    <div class="navbar-end">
-                        <a class="navbar-item is-active">
-                            Research
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <div class="hero-body">
-        <div class="container">
-            <h1 class="title">
-                Research Projects
-            </h1>
-            <h2 class="subtitle">
-                All ongoing research
-            </h2>
-        </div>
-    </div>
-</section>
 <section class="section">
     <div class="container">
-        {% for project in projects %}
-        <h2 class="title">
-            <a href="{{ project.get_absolute_url }}">
-                {{ project.en_title }}
-            </a>
-        </h2>
-        <h2 class="subtitle">
-            {{ project.th_title}}
-        </h2>
-        <article class="notification">
-            <h3 class="title is-size-5">Abstract</h3>
-            <p class="has-text-justified">
-                {{ project.th_abstract }}
-            </p>
-        </article>
-        <p class="has-text-right">
-            Added at {{ project.publish }} by {{ project.creator }}
-        </p>
-        {% endfor %}
+        <div class="columns">
+            <div class="column">
+                {% if query %}
+                <h2 class="title is-size-4">
+                    Projects containing : {{ query }}
+                </h2>
+                {% with projects.count as total_results %}
+                <p class="tag is-large"><strong>Found</strong>&nbsp; {{ total_results }}&nbsp; project{{ total_results|pluralize }}</p>
+                {% endwith %}
+                {% endif %}
+                {% for project in projects %}
+                <h2 class="title">
+                    <a href="{{ project.get_absolute_url }}">
+                        {{ project.en_title }}
+                    </a>
+                </h2>
+                <h2 class="subtitle">
+                    {{ project.th_title}}
+                </h2>
+                <article class="notification">
+                    <h3 class="title is-size-5">Abstract</h3>
+                    <p class="has-text-justified">
+                        {{ project.th_abstract }}
+                    </p>
+                </article>
+                <p class="has-text-right">
+                    Added at {{ project.publish }} by {{ project.creator }}
+                    <span class="icon is-large">
+                        <i class="fas fa-user-circle fa-3x"></i>
+                    </span>
+                </p>
+                {% endfor %}
+            </div>
+            <div class="column is-one-fifth">
+                <h1 class="title">Search for projects</h1>
+                <form action="." method="get">
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                </form>
+                <a href="{% url 'research:project_list' %}">
+                    All projects
+                </a>
+            </div>
+        </div>
     </div>
 </section>
 {% endblock %}
