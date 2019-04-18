@@ -1,10 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "research/base.html" %}
 
-</body>
-</html>
+{% block title %}Research Project: Detail{% endblock %}
+{% block page_header %}Research Project Detail{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <p class="title">{{ project.en_title }}</p>
+        <p class="subtitle">{{ project.th_title }}</p>
+        <article class="notification">
+            <h1 class="title">บทคัดย่อ</h1>
+            <p class="has-text-justified">{{ project.th_abstract }}</p>
+        </article>
+        <table class="table is-fullwidth">
+            <tr>
+                <td>ลงทะเบียนเมื่อ</td><td>{{ project.publish }}</td>
+            </tr>
+            <tr>
+                <td>ลงทะเบียนโดย</td><td>{{ project.creator }}</td>
+            </tr>
+            <tr>
+                <td>สถานภาพโครงการ</td><td>{{ project.status }}</td>
+            </tr>
+            <tr>
+                <td>วันเริ่มโครงการ</td><td>{{ project.publish }}</td>
+            </tr>
+            <tr>
+                <td>วันสิ้นสุดโครงการ</td><td>{{ project.publish }}</td>
+            </tr>
+            <tr>
+                <td>สถานภาพโครงการ</td><td>{{ project.status }}</td>
+            </tr>
+            <tr>
+                <td>ทุนสนับสนุน</td><td>None</td>
+            </tr>
+            <tr>
+                <td>สถานะการขออนุมัติทางจริยธรรมวิจัย</td><td>ผ่าน</td>
+            </tr>
+        </table>
+    </div>
+</section>
+{% endblock %}
