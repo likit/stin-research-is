@@ -31,6 +31,8 @@ class Project(models.Model):
                                 )
     th_abstract = models.TextField()
     # probably should leave out the full text instead the client requests.
+    startdate = models.DateField(null=True)
+    enddate = models.DateField(null=True)
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
