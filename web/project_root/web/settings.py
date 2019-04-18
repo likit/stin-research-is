@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'modelcluster',
     'taggit',
     'cms',
+    'research.apps.ResearchConfig'
 ]
 
 MIDDLEWARE = [
