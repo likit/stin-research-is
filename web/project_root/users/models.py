@@ -53,7 +53,13 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
 
     def __str__(self):
+        if self.first_name and self.last_name:
+            return self.fullname
         return self.email
+
+    @property
+    def fullname(self):
+        return '{} {} {}'.format(self.acad_position, self.first_name, self.last_name)
 
 
 class Department(models.Model):
