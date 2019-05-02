@@ -100,3 +100,12 @@ class IRBRecord(models.Model):
     updated = models.DateTimeField(auto_now_add=True)
 
 
+class Publication(models.Model):
+    pubdate = models.DateField('publication date')
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    journal = models.CharField(max_length=250)
+    title = models.CharField(max_length=250)
+    abstract = models.TextField(blank=True)
+    url = models.URLField(blank=True)

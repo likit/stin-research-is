@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Project, IRBRecord, ProjectCategory, ProjectSubCategory
+from .models import Project, IRBRecord, ProjectCategory, ProjectSubCategory, Publication
 
 # Register your models here.
 @admin.register(Project)
@@ -34,3 +34,10 @@ class ProjectSubCategoryAdmin(admin.ModelAdmin):
     ordering = ('name',)
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(Publication)
+class PublicationAdmin(admin.ModelAdmin):
+    list_display = ('pubdate', 'title', 'creator', 'added_at', 'updated_at')
+    ordering = ('pubdate',)
+    search_fields = ('title',)
