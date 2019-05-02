@@ -8,6 +8,17 @@ class OngoingManager(models.Manager):
     def get_queryset(self):
         return super(OngoingManager, self).get_queryset().filter(status='began')
 
+class ProjectCategory(models.Model):
+    name = models.CharField(max_length=64)
+    slug = models.SlugField(max_length=250, unique=True)
+
+
+class ProjectSubCategory(models.Model):
+    main_category = models.ForeignKey(ProjectCategory,
+                                      on_delete=models.CASCADE,
+                                      related_name='subs')
+    name = models.CharField(max_length=64)
+    slug = models.SlugField(max_length=250, unique=True)
 
 # Create your models here.
 class Project(models.Model):
@@ -24,6 +35,10 @@ class Project(models.Model):
 
     en_title = models.CharField(max_length=250)
     th_title = models.CharField(max_length=250)
+    intro = models.TextField(null=True)
+    objective = models.TextField(null=True)
+    method = models.TextField(null=True)
+    budget = models.FloatField(null=True)
     slug = models.SlugField(max_length=250, unique_for_date='publish')
     creator = models.ForeignKey(User,
                                 on_delete=models.CASCADE,
@@ -39,6 +54,11 @@ class Project(models.Model):
     status = models.CharField(max_length=10,
                               choices=STATUS_CHOICES,
                               default='draft')
+    category = models.ForeignKey(ProjectSubCategory,
+                                 on_delete=models.DO_NOTHING,
+                                 related_name='projects',
+                                 null=True
+                                 )
 
     class Meta:
         ordering = ('-publish',)
@@ -78,3 +98,5 @@ class IRBRecord(models.Model):
                                 on_delete=models.CASCADE,
                                 related_name='irb_records')
     updated = models.DateTimeField(auto_now_add=True)
+
+
