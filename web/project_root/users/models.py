@@ -45,6 +45,8 @@ class CustomUser(AbstractUser):
     department = models.ForeignKey(
                     'Department', on_delete=models.DO_NOTHING, null=True, blank=True)
 
+    expertise = models.CharField(max_length=250, blank=True)
+
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

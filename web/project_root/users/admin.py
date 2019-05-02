@@ -15,9 +15,11 @@ class CustomUserAdmin(UserAdmin):
         (_('Personal info'), {'fields':
                                 ('first_name',
                                     'last_name',
-                                    'department',
+                                    'job_position',
                                     'acad_position',
-                                    'job_position')
+                                    'department',
+                                    'expertise',
+                                    )
                                 }),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                             'groups', 'user_permissions')}),
