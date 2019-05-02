@@ -46,6 +46,7 @@ class CustomUser(AbstractUser):
                     'Department', on_delete=models.DO_NOTHING, null=True, blank=True)
 
     expertise = models.CharField(max_length=250, blank=True)
+    avatar = models.ImageField(upload_to='images/', blank=True)
 
     objects = UserManager()
 

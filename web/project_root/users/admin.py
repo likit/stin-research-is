@@ -15,6 +15,7 @@ class CustomUserAdmin(UserAdmin):
         (_('Personal info'), {'fields':
                                 ('first_name',
                                     'last_name',
+                                    'avatar',
                                     'job_position',
                                     'acad_position',
                                     'department',
