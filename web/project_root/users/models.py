@@ -36,6 +36,12 @@ class CustomUser(AbstractUser):
     # TODO: Add some other fields for users
     username = None
     email = models.EmailField(_('email address'), unique=True)
+    job_position = models.CharField(max_length=64, blank=True)
+    acad_position = models.CharField(max_length=64, choices=(
+        ('ผู้ช่วยศาสตราจารย์', 'ผู้ช่วยศาสตราจารย์'),
+        ('รองศาสตราจารย์', 'รองศาสตราจารย์'),
+        ('ศาตราจารย์', 'ศาสตราจารย์'),
+    ), blank=True)
     department = models.ForeignKey(
                     'Department', on_delete=models.DO_NOTHING, null=True, blank=True)
 

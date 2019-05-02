@@ -12,7 +12,13 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'department')}),
+        (_('Personal info'), {'fields':
+                                ('first_name',
+                                    'last_name',
+                                    'department',
+                                    'acad_position',
+                                    'job_position')
+                                }),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                             'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
@@ -23,7 +29,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('email', 'password1', 'password2'),
         }),
     )
-    list_display = ('email', 'first_name', 'department', 'last_name', 'is_staff')
+    list_display = ('email', 'acad_position', 'first_name', 'last_name', 'department', 'job_position', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 
