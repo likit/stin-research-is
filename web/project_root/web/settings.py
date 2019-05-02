@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'modelcluster',
     'taggit',
     'cms',
-    'research.apps.ResearchConfig'
+    'research.apps.ResearchConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +148,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 WAGTAIL_SITE_NAME = 'STIN Pages Admin'
+
+AUTH_USER_MODEL = 'users.CustomUser'
