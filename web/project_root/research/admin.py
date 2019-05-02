@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Project, IRBRecord
+from .models import Project, IRBRecord, ProjectCategory, ProjectSubCategory
 
 # Register your models here.
 @admin.register(Project)
@@ -18,3 +18,19 @@ class IRBRecordAdmin(admin.ModelAdmin):
     list_filter = ('status', 'submitdate', 'creator')
     date_hierarchy = 'submitdate'
     ordering = ('status', 'submitdate')
+
+
+@admin.register(ProjectCategory)
+class ProjectCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    ordering = ('name',)
+    search_fields = ('name',)
+    prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(ProjectSubCategory)
+class ProjectSubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    ordering = ('name',)
+    search_fields = ('name',)
+    prepopulated_fields = {'slug': ('name',)}

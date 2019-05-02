@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from django.contrib.auth.models import User
+from users.models import CustomUser
 
 
 class OngoingManager(models.Manager):
@@ -40,7 +40,7 @@ class Project(models.Model):
     method = models.TextField(null=True)
     budget = models.FloatField(null=True)
     slug = models.SlugField(max_length=250, unique_for_date='publish')
-    creator = models.ForeignKey(User,
+    creator = models.ForeignKey(CustomUser,
                                 on_delete=models.CASCADE,
                                 related_name='created_projects'
                                 )
@@ -90,7 +90,7 @@ class IRBRecord(models.Model):
                               default='exempted')
 
     submitdate = models.DateField(default=timezone.now)
-    creator = models.ForeignKey(User,
+    creator = models.ForeignKey(CustomUser,
                                 on_delete=models.CASCADE,
                                 related_name='irb_records'
                                 )
