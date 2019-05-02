@@ -33,8 +33,11 @@ class UserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
+    # TODO: Add some other fields for users
     username = None
     email = models.EmailField(_('email address'), unique=True)
+    department = models.ForeignKey(
+                    'Department', on_delete=models.DO_NOTHING, null=True, blank=True)
 
     objects = UserManager()
 
@@ -44,3 +47,15 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
+
+class Department(models.Model):
+    name = models.CharField(max_length=250, blank=False)
+    parent = models.ForeignKey(
+                'Department', on_delete=models.CASCADE, null=True, blank=True,
+                related_name='units')
+
+    def __str__(self):
+        if self.parent:
+            return '{1} - {0}'.format(self.name, self.parent)
+        else:
+            return self.name
