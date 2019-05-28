@@ -1,0 +1,23 @@
+{% extends "research/base.html" %}
+
+{% block title %}Researchers{% endblock %}
+{% block page_header %}List of all researchers{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <table class="table">
+            <thead>
+                <th>ชื่อ</th>
+                <th>สังกัด</th>
+            </thead>
+            <tbody>
+            {% for r in researchers %}
+            <tr>
+                <td><a href="{{ r.get_absolute_url }}">{{ r.fullname }}</a></td>
+                <td>{{ r.department }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

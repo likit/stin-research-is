@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import reverse
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 
@@ -32,6 +33,11 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
+class ResearcherManager(models.Manager):
+    def get_queryset(self):
+        return super(ResearcherManager, self).get_queryset().filter(is_researcher=True)
+
+
 class CustomUser(AbstractUser):
     # TODO: Add some other fields for users
     username = None
@@ -47,8 +53,10 @@ class CustomUser(AbstractUser):
 
     expertise = models.CharField(max_length=250, blank=True)
     avatar = models.ImageField(upload_to='images/', blank=True)
+    is_researcher = models.BooleanField('Is a researcher?', default=True)
 
     objects = UserManager()
+    researchers = ResearcherManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -62,6 +70,9 @@ class CustomUser(AbstractUser):
     def fullname(self):
         return '{} {} {}'.format(self.acad_position, self.first_name, self.last_name)
 
+    def get_absolute_url(self):
+        return reverse('staff:profile',
+                       args=[self.pk])
 
 class Department(models.Model):
     name = models.CharField(max_length=250, blank=False)

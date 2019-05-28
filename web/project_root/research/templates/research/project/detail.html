@@ -6,7 +6,7 @@
 {% block content %}
 <section class="section">
     <div class="container">
-        <p class="title">{{ project.th_title }}</p>
+        <p class="title">ชื่อโครงการ{{ project.th_title }}</p>
         <p class="subtitle">{{ project.en_title }}</p>
         <article class="notification">
             <h1 class="title">บทคัดย่อ</h1>
@@ -17,7 +17,11 @@
                 <td>ลงทะเบียนเมื่อ</td><td>{{ project.publish }}</td>
             </tr>
             <tr>
-                <td>ลงทะเบียนโดย</td><td>{{ project.creator }}</td>
+                <td>ลงทะเบียนโดย</td><td>
+                    <a href="{{ project.creator.get_absolute_url }}">
+                    {{ project.creator }}
+                    </a>
+                </td>
             </tr>
             <tr>
                 <td>สถานภาพโครงการ</td><td>{{ project.status }}</td>
@@ -32,11 +36,15 @@
                 <td>สถานภาพโครงการ</td><td>{{ project.status }}</td>
             </tr>
             <tr>
-                <td>ทุนสนับสนุน</td><td>None</td>
+                <td>ทุนสนับสนุน</td><td>{{ project.budget }} บาท</td>
             </tr>
             <tr>
                 <td>สถานะการขออนุมัติทางจริยธรรมวิจัย</td>
+                {% if irb %}
                 <td><a href="{% url 'research:irb_detail' irb.pk %}">{{ irb.status }}</a>
+                {% else %}
+                <td>ยังไม่มีรายการ</td>
+                {% endif %}
                 </td>
             </tr>
         </table>

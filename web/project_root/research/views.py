@@ -30,7 +30,10 @@ def project_detail(request, year, month, day, project):
                                 publish__day=day)
     thai_status = {'began': 'เริ่มดำเนินการแล้ว',
                    'drafted': 'ร่างโครงการ'}
-    irb = project.irb_records.all()[0]
+    try:
+        irb = project.irb_records.all()[0]
+    except IndexError:
+        irb = None
     return render(request,
                   'research/project/detail.html',
                   {'project': project, 'thai_status': thai_status, 'irb': irb})

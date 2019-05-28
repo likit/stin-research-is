@@ -57,7 +57,8 @@ class Project(models.Model):
     category = models.ForeignKey(ProjectSubCategory,
                                  on_delete=models.DO_NOTHING,
                                  related_name='projects',
-                                 null=True
+                                 null=True,
+                                 blank=True
                                  )
 
     class Meta:
@@ -102,7 +103,7 @@ class IRBRecord(models.Model):
 
 class Publication(models.Model):
     pubdate = models.DateField('publication date')
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="pubs")
     added_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     journal = models.CharField(max_length=250)

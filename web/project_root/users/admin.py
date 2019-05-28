@@ -17,6 +17,7 @@ class CustomUserAdmin(UserAdmin):
                                     'last_name',
                                     'avatar',
                                     'job_position',
+                                    'is_researcher',
                                     'acad_position',
                                     'department',
                                     'expertise',

@@ -25,6 +25,7 @@ from wagtail.core import urls as wagtail_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('research/', include('research.urls', namespace='research')),
+    path('staff/', include('users.urls', namespace='staff')),
     re_path(r'^cms/', include(wagtailadmin_urls)),
     re_path(r'^documents/', include(wagtaildocs_urls)),
     re_path(r'^pages/', include(wagtail_urls)),

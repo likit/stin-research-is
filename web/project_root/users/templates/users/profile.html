@@ -1,0 +1,38 @@
+{% extends "users/base.html" %}
+
+{% block title %}Researchers{% endblock %}
+{% block page_header %}Profile Detail{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="box">
+            <div class="has-text-centered">
+                <figure class="image is-128x128 container">
+                    <img class="is-rounded" src="/media/{{ researcher.avatar }}">
+                </figure>
+                <h1 class="title">{{ researcher.fullname }}</h1>
+                <p>ตำแหน่ง {{ researcher.job_position }}</p>
+                <p>สังกัด {{ researcher.department }} </p>
+                <hr>
+            </div>
+            <div>
+                <h2 class="title has-text-centered">ผลงานวิจัย</h2>
+                {% for pub in publications %}
+                    <p class="notification">
+                        <p><strong>{{ pub.title }}</strong>, {{ pub.pubdate }}, {{ pub.journal }}</p>
+                        <p><a href="{{ pub.url }}">Link to the article</a></p>
+                    </p>
+                {% endfor %}
+            </div>
+            <div>
+                <h2 class="title has-text-centered">โครงการวิจัย</h2>
+                {% for project in researcher.created_projects.all %}
+                    <p class="notification">
+                        <p><strong>{{ project.th_title }}</strong>, {{ project.th_abstract }}</p>
+                        <p>เริ่มโครงการเมื่อวันที่ {{ project.startdate }} <a href="{{ project.get_absolute_url }}">รายละเอียด</a></p>
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
