@@ -1,6 +1,26 @@
 version: '3'
 
 services:
+  wordpress:
+    image: wordpress
+    restart: always
+    ports:
+      - 8880:80
+      - 80:80
+    env_file:
+      - ./wordpress.env
+    volumes:
+      - ./wordpress:/var/www/html
+  wpdb:
+    image: mysql:5.7
+    restart: always
+    env_file:
+      - ./wordpress.env
+    environment:
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=stin
+    volumes:
+      - wordpress:/var/lib/mysql
   pg:
     image: postgres:11
     volumes:
@@ -21,5 +41,6 @@ services:
       - pg
 
 volumes:
+  wordpress:
   stinvol:
     external: true
