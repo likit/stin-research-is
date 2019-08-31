@@ -11,6 +11,7 @@ services:
       - ./wordpress.env
     volumes:
       - ./wordpress:/var/www/html
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
   wpdb:
     image: mysql:5.7
     restart: always
