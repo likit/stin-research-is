@@ -1,6 +1,23 @@
 version: '3'
 
 services:
+  web:
+    image: odoo:12.0
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+      - "80:8096"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+      - ./config:/etc/odoo
+  db:
+    image: postgres:10
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
   wordpress:
     image: wordpress
     restart: always
@@ -42,6 +59,7 @@ services:
       - pg
 
 volumes:
+  odoo-web-data:
   wordpress:
   stinvol:
     external: true
