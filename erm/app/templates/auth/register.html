@@ -13,7 +13,7 @@
                     {% endif %}
                 {% endwith %}
                 <div class="box">
-                <h1 class="title">Registration</h1>
+                <h1 class="title">User Registration</h1>
                 <hr>
                 <form action="{{ url_for('auth.register') }}" method="post">
                     {{ form.csrf_token }}
@@ -33,9 +33,12 @@
                             {{ form.confirm_password(placeholder='Confirm Password', class='input') }}
                         </div>
                     </div>
-                    <div class="field">
+                    <div class="field is-grouped">
                         <div class="control">
                             <button type="submit" class="button is-primary">Submit</button>
+                        </div>
+                        <div class="control">
+                            <a href="{{ request.referrer }}" class="button is-danger">Cancel</a>
                         </div>
                     </div>
                 </form>

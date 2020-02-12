@@ -1,0 +1,27 @@
+  <header class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <span class="navbar-burger burger" data-target="navbarMenuHeroC">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </div>
+      <div id="navbarMenuHeroC" class="navbar-menu">
+        <div class="navbar-end">
+          <a class="navbar-item is-active">
+            Home
+          </a>
+          {% if current_user.is_authenticated %}
+          <a class="navbar-item" href="#">
+              Profile
+          </a>
+          <a class="navbar-item" href="{{ url_for('auth.logout') }}">
+            Sign Out
+          </a>
+          {% else %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </header>

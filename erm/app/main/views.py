@@ -1,7 +1,10 @@
+from flask import render_template
 from . import main_bp as main
 from app import db
+from app.auth.forms import LoginForm
 
 
 @main.route('/')
 def index():
-    return '<h1>Welcome to the lightest RMS ever.</h1>'
+    form = LoginForm()
+    return render_template('main/index.html', form=form)

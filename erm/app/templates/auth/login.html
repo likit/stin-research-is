@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Login Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-fullheight is-light">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <div class="columns">
+                <div class="column is-half is-offset-one-quarter">
+                    {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                    {% for cat,msg in messages %}
+                    <p class="notification {{ cat }}">{{ msg }}</p>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <div class="box">
+                        <h1 class="title">User Sign In</h1>
+                        <hr>
+                        <form action="{{ url_for('auth.login') }}" method="post">
+                            {{ form.csrf_token }}
+                            <div class="field">
+                                <div class="control">
+                                    {{ form.email(placeholder='Email', class='input') }}
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    {{ form.password(placeholder='Password', class='input') }}
+                                </div>
+                            </div>
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <button type="submit" class="button is-primary">Sign In</button>
+                                </div>
+                                <div class="control">
+                                    <a class="button is-danger" href="{{ request.referrer }}">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

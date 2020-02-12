@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_migrate import Migrate
 from flask_admin import Admin
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
@@ -10,6 +11,7 @@ load_dotenv()
 admin = Admin()
 db = SQLAlchemy()
 migrate = Migrate()
+login_manager = LoginManager()
 
 
 def create_app():
@@ -32,4 +34,7 @@ def create_app():
     admin.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
+
     return app

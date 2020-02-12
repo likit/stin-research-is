@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<section class="hero is-fullheight is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <h1 class="title">Welcome to the STIN Research Management System.</h1>
+                </div>
+                <div class="column is-one-third">
+                    {% include "messages.html" %}
+                    <div class="box has-text-centered">
+                        <h1><strong>Sign In with Email</strong></h1>
+                        <hr>
+                        <form action="{{ url_for('auth.login') }}" method="post">
+                            {% if current_user.is_authenticated %}
+                            <fieldset disabled>
+                            {% endif %}
+                            {{ form.csrf_token }}
+                            <div class="field">
+                                <div class="control">
+                                    {{ form.email(placeholder='Email', class='input') }}
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    {{ form.password(placeholder='Password', class='input') }}
+                                </div>
+                            </div>
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <button class="button is-primary" type="submit">Sign In</button>
+                                </div>
+                                <div class="control">
+                                    <a class="button is-text" href="{{ url_for('auth.register') }}">Or register your E-mail</a>
+                                </div>
+                            </div>
+                            {% if current_user.is_authenticated %}
+                            </fieldset>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
