@@ -8,10 +8,94 @@
     </div>
 </section>
 <section class="section">
-    <div class="container">
-        <h2 class="title">Your Profile</h2>
-        {{ current_user.email }}
-        {{ current_user.profile.fullname_th }}
+    <div class="columns">
+        <div class="column is-three-fifths is-offset-one-fifth">
+            <div class="box has-text-centered">
+                <h2 class="title">Your Profile</h2>
+                {% if current_user.is_authenticated and current_user.id == user.id %}
+                <a href="">
+                    <span class="icon">
+                        <i class="fas fa-pencil-alt"></i>
+                    </span>
+                <span>edit</span>
+                </a>
+                {% endif %}
+                <hr>
+                <table class="table is-fullwidth">
+                    <tr>
+                        <td class="title is-size-5">Thai Name</td>
+                        <td>{{ user.profile.title_th or '' }} {{ user.profile.fullname_th or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">English Name</td>
+                        <td>{{ user.profile.title_en or '' }} {{ user.profile.fullname_en or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">E-mail</td>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Program</td>
+                        <td>{{ user.profile.program or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Education</td>
+                        <td>
+                        <table class="table is-fullwidth is-striped is-narrow">
+                            {% for ed in user.profile.educations %}
+                            <tr>
+                                <td>Level</td>
+                                <td>{{ ed.degree|title }}</td>
+                                <td>
+                                    {% if current_user.is_authenticated and current_user.id==user.id %}
+                                    <a href="">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
+                                        <span>edit</span>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Program</td>
+                                <td>{{ ed.program or '-' }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Field</td>
+                                <td>{{ ed.field or '-' }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>University</td>
+                                <td>{{ ed.university or '-' }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"></td>
+                            </tr>
+                            {% endfor %}
+                            {% if current_user.is_authenticated and current_user.id == user.id %}
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <a>
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>New Education</span>
+                                    </a>
+                                </td>
+                                <td></td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
 {% endblock %}
