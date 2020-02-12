@@ -12,7 +12,7 @@
     <div class="column">
         <div class="container has-text-centered">
             <h1 class="title">Project Detail</h1>
-            <h2 class="subtitle">{{ project.title_th }}</h2>
+            <h2 class="subtitle is-size-4">{{ project.title_th }}</h2>
             <p>
                 {% for member in project.members %}
                 {{ member.user.profile.fullname_th }} ({{ member.role }}),
@@ -43,13 +43,28 @@
                     <td class="title is-size-5">Objective</td><td>{{ project.objective }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Method</td><td>{{ project.Method }}</td>
+                    <td class="title is-size-5">Method</td><td>{{ project.method }}</td>
                 </tr>
                 <tr>
                     <td class="title is-size-5">Created at</td><td>{{ project.created_at }}</td>
                 </tr>
                 <tr>
                     <td class="title is-size-5">Status</td><td>{{ project.status }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Category</td>
+                    <td>
+                        <div class="field is-grouped is-grouped-multiline">
+                            {% for cat in project.subcategories %}
+                            <div class="control">
+                                <div class="tags has-addons">
+                                    <p class="tag is-light is-medium is-info">{{ cat.category }}</p>
+                                    <p class="tag is-light is-medium">{{ cat.parent }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </td>
                 </tr>
             </table>
             </div>
