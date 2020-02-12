@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Profile Page{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <h2 class="title">Your Profile</h2>
+        {{ current_user.email }}
+        {{ current_user.profile.fullname_th }}
+    </div>
+</section>
+{% endblock %}
