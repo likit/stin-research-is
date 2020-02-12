@@ -15,7 +15,6 @@ class ProjectMember(db.Model):
         return self.role
 
 
-
 class ProjectRecord(db.Model):
     __tablename__ = 'projects'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -53,3 +52,13 @@ class SubCategory(db.Model):
 
     def __str__(self):
         return '{} ({})'.format(self.category, self.parent)
+
+
+class Application(db.Model):
+    __tablename__ = 'applications'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    org = db.Column('organization', db.String(), nullable=False)
+    detail = db.Column('detail', db.Text())
+    datetime = db.Column('datetime', db.DateTime(timezone=True))
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    project = db.relationship(ProjectRecord, backref=db.backref('applications'))

@@ -10,9 +10,9 @@ from flask_admin.contrib.sqla import ModelView
 app = create_app()
 
 admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(Profile, db.session))
-admin.add_view(ModelView(Program, db.session))
-admin.add_view(ModelView(Department, db.session))
+admin.add_view(ModelView(Profile, db.session, category='Researcher'))
+admin.add_view(ModelView(Program, db.session, category='Researcher'))
+admin.add_view(ModelView(Department, db.session, category='Researcher'))
 
 
 class EducationModelView(ModelView):
@@ -20,7 +20,7 @@ class EducationModelView(ModelView):
         'degree': [('bachelor', 'bachelor'), ('master', 'master'), ('doctorate', 'doctorate')]
     }
 
-admin.add_view(EducationModelView(Education, db.session))
+admin.add_view(EducationModelView(Education, db.session, category='Researcher'))
 
 class ProjectMemberModelView(ModelView):
     form_choices = {
@@ -50,7 +50,8 @@ class ProjectRecordModelView(ModelView):
     }
 
 
-admin.add_view(ProjectRecordModelView(ProjectRecord, db.session))
-admin.add_view(ProjectMemberModelView(ProjectMember, db.session))
-admin.add_view(ModelView(Category, db.session))
-admin.add_view(ModelView(SubCategory, db.session))
+admin.add_view(ProjectRecordModelView(ProjectRecord, db.session, category='Project'))
+admin.add_view(ProjectMemberModelView(ProjectMember, db.session, category='Project'))
+admin.add_view(ModelView(Category, db.session, category='Project'))
+admin.add_view(ModelView(SubCategory, db.session, category='Project'))
+admin.add_view(ModelView(Application, db.session, category='Project'))
