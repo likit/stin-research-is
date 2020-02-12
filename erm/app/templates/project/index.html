@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-
 {% block title %}Projects Page{% endblock %}
 
 {% block page_content %}
@@ -40,7 +39,8 @@
                         {% endfor %}
                     </td>
                     <td>
-                        <a href="" class="button is-small is-primary">
+                        <a href="{{ url_for('project.display_project', project_id=project.id) }}"
+                           class="button is-small is-primary">
                             See detail
                         </a>
                     </td>

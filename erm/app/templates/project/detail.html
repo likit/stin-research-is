@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Project Detail Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="column">
+        <div class="container has-text-centered">
+            <h1 class="title">Project Detail</h1>
+            <h2 class="subtitle">{{ project.title_th }}</h2>
+            <p>
+                {% for member in project.members %}
+                {{ member.user.profile.fullname_th }} ({{ member.role }}),
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            <div class="box">
+            <table class="table is-fullwidth is-striped">
+                <tr>
+                    <td class="title is-size-5">English Title</td><td>{{ project.title_en }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Thai Subtitle</td><td>{{ project.subtitle_th }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">English Subtitle</td><td>{{ project.subtitle_en }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Abstract</td><td>{{ project.abstract }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Introduction</td><td>{{ project.intro }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Objective</td><td>{{ project.objective }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Method</td><td>{{ project.Method }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Created at</td><td>{{ project.created_at }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Status</td><td>{{ project.status }}</td>
+                </tr>
+            </table>
+            </div>
+            <div class="has-text-centered">
+                <a href="{{ request.referrer }}" class="button is-primary">Back</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

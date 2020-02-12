@@ -9,3 +9,10 @@ from .models import *
 def list_projects():
     projects = ProjectRecord.query.order_by(ProjectRecord.created_at)
     return render_template('project/index.html', projects=projects)
+
+
+@project.route('/detail/<int:project_id>')
+def display_project(project_id):
+    project = ProjectRecord.query.get(project_id)
+    return render_template('project/detail.html', project=project)
+
