@@ -31,6 +31,9 @@ def create_app():
     from app.auth import auth_bp as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
+    from app.researcher import researcher_bp as researcher_blueprint
+    app.register_blueprint(researcher_blueprint, url_prefix='/researcher')
+
     admin.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
