@@ -52,3 +52,5 @@ class ProjectRecordModelView(ModelView):
 
 admin.add_view(ProjectRecordModelView(ProjectRecord, db.session))
 admin.add_view(ProjectMemberModelView(ProjectMember, db.session))
+admin.add_view(ModelView(Category, db.session))
+admin.add_view(ModelView(SubCategory, db.session))

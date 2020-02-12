@@ -11,6 +11,9 @@ class ProjectMember(db.Model):
     role = db.Column('role', db.String())
     project = db.relationship('ProjectRecord', backref=db.backref('members'))
 
+    def __str__(self):
+        return self.role
+
 
 
 class ProjectRecord(db.Model):
@@ -28,3 +31,25 @@ class ProjectRecord(db.Model):
 
     def __str__(self):
         return self.title_th[:50]
+
+
+class Category(db.Model):
+    __tablename__ = 'categories'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    category = db.Column('category', db.String(), nullable=False, unique=True)
+
+    def __str__(self):
+        return '{}'.format(self.category)
+
+
+class SubCategory(db.Model):
+    __tablename__ = 'subcategories'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    category = db.Column('category', db.String(), nullable=False, unique=True)
+    parent_id = db.Column('parent_id', db.ForeignKey('categories.id'))
+    parent = db.relationship(Category, backref=db.backref('subcategories'))
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    project = db.relationship(ProjectRecord, backref=db.backref('subcategories'))
+
+    def __str__(self):
+        return '{} ({})'.format(self.category, self.parent)
