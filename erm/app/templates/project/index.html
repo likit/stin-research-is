@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+
+{% block title %}Projects Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column">
+            <table class="table">
+                <thead>
+                <th>No.</th>
+                <th>Thai Title</th>
+                <th>English Title</th>
+                <th>Created At</th>
+                <th>Status</th>
+                <th>Headed By</th>
+                <th></th>
+                </thead>
+                <tbody>
+                {% for project in projects|sort(attribute='created_at', reverse=True) %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ project.title_th }}</td>
+                    <td>{{ project.title_en }}</td>
+                    <td>{{ project.created_at }}</td>
+                    <td>{{ project.status }}</td>
+                    <td>
+                        {% for member in project.members %}
+                            {% if member.role == 'head' %}
+                            <a href="#" class="button is-light is-small">
+                                {{ member.user.profile.fullname_th }},
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="" class="button is-small is-primary">
+                            See detail
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

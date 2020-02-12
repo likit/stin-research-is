@@ -27,6 +27,11 @@ class ProjectRecord(db.Model):
     intro = db.Column('introduction', db.Text())
     method = db.Column('method', db.Text())
     status = db.Column('status', db.String())
+    created_at = db.Column('created_at', db.DateTime(timezone=True))
+    updated_at = db.Column('updated_at', db.DateTime(timezone=True))
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    approved_at = db.Column('approved_at', db.DateTime(timezone=True))
+    denied_at = db.Column('denied_at', db.DateTime(timezone=True))
 
     def __str__(self):
         return self.title_th[:50]
