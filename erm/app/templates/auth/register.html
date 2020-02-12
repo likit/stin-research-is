@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block page_content %}
+<section class="hero is-fullheight is-light">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+        <div class="columns">
+            <div class="column is-half is-offset-one-quarter">
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        {% for cat,msg in messages %}
+                        <p class="notification {{ cat }}">{{ msg }}</p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <div class="box">
+                <h1 class="title">Registration</h1>
+                <hr>
+                <form action="{{ url_for('auth.register') }}" method="post">
+                    {{ form.csrf_token }}
+                    <div class="field">
+                        <div class="control">
+                            {{ form.email(placeholder='Email', class='input') }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            {{ form.password(placeholder='Password', class='input') }}
+                            <p class="help">Must be 8-16 characters.</p>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            {{ form.confirm_password(placeholder='Confirm Password', class='input') }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

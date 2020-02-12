@@ -25,6 +25,10 @@ def create_app():
 
     from app.main import main_bp as main_blueprint
     app.register_blueprint(main_blueprint, url_prefix='/')
+
+    from app.auth import auth_bp as auth_blueprint
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
+
     admin.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)

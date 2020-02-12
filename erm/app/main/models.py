@@ -6,7 +6,7 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     email = db.Column('email', db.String(255), unique=True, nullable=False)
-    password_hash = db.Column('password_hash', db.String(32), nullable=False)
+    password_hash = db.Column('password_hash', db.String(255), nullable=False)
 
     def __init__(self, email, password):
         self.email = email
