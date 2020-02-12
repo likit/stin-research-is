@@ -24,6 +24,7 @@ class ProjectRecord(db.Model):
     abstract = db.Column('abstract', db.Text())
     intro = db.Column('introduction', db.Text())
     method = db.Column('method', db.Text())
+    status = db.Column('status', db.String())
 
     def __str__(self):
         return self.title_th[:50]

@@ -44,6 +44,10 @@ class ProjectRecordModelView(ModelView):
             'rows': 10
         },
     }
+    form_choices = {
+        'status': [('draft', 'Draft'), ('submitted', 'Submitted'),
+                   ('revising', 'Revising'), ('approved', 'Approved')]
+    }
 
 
 admin.add_view(ProjectRecordModelView(ProjectRecord, db.session))
