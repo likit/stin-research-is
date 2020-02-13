@@ -18,48 +18,21 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
-  wordpress:
-    image: wordpress
-    restart: always
-    ports:
-      - 8880:80
-      - 80:80
-    env_file:
-      - ./wordpress.env
-    volumes:
-      - ./wordpress:/var/www/html
-      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-  wpdb:
-    image: mysql:5.7
-    restart: always
-    env_file:
-      - ./wordpress.env
-    environment:
-      - MYSQL_DATABASE=wordpress
-      - MYSQL_USER=stin
-    volumes:
-      - wordpress:/var/lib/mysql
   pg:
     image: postgres:11
     volumes:
       - stinvol:/var/lib/postgresql/data/
     ports:
-      - "5435:5432"
+      - "5434:5432"
   web:
-    build: './web'
-    command: python manage.py runserver 0.0.0.0:8000
-    environment:
-      - POSTGRES_PASSWORD
+    build: './erm'
     volumes:
-      - ./web/project_root:/project_root
+      - ./erm:/stinerm
     ports:
-      - "8000:8000"
-      - "80:8000"
+      - "5000:5000"
     depends_on:
       - pg
 
 volumes:
   odoo-web-data:
-  wordpress:
   stinvol:
-    external: true
