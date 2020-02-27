@@ -65,4 +65,4 @@ def logout():
     else:
         logout_user()
         flash('You have been signed out.', 'is-success')
-        return redirect(request.referrer)
+        return redirect(url_for('main.index'))
