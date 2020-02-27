@@ -18,15 +18,19 @@ class ProjectMember(db.Model):
 class ProjectRecord(db.Model):
     __tablename__ = 'projects'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    title_th = db.Column('title_th', db.String())
-    subtitle_th = db.Column('subtitle_th', db.String())
-    title_en = db.Column('title_en', db.String())
-    subtitle_en = db.Column('subtitle_en', db.String())
-    objective = db.Column('objective', db.Text())
-    abstract = db.Column('abstract', db.Text())
-    intro = db.Column('introduction', db.Text())
-    method = db.Column('method', db.Text())
-    status = db.Column('status', db.String())
+    title_th = db.Column('title_th', db.String(), info={'label': 'Title Thai'})
+    subtitle_th = db.Column('subtitle_th', db.String(), info={'label': 'Subtitle Thai'})
+    title_en = db.Column('title_en', db.String(), info={'label': 'Title English'})
+    subtitle_en = db.Column('subtitle_en', db.String(), info={'label': 'Subtitle English'})
+    objective = db.Column('objective', db.Text(), info={'label': 'Objective'})
+    abstract = db.Column('abstract', db.Text(), info={'label': 'Abstract'})
+    intro = db.Column('introduction', db.Text(), info={'label': 'Introduction'})
+    method = db.Column('method', db.Text(), info={'label': 'Method'})
+    status = db.Column('status', db.String(),
+                       info={'label': 'Status',
+                             'choices': [(i, i) for i in ['draft', 'concept', 'full',
+                                                         'submitted', 'revised', 'approved',
+                                                         'rejected', 'finished']]})
     created_at = db.Column('created_at', db.DateTime(timezone=True))
     updated_at = db.Column('updated_at', db.DateTime(timezone=True))
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
@@ -34,7 +38,7 @@ class ProjectRecord(db.Model):
     denied_at = db.Column('denied_at', db.DateTime(timezone=True))
     #TODO: add cascading and nullable=False
     creator_id = db.Column('creator_id', db.ForeignKey('users.id'))
-    creator = db.relationship('User', backref=db.backref('projects'))
+    creator = db.relationship('User', backref=db.backref('projects'), info={'label': 'Creator'})
 
     def __str__(self):
         return self.title_th[:50]

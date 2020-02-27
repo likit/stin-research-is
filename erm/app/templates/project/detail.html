@@ -46,7 +46,10 @@
                     <td class="title is-size-5">Method</td><td>{{ project.method }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Created at</td><td>{{ project.created_at }}</td>
+                    <td class="title is-size-5">Created at</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Updated at</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
                 </tr>
                 <tr>
                     <td class="title is-size-5">Status</td><td>{{ project.status }}</td>
@@ -70,6 +73,9 @@
             </div>
             <div class="has-text-centered">
                 <a href="{{ request.referrer }}" class="button is-primary">Back</a>
+                {% if project.creator == current_user and current_user.is_authenticated %}
+                <a href="{{ url_for('project.edit_project', project_id=project.id) }}" class="button is-light">Edit</a>
+                {% endif %}
             </div>
         </div>
     </div>

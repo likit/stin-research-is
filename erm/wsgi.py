@@ -1,4 +1,5 @@
 from app import create_app
+from pytz import timezone
 from flask_admin.contrib.sqla import ModelView
 from app import admin, db
 from app.main.models import User
@@ -8,6 +9,12 @@ from flask_admin.contrib.sqla import ModelView
 
 
 app = create_app()
+
+@app.template_filter("localdatetime")
+def local_datetime(dt):
+    bangkok = timezone('Asia/Bangkok')
+    datetime_format = '%d/%m/%Y %H:%M'
+    return dt.astimezone(bangkok).strftime(datetime_format)
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Profile, db.session, category='Researcher'))
