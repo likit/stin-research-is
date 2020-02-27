@@ -16,6 +16,14 @@ def local_datetime(dt):
     datetime_format = '%d/%m/%Y %H:%M'
     return dt.astimezone(bangkok).strftime(datetime_format)
 
+
+@app.template_filter("localdate")
+def local_datetime(dt):
+    bangkok = timezone('Asia/Bangkok')
+    datetime_format = '%d/%m/%Y'
+    return dt.strftime(datetime_format)
+
+
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Profile, db.session, category='Researcher'))
 admin.add_view(ModelView(Program, db.session, category='Researcher'))

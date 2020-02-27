@@ -2,7 +2,7 @@ from app import db
 from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from wtforms.widgets import Select
-from .models import ProjectRecord
+from .models import ProjectRecord, Application
 
 
 BaseModelForm = model_form_factory(FlaskForm)
@@ -19,3 +19,7 @@ class ProjectRecordForm(ModelForm):
         model = ProjectRecord
         exclude = ['approved_at', 'created_at', 'updated_at']
 
+
+class ApplicationForm(ModelForm):
+    class Meta:
+        model = Application

@@ -22,6 +22,9 @@
     </div>
     <div class="columns">
         <div class="column is-four-fifths is-offset-1">
+            {% for cat,msg in get_flashed_messages(with_categories=true) %}
+            <p class="notification is-{{ cat }}">{{ msg }}</p>
+            {% endfor %}
             <div class="box">
             <table class="table is-fullwidth is-striped">
                 <tr>
@@ -67,6 +70,55 @@
                             </div>
                             {% endfor %}
                         </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Application</td>
+                    <td>
+                        <table class="table is-striped">
+                            <thead>
+                                <th>องค์กร สถานที่ ชุมชน</th>
+                                <th>รายละเอียดการใช้งานวิจัย</th>
+                                <th>วันที่และเวลา</th>
+                            </thead>
+                            <tbody>
+                                {% for app in project.applications %}
+                                <tr>
+                                    <td>{{ app.org }}</td>
+                                    <td>{{ app.detail }}</td>
+                                    <td>{{ app.date|localdate }}</td>
+                                    <td>
+                                        {% if current_user == project.creator and current_user.is_authenticated %}
+                                        <a href="{{ url_for('project.edit_application', app_id=app.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </span>
+                                            <span>Edit</span>
+                                        </a>
+                                        <a href="{{ url_for('project.remove_application', app_id=app.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </span>
+                                            <span>Remove</span>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% if current_user == project.creator and current_user.is_authenticated %}
+                                <tr>
+                                    <td colspan="4" class="has-text-centered">
+                                        <a href="{{ url_for('project.add_application', project_id=project.id) }}"
+                                            class="is-link is-outlined button">
+                                            <span class="icon">
+                                                <i class="fas fa-plus"></i>
+                                            </span><span>Add Application</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
                     </td>
                 </tr>
             </table>
