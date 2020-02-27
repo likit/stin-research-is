@@ -61,6 +61,14 @@
                         {{ form.method(placehoder="Method", class="textarea") }}
                     </div>
                 </div>
+                {% if current_user.role == 1 %}
+                <div class="field">
+                    <label class="label">{{ form.status.label }}</label>
+                    <div class="select">
+                        {{ form.status() }}
+                    </div>
+                </div>
+                {% endif %}
                 <div class="field is-grouped">
                     <div class="control">
                         <button type="submit" class="button is-success">Save</button>

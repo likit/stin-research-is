@@ -17,5 +17,5 @@ class ModelForm(BaseModelForm):
 class ProjectRecordForm(ModelForm):
     class Meta:
         model = ProjectRecord
-        exclude = ['status', 'approved_at', 'created_at', 'updated_at']
+        exclude = ['approved_at', 'created_at', 'updated_at']
 
