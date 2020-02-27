@@ -56,3 +56,21 @@ def add_education(profile_id):
         return redirect(url_for('researcher.show_profile', user_id=profile.user_id))
 
     return render_template('researcher/education_add.html', form=form)
+
+
+@researcher.route('/profile/education/<int:edid>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_education(edid):
+    edu = Education.query.get(edid)
+    form = EducationForm(obj=edu, degree=edu.degree)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(edu)
+            db.session.add(edu)
+            db.session.commit()
+            flash('Record has been edited.', 'success')
+        else:
+            flash('Error occurred.', 'danger')
+        return redirect(url_for('researcher.show_profile', user_id=edu.profile.user_id))
+
+    return render_template('researcher/education_add.html', form=form)

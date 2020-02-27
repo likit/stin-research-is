@@ -45,13 +45,13 @@
                         <td class="title is-size-5">Education</td>
                         <td>
                         <table class="table is-fullwidth is-striped is-narrow">
-                            {% for ed in user.profile.educations %}
+                            {% for ed in user.profile.educations|sort(attribute='year', reverse=True) %}
                             <tr>
                                 <td>Level</td>
                                 <td>{{ ed.degree|title }}</td>
                                 <td>
                                     {% if current_user.is_authenticated and current_user.id==user.id %}
-                                    <a href="">
+                                    <a href="{{ url_for('researcher.edit_education', edid=ed.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-pencil-alt"></i>
                                         </span>
@@ -59,6 +59,11 @@
                                     </a>
                                     {% endif %}
                                 </td>
+                            </tr>
+                            <tr>
+                                <td>Year</td>
+                                <td>{{ ed.year }}</td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>Program</td>

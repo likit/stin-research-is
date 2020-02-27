@@ -46,6 +46,13 @@
                         {{ form.university(placeholder='University', class='input') }}
                     </div>
                 </div>
+                <div class="field">
+                    <label class="label">{{ form.year.label }}</label>
+                    <div class="control">
+                        {{ form.year(placeholder='Year', class='input') }}
+                    </div>
+                    <p class="help">ปี ค.ศ.</p>
+                </div>
                 <div class="field is-grouped">
                     <div class="control">
                         <button type="submit" class="button is-success">Save</button>
