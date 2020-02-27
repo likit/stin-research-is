@@ -57,6 +57,12 @@
                                         </span>
                                         <span>edit</span>
                                     </a>
+                                    <a href="{{ url_for('researcher.remove_education', edid=ed.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </span>
+                                        <span>remove</span>
+                                    </a>
                                     {% endif %}
                                 </td>
                             </tr>

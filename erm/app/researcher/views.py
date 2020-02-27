@@ -74,3 +74,18 @@ def edit_education(edid):
         return redirect(url_for('researcher.show_profile', user_id=edu.profile.user_id))
 
     return render_template('researcher/education_add.html', form=form)
+
+
+@researcher.route('/profile/education/<int:edid>/remove', methods=['GET', 'POST'])
+@login_required
+def remove_education(edid):
+    edu = Education.query.get(edid)
+    user_id = edu.profile.user_id
+    try:
+        db.session.delete(edu)
+        db.session.commit()
+    except:
+        flash('Error occurred.')
+    else:
+        flash('Record has been removed', 'success')
+    return redirect(url_for('researcher.show_profile', user_id=user_id))
