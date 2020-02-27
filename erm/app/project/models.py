@@ -69,8 +69,8 @@ class SubCategory(db.Model):
 class Application(db.Model):
     __tablename__ = 'applications'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    org = db.Column('organization', db.String(), nullable=False)
-    detail = db.Column('detail', db.Text())
-    datetime = db.Column('datetime', db.DateTime(timezone=True))
+    org = db.Column('organization', db.String(), nullable=False, info={'label': 'Organization'})
+    detail = db.Column('detail', db.Text(), info={'label': 'Detail'})
+    date = db.Column('date', db.Date(), info={'label': 'Date'})
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     project = db.relationship(ProjectRecord, backref=db.backref('applications'))
