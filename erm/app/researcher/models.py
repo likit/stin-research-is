@@ -35,6 +35,7 @@ class Education(db.Model):
     field = db.Column('field', db.String())
     program = db.Column('program', db.String())
     university = db.Column('university', db.String())
+    year = db.Column('year', db.Integer, nullable=False)
     profile_id = db.Column('profile_id', db.ForeignKey('profiles.id'))
     profile = db.relationship('Profile', backref=db.backref('educations'))
 
