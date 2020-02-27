@@ -12,8 +12,11 @@
         <div class="column is-three-fifths is-offset-one-fifth">
             <div class="box has-text-centered">
                 <h2 class="title">Your Profile</h2>
+                {% for cat,msg in get_flashed_messages(with_categories=true) %}
+                <p class="notification is-{{ cat }}">{{ msg }}</p>
+                {% endfor %}
                 {% if current_user.is_authenticated and current_user.id == user.id %}
-                <a href="">
+                <a href="{{ url_for('researcher.edit_profile', user_id=user.id) }}">
                     <span class="icon">
                         <i class="fas fa-pencil-alt"></i>
                     </span>

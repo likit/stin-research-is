@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Profile Page{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">Edit Profile</h1>
+            <form method="post">
+                {{ form.csrf_token }}
+                <div class="field">
+                    <label class="label">{{ form.title_th.label }}</label>
+                    <div class="control">
+                        {{ form.title_th(placeholder='Title TH', class='input') }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.firstname_th.label }}</label>
+                    <div class="control">
+                        {{ form.firstname_th(placeholder='First Name TH', class='input') }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.lastname_th.label }}</label>
+                    <div class="control">
+                        {{ form.lastname_th(placeholder='Last Name TH', class='input') }}
+                    </div>
+                </div>
+                <hr>
+                <div class="field">
+                    <label class="label">{{ form.title_en.label }}</label>
+                    <div class="control">
+                        {{ form.title_en(placeholder='Title EN', class='input') }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.firstname_en.label }}</label>
+                    <div class="control">
+                        {{ form.firstname_en(placeholder='First Name EN', class='input') }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.lastname_en.label }}</label>
+                    <div class="control">
+                        {{ form.lastname_en(placeholder='Last Name EN', class='input') }}
+                    </div>
+                </div>
+                <div class="field">
+                  <label class="label">{{ form.programs.label }}</label>
+                  <div class="control">
+                    <div class="select">
+                        {{ form.programs() }}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-success">Save</button>
+                    </div>
+                    <div class="control">
+                        <a class="button is-light" href="{{ request.referrer }}">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
