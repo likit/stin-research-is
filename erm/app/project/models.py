@@ -32,6 +32,9 @@ class ProjectRecord(db.Model):
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     approved_at = db.Column('approved_at', db.DateTime(timezone=True))
     denied_at = db.Column('denied_at', db.DateTime(timezone=True))
+    #TODO: add cascading and nullable=False
+    creator_id = db.Column('creator_id', db.ForeignKey('users.id'))
+    creator = db.relationship('User', backref=db.backref('projects'))
 
     def __str__(self):
         return self.title_th[:50]
