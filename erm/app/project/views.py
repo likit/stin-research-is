@@ -6,7 +6,8 @@ from .models import *
 
 
 @project.route('/')
-def list_projects():
+@project.route('/<int:user_id>')
+def list_projects(user_id=None):
     projects = ProjectRecord.query.order_by(ProjectRecord.created_at)
     return render_template('project/index.html', projects=projects)
 
