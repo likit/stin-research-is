@@ -21,8 +21,8 @@
               <a class="navbar-item" href="{{ url_for('researcher.show_profile', user_id=current_user.id) }}">
                 Profile
               </a>
-              <a class="navbar-item" href="{{ url_for('project.list_projects', user_id=current_user.id) }}">
-                Projects
+              <a class="navbar-item" href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">
+                Your Projects
               </a>
             </div>
           </div>
