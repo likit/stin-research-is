@@ -27,7 +27,10 @@ class Program(db.Model):
 class Education(db.Model):
     __tablename__ = 'educations'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    degree = db.Column('degree', db.String(), nullable=False)
+    degree = db.Column('degree',
+                       db.String(),
+                       info={'choices': [(i, i) for i in ['Undergraduate', 'Master', 'Doctorate']]},
+                       nullable=False)
     degree_title = db.Column('degree_title', db.String())
     field = db.Column('field', db.String())
     program = db.Column('program', db.String())

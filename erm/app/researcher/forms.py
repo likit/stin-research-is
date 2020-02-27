@@ -2,7 +2,7 @@ from app import db
 from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from wtforms.widgets import Select
-from .models import Profile, Program
+from .models import Profile, Program, Education
 
 
 BaseModelForm = model_form_factory(FlaskForm)
@@ -26,4 +26,9 @@ class ProfileForm(ModelForm):
     programs = QuerySelectField('Program',
                                 query_factory=lambda: Program.query,
                                 widget=Select())
+
+
+class EducationForm(ModelForm):
+    class Meta:
+        model = Education
 

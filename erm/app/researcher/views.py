@@ -1,8 +1,8 @@
 from flask import render_template, flash, request, redirect, url_for
 from flask_login import login_required
 from app.main.models import User
-from app.researcher.models import Profile, Program
-from app.researcher.forms import ProfileForm
+from app.researcher.models import Profile, Education
+from app.researcher.forms import ProfileForm, EducationForm
 from app import db
 from . import researcher_bp as researcher
 
@@ -35,3 +35,24 @@ def edit_profile(user_id):
             flash('Errors occurred.', 'danger')
             return redirect(url_for('researcher.show_profile', user_id=user.id))
     return render_template('researcher/profile_edit.html', form=form)
+
+
+
+@researcher.route('/profile/<int:profile_id>/education/new', methods=['GET', 'POST'])
+@login_required
+def add_education(profile_id):
+    profile = Profile.query.get(profile_id)
+    form = EducationForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_edu = Education()
+            new_edu.profile = profile
+            form.populate_obj(new_edu)
+            db.session.add(new_edu)
+            db.session.commit()
+            flash('New record has been added.', 'success')
+        else:
+            flash('Error occurred.', 'danger')
+        return redirect(url_for('researcher.show_profile', user_id=profile.user_id))
+
+    return render_template('researcher/education_add.html', form=form)
