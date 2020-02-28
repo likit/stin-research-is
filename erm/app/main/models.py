@@ -9,7 +9,8 @@ class User(db.Model):
     password_hash = db.Column('password_hash', db.String(255), nullable=False)
     #TODO: role should not be nullable
     role = db.Column('role', db.Integer, default=2,
-                     info={'label': 'role', 'choices': [(1, 'admin'), (2, 'user')]})
+                     # info={'label': 'role', 'choices': [(1, 'admin'), (2, 'user')]},
+                     )
 
     def __init__(self, email, password):
         self.email = email
