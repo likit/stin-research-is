@@ -29,7 +29,7 @@ class Education(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     degree = db.Column('degree',
                        db.String(),
-                       info={'choices': [(i, i) for i in ['Undergraduate', 'Master', 'Doctorate']]},
+                       info={'choices': [(i, i) for i in ['Bachelor', 'Master', 'Doctorate']]},
                        nullable=False)
     degree_title = db.Column('degree_title', db.String())
     field = db.Column('field', db.String())

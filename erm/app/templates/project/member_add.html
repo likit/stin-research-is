@@ -1,10 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Add Project Member{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">New Project Member Record</h1>
+            <form method="post">
+                {{ form.csrf_token }}
+                <div class="field">
+                    <label class="label">{{ form.role.label }}</label>
+                    <div class="control">
+                        <div class="select">
+                            {{ form.role() }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Researcher List</label>
+                    <div class="select">
+                        {{ form.users() }}
+                    </div>
+                </div>
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-success">Save</button>
+                    </div>
+                    <div class="control">
+                        <a class="button is-light" href="{{ request.referrer }}">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

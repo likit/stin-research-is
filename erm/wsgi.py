@@ -30,16 +30,21 @@ admin.add_view(ModelView(Program, db.session, category='Researcher'))
 admin.add_view(ModelView(Department, db.session, category='Researcher'))
 
 
+
 class EducationModelView(ModelView):
     form_choices = {
-        'degree': [('bachelor', 'bachelor'), ('master', 'master'), ('doctorate', 'doctorate')]
+        'degree': [('Bachelor', 'Bachelor'), ('Master', 'Master'), ('Doctorate', 'Doctorate')]
     }
 
 admin.add_view(EducationModelView(Education, db.session, category='Researcher'))
 
 class ProjectMemberModelView(ModelView):
     form_choices = {
-        'role': [('head', 'Head'), ('researcher', 'Researcher'), ('coordinator', 'Coordinator')]
+        'role': [('PI', 'PI'),
+                 ('co-PI', 'co-PI'),
+                 ('Researcher', 'Researcher'),
+                 ('Coordinator', 'Coordinator'),
+                 ]
     }
 
 
@@ -60,8 +65,11 @@ class ProjectRecordModelView(ModelView):
         },
     }
     form_choices = {
-        'status': [('draft', 'Draft'), ('submitted', 'Submitted'),
-                   ('revising', 'Revising'), ('approved', 'Approved')]
+        'status': [('draft', 'draft'), ('submitted', 'submitted'),
+                   ('concept', 'concept'), ('full', 'full',),
+                   ('revising', 'revising'),
+                   ('rejected', 'rejected'),
+                   ('finished', 'finished')]
     }
 
 

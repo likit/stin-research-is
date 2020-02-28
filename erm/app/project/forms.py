@@ -2,7 +2,8 @@ from app import db
 from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from wtforms.widgets import Select
-from .models import ProjectRecord, Application
+from .models import ProjectRecord, Application, ProjectMember
+from app.main.models import User
 
 
 BaseModelForm = model_form_factory(FlaskForm)
@@ -23,3 +24,12 @@ class ProjectRecordForm(ModelForm):
 class ApplicationForm(ModelForm):
     class Meta:
         model = Application
+
+
+class ProjectMemberForm(ModelForm):
+    class Meta:
+        model = ProjectMember
+
+    users = QuerySelectField('User',
+                             query_factory=lambda: User.query.filter_by(role=2),
+                             widget=Select())

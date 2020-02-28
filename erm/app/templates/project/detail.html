@@ -73,6 +73,47 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="title is-size-5">Members</td>
+                    <td>
+                        <table class="table is-striped">
+                            <thead>
+                            <th>ชื่อ</th>
+                            <th>บทบาทหน้าที่</th>
+                            <th>email</th>
+                            </thead>
+                            <tbody>
+                            {% for member in project.members %}
+                            <tr>
+                                <td>{{ member.user.profile }}</td>
+                                <td>{{ member.role }}</td>
+                                <td>{{ member.user.email }}</td>
+                                <td>
+                                    <a href="{{ url_for('project.remove_member', project_id=project.id, member_id=member.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="4" class="has-text-centered">
+                                    <a href="{{ url_for('project.add_member', project_id=project.id) }}"
+                                       {% if current_user != project.creator or not current_user.is_authenticated %}
+                                       disabled
+                                       {% endif %}
+                                       class="is-link is-outlined button">
+                                            <span class="icon">
+                                                <i class="fas fa-plus"></i>
+                                            </span><span>Add Member</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
                     <td class="title is-size-5">Application</td>
                     <td>
                         <table class="table is-striped">
@@ -109,6 +150,9 @@
                                 <tr>
                                     <td colspan="4" class="has-text-centered">
                                         <a href="{{ url_for('project.add_application', project_id=project.id) }}"
+                                            {% if project.status !="finished"%}
+                                            disabled
+                                            {% endif %}
                                             class="is-link is-outlined button">
                                             <span class="icon">
                                                 <i class="fas fa-plus"></i>

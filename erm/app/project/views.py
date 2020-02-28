@@ -1,11 +1,11 @@
 import arrow
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from app import db
 from . import project_bp as project
 from .models import *
-from .forms import ProjectRecordForm, ApplicationForm
+from .forms import ProjectRecordForm, ApplicationForm, ProjectMemberForm
 from app.main.models import User
 
 
@@ -46,6 +46,51 @@ def edit_project(project_id):
             flash('Error occurred.', 'danger')
         return redirect(url_for('project.display_project', project_id=project.id))
     return render_template('project/project_edit.html', form=form)
+
+
+@project.route('/add', methods=['GET', 'POST'])
+@login_required
+def add_project():
+    form = ProjectRecordForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_proj = ProjectRecord()
+            form.populate_obj(new_proj)
+            new_proj.creator = current_user
+            current_datetime = arrow.now(tz='Asia/Bangkok').datetime
+            new_proj.created_at = current_datetime
+            new_proj.updated_at = current_datetime
+            new_proj.status = 'draft'
+            db.session.add(new_proj)
+            db.session.commit()
+            flash('Data have been updated.', 'success')
+        else:
+            flash('Error occurred.', 'danger')
+        return redirect(url_for('project.display_project', project_id=new_proj.id))
+    return render_template('project/project_edit.html', form=form)
+
+@project.route('/<int:project_id>/member/add', methods=['GET', 'POST'])
+@login_required
+def add_member(project_id):
+    form = ProjectMemberForm()
+    if form.validate_on_submit():
+        new_member = ProjectMember(project_id=project_id)
+        form.populate_obj(new_member)
+        new_member.user = form.users.data
+        db.session.add(new_member)
+        db.session.commit()
+        flash('New member has been added.', 'success')
+        return redirect(url_for('project.display_project', project_id=project_id))
+    return render_template('project/member_add.html', form=form)
+
+
+@project.route('/<int:project_id>/member/<int:member_id>/remove', methods=['GET', 'POST'])
+@login_required
+def remove_member(project_id, member_id):
+    member = ProjectMember.query.get(member_id)
+    db.session.delete(member)
+    db.session.commit()
+    return redirect(url_for('project.display_project', project_id=project_id))
 
 
 @project.route('/<int:project_id>/application/new', methods=['GET', 'POST'])
@@ -97,3 +142,4 @@ def remove_application(app_id):
     else:
         flash('Application has been removed.', 'success')
     return redirect(url_for('project.display_project', project_id=project_id))
+

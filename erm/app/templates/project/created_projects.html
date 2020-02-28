@@ -12,6 +12,12 @@
     <div class="columns">
         <div class="column has-text-centered is-two-thirds is-offset-2">
             <h1 class="title">Your Projects</h1>
+            <a href="{{ url_for('project.add_project') }}" class="button is-outlined is-primary">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span>New Project</span>
+            </a>
             <table class="table">
                 <thead>
                 <th>No.</th>

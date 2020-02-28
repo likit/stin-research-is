@@ -32,7 +32,7 @@
                     <td>{{ project.status }}</td>
                     <td>
                         {% for member in project.members %}
-                            {% if member.role == 'head' %}
+                            {% if member.role == "PI" %}
                             <a href="#" class="button is-light is-small">
                                 {{ member.user.profile.fullname_th }},
                             </a>

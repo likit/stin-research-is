@@ -8,7 +8,11 @@ class ProjectMember(db.Model):
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     user_id = db.Column('user_id', db.ForeignKey('users.id'))
     user = db.relationship(User)
-    role = db.Column('role', db.String())
+    role = db.Column('role', db.String(),
+                     info={
+                         'choices': [(i, i) for i in ['PI', 'co-PI', 'Coordinator', 'Researcher']],
+                         'label': 'Role'
+                     })
     project = db.relationship('ProjectRecord', backref=db.backref('members'))
 
     def __str__(self):
@@ -29,7 +33,7 @@ class ProjectRecord(db.Model):
     status = db.Column('status', db.String(),
                        info={'label': 'Status',
                              'choices': [(i, i) for i in ['draft', 'concept', 'full',
-                                                         'submitted', 'revised', 'approved',
+                                                         'submitted', 'revising', 'approved',
                                                          'rejected', 'finished']]})
     created_at = db.Column('created_at', db.DateTime(timezone=True))
     updated_at = db.Column('updated_at', db.DateTime(timezone=True))
