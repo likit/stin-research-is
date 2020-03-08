@@ -179,6 +179,7 @@
                             <th>No.</th>
                             <th>Title</th>
                             <th>Description</th>
+                            <th>File ID</th>
                             <th></th>
                             </thead>
                             <tbody>
@@ -187,6 +188,7 @@
                                     <td>{{ fig.fignum }}</td>
                                     <td>{{ fig.title }}</td>
                                     <td>{{ fig.desc }}</td>
+                                    <td><img src="https://drive.google.com/uc?id={{ fig.url }}"></td>
                                     <td>
                                         {% if current_user == project.creator and current_user.is_authenticated %}
                                         <a href="{{ url_for('project.edit_figure', figure_id=fig.id) }}">
@@ -204,7 +206,7 @@
                                 </tr>
                             {% endfor %}
                             <tr>
-                                <td colspan="4" class="has-text-centered">
+                                <td colspan="5" class="has-text-centered">
                                     <a class="is-link is-outlined button"
                                        href="{{ url_for('project.add_figure', project_id=project.id) }}"
                                         >
