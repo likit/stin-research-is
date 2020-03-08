@@ -47,6 +47,39 @@ class ProjectRecord(db.Model):
     def __str__(self):
         return self.title_th[:50]
 
+class ProjectRecordArchive(db.Model):
+    __tablename__ = 'project_archives'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    project_record_id = db.Column('project_record_id', db.ForeignKey('projects.id'))
+    archived_at = db.Column('archived_at', db.DateTime(timezone=True))
+    title_th = db.Column('title_th', db.String(), info={'label': 'Title Thai'})
+    subtitle_th = db.Column('subtitle_th', db.String(), info={'label': 'Subtitle Thai'})
+    title_en = db.Column('title_en', db.String(), info={'label': 'Title English'})
+    subtitle_en = db.Column('subtitle_en', db.String(), info={'label': 'Subtitle English'})
+    objective = db.Column('objective', db.Text(), info={'label': 'Objective'})
+    abstract = db.Column('abstract', db.Text(), info={'label': 'Abstract'})
+    intro = db.Column('introduction', db.Text(), info={'label': 'Introduction'})
+    method = db.Column('method', db.Text(), info={'label': 'Method'})
+    status = db.Column('status', db.String(),
+                       info={'label': 'Status',
+                             'choices': [(i, i) for i in ['draft', 'concept', 'full',
+                                                          'submitted', 'revising', 'approved',
+                                                          'rejected', 'finished']]})
+    created_at = db.Column('created_at', db.DateTime(timezone=True))
+    updated_at = db.Column('updated_at', db.DateTime(timezone=True))
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    approved_at = db.Column('approved_at', db.DateTime(timezone=True))
+    denied_at = db.Column('denied_at', db.DateTime(timezone=True))
+    #TODO: add cascading and nullable=False
+    creator_id = db.Column('creator_id', db.ForeignKey('users.id'))
+    creator = db.relationship('User', backref=db.backref('project_archievs'), info={'label': 'Creator'})
+
+    def __str__(self):
+        return '[{}] {}'.format(self.title_th[:50])
+
+    def __repr__(self):
+        return '<Archieve: project id={}; status={}>'.format(self.project_record_id, self.status)
+
 
 class Category(db.Model):
     __tablename__ = 'categories'
