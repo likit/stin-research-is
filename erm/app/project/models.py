@@ -35,6 +35,7 @@ class ProjectRecord(db.Model):
                              'choices': [(i, i) for i in ['draft', 'concept', 'full',
                                                          'submitted', 'revising', 'approved',
                                                          'rejected', 'finished']]})
+    prospected_journals = db.Column('prospected_journals', db.Text())
     created_at = db.Column('created_at', db.DateTime(timezone=True))
     updated_at = db.Column('updated_at', db.DateTime(timezone=True))
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
@@ -65,6 +66,7 @@ class ProjectRecordArchive(db.Model):
                              'choices': [(i, i) for i in ['draft', 'concept', 'full',
                                                           'submitted', 'revising', 'approved',
                                                           'rejected', 'finished']]})
+    prospected_journals = db.Column('prospected_journals', db.Text())
     created_at = db.Column('created_at', db.DateTime(timezone=True))
     updated_at = db.Column('updated_at', db.DateTime(timezone=True))
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
