@@ -22,11 +22,13 @@ class ProjectMember(db.Model):
 class ProjectFigure(db.Model):
     __tablename__ = 'project_figures'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     title = db.Column('title', db.String(), info={'label': 'Title'})
     desc = db.Column('desc', db.Text(), info={'label': 'Description'})
     fignum = db.Column('fignum', db.String(),
                        info={'label': 'Figure Number'})
     url = db.Column('url', db.String())
+    project = db.relationship('ProjectRecord', backref=db.backref('figures'))
 
 
 class ProjectRecord(db.Model):
