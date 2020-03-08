@@ -61,6 +61,18 @@
                         {{ form.method(placehoder="Method", class="textarea") }}
                     </div>
                 </div>
+                <div class="field">
+                    <label class="label">{{ form.prospected_journals.label }}</label>
+                    <div class="control">
+                        {{ form.prospected_journals(placehoder="Prospected Journals", class="textarea") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.use_applications.label }}</label>
+                    <div class="control">
+                        {{ form.use_applications(placehoder="Uses or Applications", class="textarea") }}
+                    </div>
+                </div>
                 {% if current_user.role == 1 %}
                 <div class="field">
                     <label class="label">{{ form.status.label }}</label>
