@@ -1,4 +1,5 @@
 import os
+from flask_mail import Mail, Message
 from flask import Flask
 from flask_migrate import Migrate
 from flask_admin import Admin
@@ -12,18 +13,25 @@ admin = Admin()
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
+mail = Mail()
 
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres+psycopg2://postgres@{}:{}/{}'.format(
-        os.environ.get('DATABASE_HOST'),
-        os.environ.get('DATABASE_PORT', 5432),
-        os.environ.get('DATABASE'),
-    )
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL',
+                                                           'postgres+psycopg2://localhost/stinerm'
+                                                           )
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = ('Likit', os.environ.get('MAIL_USERNAME'))
+
+    mail.init_app(app)
 
     from app.main import main_bp as main_blueprint
     app.register_blueprint(main_blueprint, url_prefix='/')
