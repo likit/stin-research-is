@@ -20,6 +20,10 @@ class User(db.Model):
         return self.email
 
     @property
+    def fullname_thai(self):
+        return self.profile.fullname_th
+
+    @property
     def password(self):
         raise ValueError('Password attribute is not accessible.')
 
