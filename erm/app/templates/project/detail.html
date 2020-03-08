@@ -28,37 +28,37 @@
             <div class="box">
             <table class="table is-fullwidth is-striped">
                 <tr>
-                    <td class="title is-size-5">English Title</td><td>{{ project.title_en }}</td>
+                    <td class="title is-size-5" width="20%">English Title</td><td>{{ project.title_en }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Thai Subtitle</td><td>{{ project.subtitle_th }}</td>
+                    <td class="title is-size-5" width="20%">Thai Subtitle</td><td>{{ project.subtitle_th }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">English Subtitle</td><td>{{ project.subtitle_en }}</td>
+                    <td class="title is-size-5" width="20%">English Subtitle</td><td>{{ project.subtitle_en }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Abstract</td><td>{{ project.abstract }}</td>
+                    <td class="title is-size-5" width="20%">Abstract</td><td>{{ project.abstract }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Introduction</td><td>{{ project.intro }}</td>
+                    <td class="title is-size-5" width="20%">Introduction</td><td>{{ project.intro }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Objective</td><td>{{ project.objective }}</td>
+                    <td class="title is-size-5" width="20%">Objective</td><td>{{ project.objective }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Method</td><td>{{ project.method }}</td>
+                    <td class="title is-size-5" width="20%">Method</td><td>{{ project.method }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Created at</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
+                    <td class="title is-size-5" width="20%">Created at</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Updated at</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
+                    <td class="title is-size-5" width="20%">Updated at</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Status</td><td>{{ project.status }}</td>
+                    <td class="title is-size-5" width="20%">Status</td><td>{{ project.status }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Category</td>
+                    <td class="title is-size-5" width="20%">Category</td>
                     <td>
                         <div class="field is-grouped is-grouped-multiline">
                             {% for cat in project.subcategories %}
