@@ -1,7 +1,8 @@
 import os
 import arrow
-from flask import render_template, request, redirect, url_for, flash, jsonify
+from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
+from werkzeug.utils import secure_filename
 
 from app import db
 from . import project_bp as project
@@ -15,9 +16,11 @@ from pydrive.drive import GoogleDrive
 
 gauth = GoogleAuth()
 keyfile_dict = requests.get(os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')).json()
-scopes = ['https://www.googleapis.com/auth/drive.appdata']
+scopes = ['https://www.googleapis.com/auth/drive']
 gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile_dict, scopes)
 drive = GoogleDrive(gauth)
+
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 
 @project.route('/')
@@ -160,9 +163,26 @@ def add_figure(project_id):
     form = ProjectFigureForm()
     if request.method == 'POST':
         if form.validate_on_submit():
+            if 'file' not in request.files:
+                flash('No file uploaded.', 'warning')
+                return redirect(request.url)
+            file = request.files['file']
+            if file.filename == '':
+                flash('No selected file.', 'warning')
+                return redirect(request.url)
+            else:
+                filename = secure_filename(file.filename)
+                file.save(filename)
+                file_drive = drive.CreateFile({'title': filename})
+                file_drive.SetContentFile(filename)
+                file_drive.Upload()
+                permission = file_drive.InsertPermission({'type': 'anyone',
+                                                          'value': 'anyone',
+                                                          'role': 'reader'})
             new_figure = ProjectFigure()
-            new_figure.project_id = project_id
             form.populate_obj(new_figure)
+            new_figure.project_id = project_id
+            new_figure.url = file_drive['id']
             db.session.add(new_figure)
             db.session.commit()
             return redirect(url_for('project.display_project', project_id=project_id))
