@@ -5,8 +5,11 @@ from app.main.models import User
 class Department(db.Model):
     __tablename__ = 'departments'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    name_th = db.Column('name_th', db.String(), nullable=False, unique=True)
-    name_en = db.Column('name_en', db.String(), unique=True)
+    name_th = db.Column('name_th', db.String(),
+                        nullable=False, unique=True,
+                        info={'label': 'TH Name'})
+    name_en = db.Column('name_en', db.String(), unique=True,
+                        info={'label': 'EN Name'})
 
     def __str__(self):
         return self.name_th
@@ -45,12 +48,12 @@ class Profile(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column('user_id', db.ForeignKey('users.id'))
     user = db.relationship(User, backref=db.backref('profile', uselist=False))
-    title_th = db.Column('title_th', db.String())
-    title_en = db.Column('title_en', db.String())
-    firstname_th = db.Column('firstname_th', db.String())
-    lastname_th = db.Column('lastname_th', db.String())
-    firstname_en = db.Column('firstname_en', db.String())
-    lastname_en = db.Column('lastname_en', db.String())
+    title_th = db.Column('title_th', db.String(), info={'label': 'Thai Title'})
+    title_en = db.Column('title_en', db.String(), info={'label': 'English Title'})
+    firstname_th = db.Column('firstname_th', db.String(), info={'label': 'Thai First Name'})
+    lastname_th = db.Column('lastname_th', db.String(), info={'label': 'Thai Last Name'})
+    firstname_en = db.Column('firstname_en', db.String(), info={'label': 'English First Name'})
+    lastname_en = db.Column('lastname_en', db.String(), info={'label': 'English Last Name'})
     program_id = db.Column('program_id', db.ForeignKey('programs.id'))
     program = db.relationship(Program, backref=db.backref('researchers'))
 
