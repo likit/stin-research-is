@@ -2,7 +2,7 @@ from app import db
 from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from wtforms.widgets import Select
-from .models import ProjectRecord, Application, ProjectMember
+from .models import ProjectRecord, Application, ProjectMember, ProjectFigure
 from app.main.models import User
 
 
@@ -34,3 +34,8 @@ class ProjectMemberForm(ModelForm):
                              query_factory=lambda: User.query.filter_by(role=2),
                              get_label='fullname_thai',
                              widget=Select())
+
+
+class ProjectFigureForm(ModelForm):
+    class Meta:
+        model = ProjectFigure

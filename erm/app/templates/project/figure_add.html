@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Project Detail Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-one-third is-offset-4">
+                <h1 class="title has-text-centered">Add Figure</h1>
+                <form class="box" method="post">
+                    {{ form.csrf_token }}
+                    <div class="field">
+                        <label class="label">{{ form.title.label }}</label>
+                        <div class="control">
+                            {{ form.title(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.desc.label }}</label>
+                        <div class="control">
+                            {{ form.desc(class="textarea") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.fignum.label }}</label>
+                        <div class="control">
+                            {{ form.fignum(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-success">Save</button>
+                        </div>
+                        <div class="control">
+                            <a class="button is-light" href="{{ request.referrer }}">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

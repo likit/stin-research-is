@@ -1,13 +1,23 @@
+import os
 import arrow
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 
 from app import db
 from . import project_bp as project
 from .models import *
-from .forms import ProjectRecordForm, ApplicationForm, ProjectMemberForm
+from .forms import (ProjectRecordForm, ApplicationForm,
+                    ProjectMemberForm, ProjectFigureForm)
 from app.main.models import User
+import requests
+from pydrive.auth import ServiceAccountCredentials, GoogleAuth
+from pydrive.drive import GoogleDrive
 
+gauth = GoogleAuth()
+keyfile_dict = requests.get(os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')).json()
+scopes = ['https://www.googleapis.com/auth/drive.appdata']
+gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile_dict, scopes)
+drive = GoogleDrive(gauth)
 
 
 @project.route('/')
@@ -143,3 +153,46 @@ def remove_application(app_id):
         flash('Application has been removed.', 'success')
     return redirect(url_for('project.display_project', project_id=project_id))
 
+
+@project.route('/<int:project_id>/figure/add', methods=['GET', 'POST'])
+@login_required
+def add_figure(project_id):
+    form = ProjectFigureForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_figure = ProjectFigure()
+            new_figure.project_id = project_id
+            form.populate_obj(new_figure)
+            db.session.add(new_figure)
+            db.session.commit()
+            return redirect(url_for('project.display_project', project_id=project_id))
+    project = ProjectRecord.query.get(project_id)
+    return render_template('project/figure_add.html', project=project, form=form)
+
+
+@project.route('/figure/<int:figure_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_figure(figure_id):
+    figure = ProjectFigure.query.get(figure_id)
+    form = ProjectFigureForm(obj=figure)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(figure)
+            db.session.add(figure)
+            db.session.commit()
+            return redirect(url_for('project.display_project', project_id=figure.project.id))
+    return render_template('project/figure_add.html', form=form)
+
+
+@project.route('/figure/<int:figure_id>/remove', methods=['GET', 'POST'])
+@login_required
+def remove_figure(figure_id):
+    figure = ProjectFigure.query.get(figure_id)
+    try:
+        db.session.delete(figure)
+        db.session.commit()
+    except:
+        flash('Error occurred.', 'danger')
+    else:
+        flash('Figure has been removed.', 'success')
+    return redirect(request.referrer)
