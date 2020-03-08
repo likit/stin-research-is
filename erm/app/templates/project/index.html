@@ -18,25 +18,24 @@
                 <th>Thai Title</th>
                 <th>English Title</th>
                 <th>Created At</th>
-                <th>Status</th>
-                <th>Headed By</th>
-                <th></th>
+                <th>PIs</th>
+                <th>Detail</th>
                 </thead>
                 <tbody>
                 {% for project in projects|sort(attribute='created_at', reverse=True) %}
+                {% if project.status != 'drafty' %}
                 <tr>
                     <td>{{ loop.index }}</td>
                     <td>{{ project.title_th }}</td>
                     <td>{{ project.title_en }}</td>
-                    <td>{{ project.created_at }}</td>
-                    <td>{{ project.status }}</td>
+                    <td>{{ project.created_at|localdatetime }}</td>
                     <td>
                         {% for member in project.members %}
-                            {% if member.role == "PI" %}
-                            <a href="#" class="button is-light is-small">
-                                {{ member.user.profile.fullname_th }},
-                            </a>
-                            {% endif %}
+                        {% if member.role == 'PI' %}
+                        <a href="{{ url_for('researcher.show_profile', user_id=member.user.id) }}" class="button is-light is-small">
+                            {{ member.user.profile.fullname_th }}
+                        </a>
+                        {% endif %}
                         {% endfor %}
                     </td>
                     <td>
@@ -46,6 +45,7 @@
                         </a>
                     </td>
                 </tr>
+                {% endif %}
                 {% endfor %}
                 </tbody>
             </table>

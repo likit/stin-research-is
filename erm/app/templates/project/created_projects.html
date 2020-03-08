@@ -25,7 +25,7 @@
                 <th>English Title</th>
                 <th>Created At</th>
                 <th>Status</th>
-                <th>Headed By</th>
+                <th>PIs</th>
                 <th></th>
                 </thead>
                 <tbody>
@@ -34,13 +34,13 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ project.title_th }}</td>
                     <td>{{ project.title_en }}</td>
-                    <td>{{ project.created_at }}</td>
+                    <td>{{ project.created_at|localdatetime }}</td>
                     <td>{{ project.status }}</td>
                     <td>
                         {% for member in project.members %}
-                        {% if member.role == 'head' %}
-                        <a href="#" class="button is-light is-small">
-                            {{ member.user.profile.fullname_th }},
+                        {% if member.role == 'PI' %}
+                        <a href="{{ url_for('researcher.show_profile', user_id=member.user.id) }}" class="button is-light is-small">
+                            {{ member.user.profile.fullname_th }}
                         </a>
                         {% endif %}
                         {% endfor %}

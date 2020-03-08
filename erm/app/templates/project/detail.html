@@ -54,6 +54,7 @@
                 <tr>
                     <td class="title is-size-5" width="20%">Updated at</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
                 </tr>
+                {% if current_user.is_authenticated and project.creator == current_user %}
                 <tr>
                     <td class="title is-size-5" width="20%">Status</td><td>{{ project.status }}</td>
                 </tr>
@@ -63,6 +64,7 @@
                 <tr>
                     <td class="title is-size-5" width="20%">Uses or Applications</td><td>{{ project.use_applications }}</td>
                 </tr>
+                {% endif %}
                 <tr>
                     <td class="title is-size-5" width="20%">Category</td>
                     <td>
