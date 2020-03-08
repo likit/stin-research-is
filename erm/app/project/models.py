@@ -131,3 +131,15 @@ class Application(db.Model):
     date = db.Column('date', db.Date(), info={'label': 'Date'})
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     project = db.relationship(ProjectRecord, backref=db.backref('applications'))
+
+
+class ProjectEthicRecord(db.Model):
+    __tablename__ = 'project_ethics'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    status = db.Column('status', db.String(),
+                       info={'label': 'Status',
+                             'choices': [(i, i) for i in ['submitted', 'pending', 'reviewing',
+                                                          'revising', 'approved', 'rejected',
+                                                          ]]})
