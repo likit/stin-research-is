@@ -13,7 +13,7 @@
         <div class="columns">
             <div class="column is-one-third is-offset-4">
                 <h1 class="title has-text-centered">Add Figure</h1>
-                <form class="box" method="post">
+                <form class="box" method="post" enctype=multipart/form-data>
                     {{ form.csrf_token }}
                     <div class="field">
                         <label class="label">{{ form.title.label }}</label>
@@ -31,6 +31,12 @@
                         <label class="label">{{ form.fignum.label }}</label>
                         <div class="control">
                             {{ form.fignum(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">File</label>
+                        <div class="control">
+                            <input type="file" name="file">
                         </div>
                     </div>
                     <div class="field is-grouped">
