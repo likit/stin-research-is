@@ -19,6 +19,16 @@ class ProjectMember(db.Model):
         return self.role
 
 
+class ProjectFigure(db.Model):
+    __tablename__ = 'project_figures'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column('title', db.String(), info={'label': 'Title'})
+    desc = db.Column('desc', db.Text(), info={'label': 'Description'})
+    fignum = db.Column('fignum', db.String(),
+                       info={'label': 'Figure Number'})
+    url = db.Column('url', db.String())
+
+
 class ProjectRecord(db.Model):
     __tablename__ = 'projects'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
