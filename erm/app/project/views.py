@@ -9,7 +9,7 @@ from . import project_bp as project
 from .models import *
 from .forms import (ProjectRecordForm, ApplicationForm,
                     ProjectMemberForm, ProjectFigureForm,
-                    ProjectEthicRecord)
+                    ProjectMilestoneForm)
 from app.main.models import User
 import requests
 from pydrive.auth import ServiceAccountCredentials, GoogleAuth
@@ -269,3 +269,21 @@ def add_ethic_request(project_id):
 def view_archive(archive_id):
     ar = ProjectRecordArchive.query.get(archive_id)
     return render_template('project/archieve_detail.html', project=ar)
+
+
+@project.route('/<int:project_id>/milestone/add', methods=['GET', 'POST'])
+@login_required
+def add_milestone(project_id):
+    project = ProjectRecord.query.get(project_id)
+    form = ProjectMilestoneForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_milestone = ProjectMilestone()
+            form.populate_obj(new_milestone)
+            new_milestone.project_id = project_id
+            db.session.add(new_milestone)
+            db.session.commit()
+            flash('New milestone added.')
+            return redirect(url_for('project.display_project', project_id=project_id))
+    return render_template('project/milestone_add.html', project=project, form=form)
+

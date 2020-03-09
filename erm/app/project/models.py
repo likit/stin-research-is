@@ -144,3 +144,16 @@ class ProjectEthicRecord(db.Model):
                                                           'revising', 'approved', 'rejected',
                                                           ]]})
     project = db.relationship('ProjectRecord', backref=db.backref('ethics'))
+
+
+class ProjectMilestone(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    created_at = db.Column('created_at', db.DateTime(timezone=True))
+    deadline = db.Column('deadline', db.DateTime(timezone=True), info={'label': 'Deadline Date'})
+    goal = db.Column('goal', db.String(), nullable=False, info={'label': 'Goal/Task/Requirement'})
+    detail = db.Column('detail', db.Text(), info={'label': 'Detail'})
+    status = db.Column('status', db.String(),
+                       info={'label': 'Status',
+                             'choices': [(i, i) for i in ['started', 'ended', 'delayed']]})
+    project = db.relationship('ProjectRecord', backref=db.backref('milestones'))

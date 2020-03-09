@@ -271,6 +271,41 @@
                         </table>
                     </td>
                 </tr>
+                <tr>
+                    <td class="title is-size-5">Milestones</td>
+                    <td>
+                        <table class="table">
+                            <thead>
+                            <th>Goal/Task/Requirement</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                            <th></th>
+                            </thead>
+                            <tbody>
+                            {% for m in project.milestones %}
+                            <tr>
+                                <td>{{ m.goal }}</td>
+                                {% if m.deadline %}
+                                <td>{{ m.deadline|localdatetime }}</td>
+                                {% else %}
+                                <td>Not specified</td>
+                                {% endif %}
+                                <td>{{ m.status }}</td>
+                                <td>
+                                </td>
+                            </tr>
+                            </tbody>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="4">
+                                    <a href="{{ url_for('project.add_milestone', project_id=project.id) }}">
+                                        add
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
                 {% endif %}
             </table>
             </div>

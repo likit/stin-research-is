@@ -1,8 +1,9 @@
 from app import db
 from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
+from wtforms_components import DateTimeField
 from wtforms.widgets import Select
-from .models import ProjectRecord, Application, ProjectMember, ProjectFigure, ProjectEthicRecord
+from .models import ProjectRecord, Application, ProjectMember, ProjectFigure, ProjectMilestone
 from app.main.models import User
 
 
@@ -41,6 +42,6 @@ class ProjectFigureForm(ModelForm):
         model = ProjectFigure
 
 
-class ProjectFigureForm(ModelForm):
+class ProjectMilestoneForm(ModelForm):
     class Meta:
-        model = ProjectEthicRecord
+        model = ProjectMilestone
