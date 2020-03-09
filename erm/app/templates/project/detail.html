@@ -222,6 +222,56 @@
                         </table>
                     </td>
                 </tr>
+                {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
+                <tr>
+                    <td class="title is-size-5">Ethic Requests</td>
+                    <td>
+                        <table class="table">
+                            <thead>
+                            <th>Submitted</th>
+                            <th>Status</th>
+                            </thead>
+                            <tbody>
+                            {% for e in project.ethics %}
+                            <tr>
+                                <td>{{ e.submitted_at|localdatetime }}</td>
+                                <td>{{ e.status }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="2">
+                                    <a href="{{ url_for('project.confirm_add_ethic', project_id=project.id) }}"
+                                       class="button is-link">Submit Ethic Request</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Archives</td>
+                    <td>
+                        <table class="table">
+                            <thead>
+                            <th>Timestamp</th>
+                            <th>Status</th>
+                            <th></th>
+                            </thead>
+                            <tbody>
+                            {% for ar in project.archieves %}
+                            <tr>
+                                <td>{{ ar.archived_at|localdatetime }}</td>
+                                <td>{{ ar.status }}</td>
+                                <td>
+                                    <a href="{{ url_for('project.view_archive', archive_id=ar.id) }}">view</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                            {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+                {% endif %}
             </table>
             </div>
             <div class="has-text-centered">

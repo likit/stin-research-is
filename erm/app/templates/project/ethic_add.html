@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Project Detail Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-two-thirds is-offset-2">
+                <h1 class="title has-text-centered">Submit Research Ethic Review</h1>
+                <div class="box">
+                    <h2 class="title is-size-4">{{ project.title_th }}</h2>
+                    <h2 class="subtitle">{{ project.subtitle_th }}</h2>
+                    <hr>
+                    <div class="has-text-centered">
+                        <p>Do you want to submit this project for a review?</p>
+                        <p>Note that once it is submitted, it cannot be withdrawn.</p>
+                        <br>
+                        <a href="{{ url_for('project.add_ethic_request', project_id=project.id) }}" class="button is-link">Submit</a>
+                        <a href="{{ request.referrer }}" class="button is-danger">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -92,7 +92,7 @@ class ProjectRecordArchive(db.Model):
     denied_at = db.Column('denied_at', db.DateTime(timezone=True))
     #TODO: add cascading and nullable=False
     creator_id = db.Column('creator_id', db.ForeignKey('users.id'))
-    creator = db.relationship('User', backref=db.backref('project_archievs'), info={'label': 'Creator'})
+    project = db.relationship('ProjectRecord', backref=db.backref('archieves'))
 
     def __str__(self):
         return '[{}] {}'.format(self.title_th[:50])
@@ -143,3 +143,4 @@ class ProjectEthicRecord(db.Model):
                              'choices': [(i, i) for i in ['submitted', 'pending', 'reviewing',
                                                           'revising', 'approved', 'rejected',
                                                           ]]})
+    project = db.relationship('ProjectRecord', backref=db.backref('ethics'))
