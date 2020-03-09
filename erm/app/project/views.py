@@ -229,38 +229,39 @@ def confirm_add_ethic(project_id):
 @project.route('/<int:project_id>/ethic/add/confirmed', methods=['GET'])
 @login_required
 def add_ethic_request(project_id):
-    try:
-        ethic = ProjectEthicRecord(project_id=project_id,
-                                   submitted_at=arrow.now(tz='Asia/Bangkok').datetime,
-                                   status='submitted')
-        project = ProjectRecord.query.get(project_id)
-        project_archive = ProjectRecordArchive(
-            project_record_id=project_id,
-            archived_at=arrow.now(tz='Asia/Bangkok').datetime,
-            title_th=project.title_th,
-            subtitle_th=project.subtitle_th,
-            title_en=project.title_en,
-            subtitle_en=project.subtitle_en,
-            objective=project.objective,
-            method=project.method,
-            intro=project.intro,
-            status=project.status,
-            prospected_journals=project.prospected_journals,
-            use_applications=project.use_applications,
-            created_at=project.created_at,
-            updated_at=project.updated_at,
-            creator=project.creator
-        )
-        project.status = 'full'
-        project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
-        db.session.add(ethic)
-        db.session.add(project_archive)
-        db.session.add(project)
-        db.session.commit()
+    ethic = ProjectEthicRecord(project_id=project_id,
+                               submitted_at=arrow.now(tz='Asia/Bangkok').datetime,
+                               status='submitted')
+    project = ProjectRecord.query.get(project_id)
+    project_archive = ProjectRecordArchive(
+        project_record_id=project_id,
+        archived_at=arrow.now(tz='Asia/Bangkok').datetime,
+        title_th=project.title_th,
+        subtitle_th=project.subtitle_th,
+        title_en=project.title_en,
+        subtitle_en=project.subtitle_en,
+        objective=project.objective,
+        method=project.method,
+        intro=project.intro,
+        status=project.status,
+        prospected_journals=project.prospected_journals,
+        use_applications=project.use_applications,
+        created_at=project.created_at,
+        updated_at=project.updated_at,
+        creator_id=project.creator_id
+    )
+    project.status = 'full'
+    project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
+    db.session.add(ethic)
+    db.session.add(project_archive)
+    db.session.add(project)
+    db.session.commit()
+    '''
     except:
         flash('Error occurred. Failed to submit a request.', 'danger')
     else:
         flash('Ethic request has been submitted.', 'success')
+    '''
     return redirect(url_for('project.display_project', project_id=project.id))
 
 
@@ -287,3 +288,8 @@ def add_milestone(project_id):
             return redirect(url_for('project.display_project', project_id=project_id))
     return render_template('project/milestone_add.html', project=project, form=form)
 
+
+@project.route('/admin/ethics', methods=['GET', 'POST'])
+@login_required
+def list_ethics(project_id):
+    ethics = ProjectEthicRecord.query.get(project_id)
