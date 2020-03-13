@@ -98,7 +98,7 @@ class ProjectRecordArchive(db.Model):
     milestones = db.Column('milestones', db.JSON())
 
     def __str__(self):
-        return '[{}] {}'.format(self.title_th[:50])
+        return '[{}] {}'.format(self.id, self.title_th[:50])
 
     def __repr__(self):
         return '<Archive: project id={}; status={}>'.format(self.project_record_id, self.status)
