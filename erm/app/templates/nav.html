@@ -29,6 +29,19 @@
           <a class="navbar-item" href="{{ url_for('project.list_projects') }}">
             Projects
           </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+                Admin
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="{{ url_for('webadmin.list_submissions') }}">
+                Submissions
+              </a>
+              <a class="navbar-item" href="{{ url_for('researcher.show_profile', user_id=current_user.id) }}">
+                  Ethics
+              </a>
+            </div>
+          </div>
           <a class="navbar-item" href="{{ url_for('auth.logout') }}">
             Sign Out
           </a>

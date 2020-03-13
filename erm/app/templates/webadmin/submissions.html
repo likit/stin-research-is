@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for project in submissions %}
+<ul>
+    <li>{{ project.id }} {{ project.title_th }} {{ project.status }}</li>
+</ul>
+{% endfor %}
+
+</body>
+</html>
