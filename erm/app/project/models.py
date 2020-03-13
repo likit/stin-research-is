@@ -92,13 +92,16 @@ class ProjectRecordArchive(db.Model):
     denied_at = db.Column('denied_at', db.DateTime(timezone=True))
     #TODO: add cascading and nullable=False
     creator_id = db.Column('creator_id', db.ForeignKey('users.id'))
-    project = db.relationship('ProjectRecord', backref=db.backref('archieves'))
+    project = db.relationship('ProjectRecord', backref=db.backref('archives'))
+    members = db.Column('members', db.JSON())
+    figures = db.Column('figures', db.JSON())
+    milestones = db.Column('milestones', db.JSON())
 
     def __str__(self):
         return '[{}] {}'.format(self.title_th[:50])
 
     def __repr__(self):
-        return '<Archieve: project id={}; status={}>'.format(self.project_record_id, self.status)
+        return '<Archive: project id={}; status={}>'.format(self.project_record_id, self.status)
 
 
 class Category(db.Model):
