@@ -24,6 +24,63 @@ drive = GoogleDrive(gauth)
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 
+def make_project_archive(project):
+    """Create an archive of a project.
+    :param project: a project model
+    :return: archive model
+    """
+
+    archive = ProjectRecordArchive(
+        project_record_id=project.id,
+        archived_at=arrow.now(tz='Asia/Bangkok').datetime,
+        title_th=project.title_th,
+        subtitle_th=project.subtitle_th,
+        title_en=project.title_en,
+        subtitle_en=project.subtitle_en,
+        objective=project.objective,
+        method=project.method,
+        intro=project.intro,
+        status=project.status,
+        prospected_journals=project.prospected_journals,
+        use_applications=project.use_applications,
+        created_at=project.created_at,
+        updated_at=project.updated_at,
+        creator_id=project.creator_id
+    )
+    members = []
+    for member in project.members:
+        mem = {
+            'role': member.role,
+            'fullname_th': member.user.profile.fullname_th,
+            'fullname_en': member.user.profile.fullname_en,
+            'title_th': member.user.profile.title_th,
+            'title_en': member.user.profile.title_en,
+        }
+        members.append(mem)
+    figures = []
+    for figure in project.figures:
+        fig = {
+            'title': figure.title,
+            'desc': figure.desc,
+            'fignum': figure.fignum,
+            'url': figure.url,
+        }
+        figures.append(fig)
+    milestones = []
+    for milestone in project.milestones:
+        mst = {
+            'deadline': milestone.deadline,
+            'goal': milestone.goal,
+            'status': milestone.status,
+            'detail': milestone.detail
+        }
+        milestones.append(mst)
+    archive.members = members
+    archive.figures = figures
+    archive.milestones = milestones
+    return archive
+
+
 @project.route('/')
 def list_projects():
     projects = ProjectRecord.query.all()
@@ -219,6 +276,21 @@ def remove_figure(figure_id):
     return redirect(request.referrer)
 
 
+@project.route('/<int:project_id>/submit', methods=['GET'])
+@login_required
+def submit_project(project_id):
+    project = ProjectRecord.query.get(project_id)
+    project.status = 'submitted'
+    project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
+    project.submitted_at = arrow.now(tz='Asia/Bangkok').datetime
+    db.session.add(project)
+    archive = make_project_archive(project)
+    db.session.add(archive)
+    db.session.commit()
+    flash('Project has been submitted for a review.', 'success')
+    return redirect(url_for('project.display_project', project_id=project.id))
+
+
 @project.route('/<int:project_id>/ethic/add/confirm', methods=['GET', 'POST'])
 @login_required
 def confirm_add_ethic(project_id):
@@ -229,39 +301,21 @@ def confirm_add_ethic(project_id):
 @project.route('/<int:project_id>/ethic/add/confirmed', methods=['GET'])
 @login_required
 def add_ethic_request(project_id):
+    project = ProjectRecord.query.get(project_id)
+    if project.status != 'full':
+        flash('The project must be reviewed by the center '
+              'before submmiting for an ethic approval', 'warning')
+        return redirect(request.referrer)
+
     ethic = ProjectEthicRecord(project_id=project_id,
                                submitted_at=arrow.now(tz='Asia/Bangkok').datetime,
                                status='submitted')
-    project = ProjectRecord.query.get(project_id)
-    project_archive = ProjectRecordArchive(
-        project_record_id=project_id,
-        archived_at=arrow.now(tz='Asia/Bangkok').datetime,
-        title_th=project.title_th,
-        subtitle_th=project.subtitle_th,
-        title_en=project.title_en,
-        subtitle_en=project.subtitle_en,
-        objective=project.objective,
-        method=project.method,
-        intro=project.intro,
-        status=project.status,
-        prospected_journals=project.prospected_journals,
-        use_applications=project.use_applications,
-        created_at=project.created_at,
-        updated_at=project.updated_at,
-        creator_id=project.creator_id
-    )
-    project.status = 'full'
+    archive = make_project_archive(project)
     project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
     db.session.add(ethic)
-    db.session.add(project_archive)
+    db.session.add(archive)
     db.session.add(project)
     db.session.commit()
-    '''
-    except:
-        flash('Error occurred. Failed to submit a request.', 'danger')
-    else:
-        flash('Ethic request has been submitted.', 'success')
-    '''
     return redirect(url_for('project.display_project', project_id=project.id))
 
 
@@ -293,3 +347,4 @@ def add_milestone(project_id):
 @login_required
 def list_ethics(project_id):
     ethics = ProjectEthicRecord.query.get(project_id)
+    return 'Hello'
