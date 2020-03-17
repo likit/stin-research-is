@@ -60,6 +60,10 @@ class ProjectRecord(db.Model):
     creator_id = db.Column('creator_id', db.ForeignKey('users.id'))
     creator = db.relationship('User', backref=db.backref('projects'), info={'label': 'Creator'})
 
+    @property
+    def reviewers(self):
+        return set([review.reviewer for review in self.reviews])
+
     def __str__(self):
         return self.title_th[:50]
 
@@ -205,9 +209,13 @@ class ProjectReviewRecord(db.Model):
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     comment = db.Column('comment', db.Text())
     status = db.Column('status', db.String(), default='pending',
-                       info={'label': 'decision',
-                             'choices': [(i, i) for i in
+                       info={
+                           'label': 'decision',
+                           'choices': [(i, i) for i in
                                          ('pending', 'revise',
-                                          'approved', 'rejected')]},
+                                          'approved', 'rejected')]
+                             },
                        )
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    reviewer = db.relationship('ProjectReviewer', backref=db.backref('records'))
+    project = db.relationship('ProjectRecord', backref=db.backref('reviews'))
