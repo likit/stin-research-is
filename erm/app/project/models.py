@@ -219,3 +219,15 @@ class ProjectReviewRecord(db.Model):
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     reviewer = db.relationship('ProjectReviewer', backref=db.backref('records'))
     project = db.relationship('ProjectRecord', backref=db.backref('reviews'))
+
+
+class ProjectReviewSendRecord(db.Model):
+    __tablename__ = 'project_review_send_records'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    review_id = db.Column('reviewer_id', db.ForeignKey('project_reviewers.id'))
+    sent_at = db.Column('sent_at', db.DateTime(timezone=True))
+    title = db.Column('title', db.String(), nullable=False)
+    message = db.Column('message', db.Text())
+    deadline = db.Column('deadline', db.DateTime(timezone=True))
+    review = db.relationship('ProjectReviewer', backref=db.backref('send_records'))
+
