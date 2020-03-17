@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Project Reviews Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column has-text-centered is-one-third is-offset-4">
+            <h1 class="title">Project Reviews</h1>
+            {% for review in project.reviews %}
+            <div class="box">
+                <table class="table">
+                    <tr>
+                        <td class="title is-size-5">Reviewer</td>
+                        <td>{{ review.reviewer.academic_title or '' }}{{ review.reviewer.fullname }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Comment</td>
+                        <td>{{ review.comment or '' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Submitted at</td>
+                        {% if review.submitted_at %}
+                        <td>{{ review.submitted_at }}</td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Decision</td>
+                        <td>{{ review.status }}</td>
+                    </tr>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-one-third is-offset-4 has-text-centered">
+            <a href="{{ url_for('webadmin.submission_detail', project_id=project.id) }}" class="button is-light">
+                    <span class="icon">
+                        <i class="fas fa-chevron-left"></i>
+                    </span>
+                <span>Back</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

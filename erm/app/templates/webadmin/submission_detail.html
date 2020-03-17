@@ -275,7 +275,14 @@
                                             </span>
                                                 <span>Reviewers</span>
                                             </a>
-                                            <a href="{{ url_for('webadmin.submission_detail', project_id=project.id) }}"
+                                            <a href="{{ url_for('webadmin.view_reviews', project_id=project.id) }}"
+                                               class="button is-primary is-outlined">
+                                                <span class="icon">
+                                                    <i class="far fa-envelope"></i>
+                                                </span>
+                                                <span>Send</span>
+                                            </a>
+                                            <a href="{{ url_for('webadmin.view_reviews', project_id=project.id) }}"
                                                class="button is-link is-outlined">
                                                 <span class="icon">
                                                     <i class="far fa-eye"></i>

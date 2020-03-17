@@ -74,3 +74,8 @@ def remove_all_reviewers(project_id):
     flash('All reviewers have been removed to the project review.', 'success')
     return redirect(request.referrer)
 
+
+@webadmin.route('/submissions/<int:project_id>/reviews')
+def view_reviews(project_id):
+    project = ProjectRecord.query.get(project_id)
+    return render_template('webadmin/reviews.html', project=project)
