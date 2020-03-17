@@ -30,31 +30,104 @@
         </div>
         <div class="columns">
             <div class="column is-two-thirds is-offset-2">
-                {% for group in groups %}
+                {% for cat,msg in get_flashed_messages(with_categories=true) %}
+                <p class="notification is-{{ cat }}">{{ msg }}</p>
+                {% endfor %}
                 <div class="box">
-                    <h1 class="title">{{ group }}</h1>
                     <table class="table is-striped is-fullwidth">
                         <thead>
-                        <th>
-                            <input class="is-checkradio" type="checkbox">
-                        </th>
                         <th>Title</th>
                         <th>Fullname</th>
                         <th>Affiliation</th>
+                        <th>Email</th>
+                        <th>
+                            <a href="{{ url_for('webadmin.remove_all_reviewers', project_id=project.id) }}"
+                               class="button is-danger is-small">
+                                <span class="icon">
+                                    <i class="fas fa-minus"></i>
+                                </span>
+                                <span>remove all</span>
+                            </a>
+                        </th>
                         </thead>
-                        {% for r in group.reviewers %}
+                        <tbody>
+                        {% for r in project.reviewers %}
                         <tr>
-                            <td>
-                                <input class="is-checkradio" type="checkbox" name="reviewers">
-                            </td>
+                            <td>{{ loop.index }}</td>
                             <td>{{ r.academic_title }}</td>
                             <td>{{ r.fullname }}</td>
                             <td>{{ r.affiliation }}</td>
+                            <td>{{ r.email }}</td>
+                            <td>
+                                <a href="{{ url_for('webadmin.remove_reviewer', project_id=project.id, reviewer_id=r.id) }}"
+                                   class="button is-outlined is-danger is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-minus"></i>
+                                        </span>
+                                    <span>remove</span>
+                                </a>
+                            </td>
                         </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% for group in groups %}
+                <div class="box">
+                    <h1 class="title is-size-4">{{ group }}</h1>
+                    <table class="table is-striped is-fullwidth">
+                        <thead>
+                        <th>Title</th>
+                        <th>Fullname</th>
+                        <th>Affiliation</th>
+                        <th>Email</th>
+                        <th>
+                            <a href="{{ url_for('webadmin.add_all_reviewers', group_id=group.id, project_id=project.id) }}"
+                               class="button is-primary is-small">
+                                <span class="icon">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                                <span>add all</span>
+                            </a>
+                        </th>
+                        </thead>
+                        {% for r in group.reviewers %}
+                        {% if r not in project.reviewers %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ r.academic_title }}</td>
+                            <td>{{ r.fullname }}</td>
+                            <td>{{ r.affiliation }}</td>
+                            <td>{{ r.email }}</td>
+                            <td>
+                                <div class="buttons has-addons">
+                                    <a href="{{ url_for('webadmin.add_reviewer', project_id=project.id, reviewer_id=r.id) }}"
+                                       class="button is-outlined is-primary is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>add</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
                         {% endfor %}
                     </table>
                 </div>
                 {% endfor %}
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <a href="{{ url_for('webadmin.submission_detail', project_id=project.id) }}" class="button is-light">
+                    <span class="icon">
+                        <i class="fas fa-chevron-left"></i>
+                    </span>
+                    <span>
+                        Back
+                    </span>
+                </a>
             </div>
         </div>
     </div>

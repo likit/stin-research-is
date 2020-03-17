@@ -100,28 +100,8 @@
                                     <td>{{ member.user.profile }}</td>
                                     <td>{{ member.role }}</td>
                                     <td>{{ member.user.email }}</td>
-                                    <td>
-                                        <a href="{{ url_for('project.remove_member', project_id=project.id, member_id=member.id) }}">
-                                        <span class="icon">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </span>
-                                        </a>
-                                    </td>
                                 </tr>
                                 {% endfor %}
-                                <tr>
-                                    <td colspan="4" class="has-text-centered">
-                                        <a href="{{ url_for('project.add_member', project_id=project.id) }}"
-                                           {% if current_user != project.creator or not current_user.is_authenticated or project.status != 'draft' %}
-                                           disabled
-                                           {% endif %}
-                                           class="is-link is-outlined button">
-                                            <span class="icon">
-                                                <i class="fas fa-plus"></i>
-                                            </span><span>Add Member</span>
-                                        </a>
-                                    </td>
-                                </tr>
                                 </tbody>
                             </table>
                         </td>
@@ -159,21 +139,6 @@
                                     </td>
                                 </tr>
                                 {% endfor %}
-                                {% if current_user == project.creator and current_user.is_authenticated %}
-                                <tr>
-                                    <td colspan="4" class="has-text-centered">
-                                        <a href="{{ url_for('project.add_application', project_id=project.id) }}"
-                                           {% if project.status !="finished"%}
-                                           disabled
-                                           {% endif %}
-                                           class="is-link is-outlined button">
-                                            <span class="icon">
-                                                <i class="fas fa-plus"></i>
-                                            </span><span>Add Application</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endif %}
                                 </tbody>
                             </table>
                         </td>
@@ -196,41 +161,12 @@
                                     <td>{{ fig.title }}</td>
                                     <td>{{ fig.desc }}</td>
                                     <td><img src="https://drive.google.com/uc?id={{ fig.url }}"></td>
-                                    <td>
-                                        {% if current_user == project.creator and current_user.is_authenticated %}
-                                        <a href="{{ url_for('project.edit_figure', figure_id=fig.id) }}">
-                                            <span class="icon">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </span>
-                                        </a>
-                                        <a href="{{ url_for('project.remove_figure', figure_id=fig.id) }}">
-                                            <span class="icon">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </span>
-                                        </a>
-                                        {% endif %}
-                                    </td>
                                 </tr>
                                 {% endfor %}
-                                <tr>
-                                    <td colspan="5" class="has-text-centered">
-                                        <a class="is-link is-outlined button"
-                                           href="{{ url_for('project.add_figure', project_id=project.id) }}"
-                                           {% if current_user != project.creator or project.status != "draft" %}
-                                           disabled
-                                           {% endif %}
-                                        >
-                                        <span class="icon">
-                                            <i class="fas fa-plus"></i>
-                                        </span><span>Add Figure</span>
-                                        </a>
-                                    </td>
-                                </tr>
                                 </tbody>
                             </table>
                         </td>
                     </tr>
-                    {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
                     <tr>
                         <td class="title is-size-5">Ethic Requests</td>
                         <td>
@@ -246,15 +182,6 @@
                                     <td>{{ e.status }}</td>
                                 </tr>
                                 {% endfor %}
-                                <tr>
-                                    <td colspan="2">
-                                        <a href="{{ url_for('project.confirm_add_ethic', project_id=project.id) }}"
-                                           {% if project.status != "full" %}
-                                           disabled
-                                           {% endif %}
-                                           class="button is-link">Submit Ethic Request</a>
-                                    </td>
-                                </tr>
                                 </tbody>
                             </table>
                         </td>
@@ -307,17 +234,9 @@
                                 </tr>
                                 </tbody>
                                 {% endfor %}
-                                <tr>
-                                    <td colspan="4">
-                                        <a href="{{ url_for('project.add_milestone', project_id=project.id) }}">
-                                            add
-                                        </a>
-                                    </td>
-                                </tr>
                             </table>
                         </td>
                     </tr>
-                    {% endif %}
                     <tr>
                         <td class="title is-size-5">Reviewers</td>
                         <td>
@@ -327,30 +246,58 @@
                                 <th>Title</th>
                                 <th>Name</th>
                                 <th>Affiliation</th>
-                                <th>Group</th>
+                                <th colspan="2">Email</th>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                {% for r in project.reviewers %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ r.academic_title }}</td>
+                                    <td>{{ r.fullname }}</td>
+                                    <td>{{ r.affiliation }}</td>
+                                    <td>{{ r.email }}</td>
+                                    <td>
+                                        <a href="{{ url_for('webadmin.remove_reviewer', project_id=project.id, reviewer_id=r.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-trash-alt has-text-danger"></i>
+                                        </span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="6" class="has-text-centered">
+                                        <div class="buttons is-centered">
+                                            <a href="{{ url_for('webadmin.list_reviewers', project_id=project.id) }}"
+                                               class="button is-link is-outlined">
+                                            <span class="icon">
+                                                <i class="fas fa-user-plus"></i>
+                                            </span>
+                                                <span>Reviewers</span>
+                                            </a>
+                                            <a href="{{ url_for('webadmin.submission_detail', project_id=project.id) }}"
+                                               class="button is-link is-outlined">
+                                                <span class="icon">
+                                                    <i class="far fa-eye"></i>
+                                                </span>
+                                                <span>View</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
                 </table>
             </div>
             <div class="has-text-centered">
-                <a href="{{ request.referrer }}" class="button is-light">
+                <a href="{{ url_for('webadmin.list_submissions') }}" class="button is-light">
                     <span class="icon">
                         <i class="fas fa-chevron-left"></i>
                     </span>
                     <span>
                         Back
-                    </span>
-                </a>
-                <a href="{{ url_for('webadmin.add_reviewers', project_id=project.id) }}"
-                   class="button is-link">
-                    <span class="icon">
-                        <i class="fas fa-user-plus"></i>
-                    </span>
-                    <span>
-                        Reviewers
                     </span>
                 </a>
             </div>
