@@ -78,3 +78,6 @@ admin.add_view(ProjectMemberModelView(ProjectMember, db.session, category='Proje
 admin.add_view(ModelView(Category, db.session, category='Project'))
 admin.add_view(ModelView(SubCategory, db.session, category='Project'))
 admin.add_view(ModelView(Application, db.session, category='Project'))
+admin.add_view(ModelView(ProjectReviewerGroup, db.session, category='Project'))
+admin.add_view(ModelView(ProjectReviewer, db.session, category='Project'))
+admin.add_view(ModelView(ProjectReviewRecord, db.session, category='Project'))

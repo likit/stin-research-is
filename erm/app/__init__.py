@@ -45,6 +45,9 @@ def create_app():
     from app.project import project_bp as project_blueprint
     app.register_blueprint(project_blueprint, url_prefix='/project')
 
+    from app.webadmin import webadmin_bp as webadmin_blueprint
+    app.register_blueprint(webadmin_blueprint, url_prefix='/webadmin')
+
     admin.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)

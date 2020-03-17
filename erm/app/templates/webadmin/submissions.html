@@ -1,15 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{% for project in submissions %}
-<ul>
-    <li>{{ project.id }} {{ project.title_th }} {{ project.status }}</li>
-</ul>
-{% endfor %}
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}Project Submissions{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container has-text-centered">
+        <div class="columns">
+            <div class="column is-two-thirds is-offset-2">
+                <h1 class="title">Project Detail</h1>
+                <table class="table is-striped">
+                    <thead>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Submitted at</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+                    {% for project in submissions %}
+                    <tr>
+                        <td>{{ project.id }}</td>
+                        <td>{{ project.title_th }}</td>
+                        <td>{{ project.submitted_at|localdatetime }}</td>
+                        <td>
+                            <a href="{{ url_for('webadmin.submission_detail', project_id=project.id) }}"
+                               class="button is-rounded is-primary">
+                                <span class="icon">
+                                    <i class="far fa-eye"></i>
+                                </span>
+                                <span>view</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

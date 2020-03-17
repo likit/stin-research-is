@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Project Detail Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container has-text-centered">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title">
+                    เพิ่มรายชื่อกรรมการพิจารณาโครงการวิจัย
+                </h1>
+                <h1 class="title is-size-4">
+                    ชื่อโครงการ
+                </h1>
+                <h1 class="subtitle is-size-5">
+                    {{ project.title_th }}
+                </h1>
+                <p>
+                    {% for member in project.members %}
+                    {{ member.user.profile.fullname_th }} ({{ member.role }}),
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-two-thirds is-offset-2">
+                {% for group in groups %}
+                <div class="box">
+                    <h1 class="title">{{ group }}</h1>
+                    <table class="table is-striped is-fullwidth">
+                        <thead>
+                        <th>
+                            <input class="is-checkradio" type="checkbox">
+                        </th>
+                        <th>Title</th>
+                        <th>Fullname</th>
+                        <th>Affiliation</th>
+                        </thead>
+                        {% for r in group.reviewers %}
+                        <tr>
+                            <td>
+                                <input class="is-checkradio" type="checkbox" name="reviewers">
+                            </td>
+                            <td>{{ r.academic_title }}</td>
+                            <td>{{ r.fullname }}</td>
+                            <td>{{ r.affiliation }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

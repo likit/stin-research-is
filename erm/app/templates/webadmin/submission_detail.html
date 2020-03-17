@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+
+{% block title %}Project Submission Detail{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="column">
+        <div class="container has-text-centered">
+            <h1 class="title">Project Detail</h1>
+            <h2 class="subtitle is-size-4">{{ project.title_th }}</h2>
+            <p>
+                {% for member in project.members %}
+                {{ member.user.profile.fullname_th }} ({{ member.role }}),
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            {% for cat,msg in get_flashed_messages(with_categories=true) %}
+            <p class="notification is-{{ cat }}">{{ msg }}</p>
+            {% endfor %}
+            <div class="box">
+                <table class="table is-fullwidth is-striped">
+                    <tr>
+                        <td class="title is-size-5" width="20%">English Title</td><td>{{ project.title_en }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">Thai Subtitle</td><td>{{ project.subtitle_th }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">English Subtitle</td><td>{{ project.subtitle_en }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">Abstract</td><td>{{ project.abstract }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">Introduction</td><td>{{ project.intro }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">Objective</td><td>{{ project.objective }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">Method</td><td>{{ project.method }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">Created at</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">Updated at</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
+                    </tr>
+                    {% if current_user.is_authenticated and project.creator == current_user %}
+                    <tr>
+                        <td class="title is-size-5" width="20%">Status</td><td>{{ project.status }}</td>
+                    </tr>
+                    {% if project.status == 'submitted' %}
+                    <tr>
+                        <td class="title is-size-5" width="20%">Submitted at</td><td>วันที่ {{ project.submitted_at|localdatetime }} นาฬิกา</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td class="title is-size-5" width="20%">Prospected Journals</td><td>{{ project.prospected_journals }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">Uses or Applications</td><td>{{ project.use_applications }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td class="title is-size-5" width="20%">Category</td>
+                        <td>
+                            <div class="field is-grouped is-grouped-multiline">
+                                {% for cat in project.subcategories %}
+                                <div class="control">
+                                    <div class="tags has-addons">
+                                        <p class="tag is-light is-medium is-info">{{ cat.category }}</p>
+                                        <p class="tag is-light is-medium">{{ cat.parent }}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Members</td>
+                        <td>
+                            <table class="table is-striped">
+                                <thead>
+                                <th>ชื่อ</th>
+                                <th>บทบาทหน้าที่</th>
+                                <th>email</th>
+                                </thead>
+                                <tbody>
+                                {% for member in project.members %}
+                                <tr>
+                                    <td>{{ member.user.profile }}</td>
+                                    <td>{{ member.role }}</td>
+                                    <td>{{ member.user.email }}</td>
+                                    <td>
+                                        <a href="{{ url_for('project.remove_member', project_id=project.id, member_id=member.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="4" class="has-text-centered">
+                                        <a href="{{ url_for('project.add_member', project_id=project.id) }}"
+                                           {% if current_user != project.creator or not current_user.is_authenticated or project.status != 'draft' %}
+                                           disabled
+                                           {% endif %}
+                                           class="is-link is-outlined button">
+                                            <span class="icon">
+                                                <i class="fas fa-plus"></i>
+                                            </span><span>Add Member</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Application</td>
+                        <td>
+                            <table class="table is-striped">
+                                <thead>
+                                <th>องค์กร สถานที่ ชุมชน</th>
+                                <th>รายละเอียดการใช้งานวิจัย</th>
+                                <th>วันที่และเวลา</th>
+                                </thead>
+                                <tbody>
+                                {% for app in project.applications %}
+                                <tr>
+                                    <td>{{ app.org }}</td>
+                                    <td>{{ app.detail }}</td>
+                                    <td>{{ app.date|localdate }}</td>
+                                    <td>
+                                        {% if current_user == project.creator and current_user.is_authenticated %}
+                                        <a href="{{ url_for('project.edit_application', app_id=app.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </span>
+                                            <span>Edit</span>
+                                        </a>
+                                        <a href="{{ url_for('project.remove_application', app_id=app.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </span>
+                                            <span>Remove</span>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% if current_user == project.creator and current_user.is_authenticated %}
+                                <tr>
+                                    <td colspan="4" class="has-text-centered">
+                                        <a href="{{ url_for('project.add_application', project_id=project.id) }}"
+                                           {% if project.status !="finished"%}
+                                           disabled
+                                           {% endif %}
+                                           class="is-link is-outlined button">
+                                            <span class="icon">
+                                                <i class="fas fa-plus"></i>
+                                            </span><span>Add Application</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Figures</td>
+                        <td>
+                            <table class="table">
+                                <thead>
+                                <th>No.</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>File ID</th>
+                                <th></th>
+                                </thead>
+                                <tbody>
+                                {% for fig in project.figures %}
+                                <tr>
+                                    <td>{{ fig.fignum }}</td>
+                                    <td>{{ fig.title }}</td>
+                                    <td>{{ fig.desc }}</td>
+                                    <td><img src="https://drive.google.com/uc?id={{ fig.url }}"></td>
+                                    <td>
+                                        {% if current_user == project.creator and current_user.is_authenticated %}
+                                        <a href="{{ url_for('project.edit_figure', figure_id=fig.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </span>
+                                        </a>
+                                        <a href="{{ url_for('project.remove_figure', figure_id=fig.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </span>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="5" class="has-text-centered">
+                                        <a class="is-link is-outlined button"
+                                           href="{{ url_for('project.add_figure', project_id=project.id) }}"
+                                           {% if current_user != project.creator or project.status != "draft" %}
+                                           disabled
+                                           {% endif %}
+                                        >
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span><span>Add Figure</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
+                    <tr>
+                        <td class="title is-size-5">Ethic Requests</td>
+                        <td>
+                            <table class="table">
+                                <thead>
+                                <th>Submitted</th>
+                                <th>Status</th>
+                                </thead>
+                                <tbody>
+                                {% for e in project.ethics %}
+                                <tr>
+                                    <td>{{ e.submitted_at|localdatetime }}</td>
+                                    <td>{{ e.status }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="2">
+                                        <a href="{{ url_for('project.confirm_add_ethic', project_id=project.id) }}"
+                                           {% if project.status != "full" %}
+                                           disabled
+                                           {% endif %}
+                                           class="button is-link">Submit Ethic Request</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Archives</td>
+                        <td>
+                            <table class="table">
+                                <thead>
+                                <th>Timestamp</th>
+                                <th>Status</th>
+                                <th></th>
+                                </thead>
+                                <tbody>
+                                {% for ar in project.archieves %}
+                                <tr>
+                                    <td>{{ ar.archived_at|localdatetime }}</td>
+                                    <td>{{ ar.status }}</td>
+                                    <td>
+                                        <a href="{{ url_for('project.view_archive', archive_id=ar.id) }}">view</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                {% endfor %}
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Milestones</td>
+                        <td>
+                            <table class="table">
+                                <thead>
+                                <th>Goal/Task/Requirement</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th></th>
+                                </thead>
+                                <tbody>
+                                {% for m in project.milestones %}
+                                <tr>
+                                    <td>{{ m.goal }}</td>
+                                    {% if m.deadline %}
+                                    <td>{{ m.deadline|localdatetime }}</td>
+                                    {% else %}
+                                    <td>Not specified</td>
+                                    {% endif %}
+                                    <td>{{ m.status }}</td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="4">
+                                        <a href="{{ url_for('project.add_milestone', project_id=project.id) }}">
+                                            add
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td class="title is-size-5">Reviewers</td>
+                        <td>
+                            <table class="table is-striped is-bordered">
+                                <thead>
+                                <th>No.</th>
+                                <th>Title</th>
+                                <th>Name</th>
+                                <th>Affiliation</th>
+                                <th>Group</th>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="has-text-centered">
+                <a href="{{ request.referrer }}" class="button is-light">
+                    <span class="icon">
+                        <i class="fas fa-chevron-left"></i>
+                    </span>
+                    <span>
+                        Back
+                    </span>
+                </a>
+                <a href="{{ url_for('webadmin.add_reviewers', project_id=project.id) }}"
+                   class="button is-link">
+                    <span class="icon">
+                        <i class="fas fa-user-plus"></i>
+                    </span>
+                    <span>
+                        Reviewers
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
