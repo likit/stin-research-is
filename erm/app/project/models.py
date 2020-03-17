@@ -63,6 +63,7 @@ class ProjectRecord(db.Model):
     def __str__(self):
         return self.title_th[:50]
 
+
 class ProjectRecordArchive(db.Model):
     __tablename__ = 'project_archives'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -160,3 +161,53 @@ class ProjectMilestone(db.Model):
                        info={'label': 'Status',
                              'choices': [(i, i) for i in ['started', 'ended', 'delayed']]})
     project = db.relationship('ProjectRecord', backref=db.backref('milestones'))
+
+
+reviewer_groups = db.Table('reviewer_groups',
+    db.Column('group_id', db.Integer, db.ForeignKey('project_reviewer_groups.id'), primary_key=True),
+    db.Column('reviewer_id', db.Integer, db.ForeignKey('project_reviewers.id'), primary_key=True)
+)
+
+
+class ProjectReviewerGroup(db.Model):
+    __tablename__ = 'project_reviewer_groups'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column('title', db.String(), nullable=False)
+
+    def __str__(self):
+        return self.title
+
+
+class ProjectReviewer(db.Model):
+    __tablename__ = 'project_reviewers'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    academic_title = db.Column('academic_title', db.String())
+    firstname = db.Column('firstname', db.String(), nullable=False)
+    lastname = db.Column('lastname', db.String(), nullable=False)
+    email = db.Column('email', db.String(), nullable=False)
+    affiliation = db.Column('affiliation', db.String())
+    user_id = db.Column('user_id', db.ForeignKey('users.id'))
+    user = db.relationship('User', backref=db.backref('reviewer', uselist=False))
+    groups = db.relationship('ProjectReviewerGroup',
+                             secondary=reviewer_groups,
+                             lazy='subquery',
+                             backref=db.backref('reviewers'))
+
+    @property
+    def fullname(self):
+        return '{} {}'.format(self.firstname, self.lastname)
+
+
+class ProjectReviewRecord(db.Model):
+    __tablename__ = 'project_review_records'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    reviewer_id = db.Column('reviewer_id', db.ForeignKey('project_reviewers.id'))
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    comment = db.Column('comment', db.Text())
+    status = db.Column('status', db.String(), default='pending',
+                       info={'label': 'decision',
+                             'choices': [(i, i) for i in
+                                         ('pending', 'revise',
+                                          'approved', 'rejected')]},
+                       )
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
