@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Ethic Reviewer Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container has-text-centered">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title">
+                    เพิ่มรายชื่อกรรมการพิจารณาจริยธรรมโครงการวิจัย
+                </h1>
+                <h1 class="title is-size-4">
+                    ชื่อโครงการ
+                </h1>
+                <h1 class="subtitle is-size-5">
+                    {{ project.title_th }}
+                </h1>
+                <p>
+                    {% for member in project.members %}
+                    {{ member.user.profile.fullname_th }} ({{ member.role }}),
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-two-thirds is-offset-2">
+                {% for cat,msg in get_flashed_messages(with_categories=true) %}
+                <p class="notification is-{{ cat }}">{{ msg }}</p>
+                {% endfor %}
+                <div class="box">
+                    <table class="table is-striped is-fullwidth">
+                        <thead>
+                        <th>No.</th>
+                        <th>Title</th>
+                        <th>Fullname</th>
+                        <th>Affiliation</th>
+                        <th>Email</th>
+                        <th>
+                            <a href="{{ url_for('webadmin.remove_all_ethic_reviewers', project_id=project.id) }}"
+                               class="button is-danger is-small">
+                                <span class="icon">
+                                    <i class="fas fa-minus"></i>
+                                </span>
+                                <span>remove all</span>
+                            </a>
+                        </th>
+                        </thead>
+                        <tbody>
+                        {% for r in project.ethic_reviewers %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ r.academic_title }}</td>
+                            <td>{{ r.fullname }}</td>
+                            <td>{{ r.affiliation }}</td>
+                            <td>{{ r.email }}</td>
+                            <td>
+                                <a href="{{ url_for('webadmin.remove_ethic_reviewer', project_id=project.id, reviewer_id=r.id) }}"
+                                   class="button is-outlined is-danger is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-minus"></i>
+                                        </span>
+                                    <span>remove</span>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% for group in groups %}
+                <div class="box">
+                    <h1 class="title is-size-4">{{ group }}</h1>
+                    <table class="table is-striped is-fullwidth">
+                        <thead>
+                        <th>No.</th>
+                        <th>Title</th>
+                        <th>Fullname</th>
+                        <th>Affiliation</th>
+                        <th>Email</th>
+                        <th>
+                            <a href="{{ url_for('webadmin.add_all_ethic_reviewers', group_id=group.id, project_id=project.id) }}"
+                               class="button is-primary is-small">
+                                <span class="icon">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                                <span>add all</span>
+                            </a>
+                        </th>
+                        </thead>
+                        {% for r in group.reviewers %}
+                        {% if r not in project.ethic_reviewers %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ r.academic_title }}</td>
+                            <td>{{ r.fullname }}</td>
+                            <td>{{ r.affiliation }}</td>
+                            <td>{{ r.email }}</td>
+                            <td>
+                                <div class="buttons has-addons">
+                                    <a href="{{ url_for('webadmin.add_ethic_reviewer', project_id=project.id, reviewer_id=r.id) }}"
+                                       class="button is-outlined is-primary is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>add</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <a href="{{ url_for('webadmin.ethic_detail', ethic_id=ethic.id) }}" class="button is-light">
+                    <span class="icon">
+                        <i class="fas fa-chevron-left"></i>
+                    </span>
+                    <span>
+                        Back
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

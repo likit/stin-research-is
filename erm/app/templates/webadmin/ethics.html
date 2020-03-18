@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Project Review{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-two-thirds is-offset-2">
+                {% for cat,msg in get_flashed_messages(with_categories=true) %}
+                <p class="notification is-{{ cat }}">{{ msg }}</p>
+                {% endfor %}
+                <div>
+                    <h1 class="title has-text-centered">Ethic Approval Submissions</h1>
+                    <table class="table is-fullwidth is-striped">
+                        <thead>
+                        <th>No.</th>
+                        <th>Title TH</th>
+                        <th>Submitted at</th>
+                        <th></th>
+                        </thead>
+                    {% for et in ethics %}
+                        <tr>
+                            <td>{{ et.id }}</td>
+                            <td>{{ et.project.title_th }}</td>
+                            <td>{{ et.submitted_at|localdatetime }}</td>
+                            <td>
+                                <a href="{{ url_for('webadmin.ethic_detail', ethic_id=et.id) }}" class="button is-primary">
+                                <span class="icon">
+                                    <i class="far fa-eye"></i>
+                                </span>
+                                    <span>view</span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

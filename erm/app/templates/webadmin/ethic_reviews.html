@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Ethic Reviews Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column has-text-centered is-one-third is-offset-4">
+            <h1 class="title">Project Ethic Approval Reviews</h1>
+            {% for review in project.ethic_reviews %}
+            <div class="box">
+                <table class="table is-fullwidth">
+                    <col width="30">
+                    <col width="60">
+                    <col width="10">
+                    <tr>
+                        <td class="title is-size-5">Reviewer</td>
+                        <td>{{ review.reviewer.academic_title or '' }}{{ review.reviewer.fullname }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Comment</td>
+                        <td>{{ review.comment or '' }}</td>
+                        <td>
+                            {% if review.comment %}
+                            <span class="icon">
+                                <i class="fas fa-check has-text-success"></i>
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Submitted at</td>
+                        {% if review.submitted_at %}
+                        <td>{{ review.submitted_at|localdatetime }}</td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Decision</td>
+                        <td><strong class="has-text-info">{{ review.status|title }}</strong></td>
+                    </tr>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-one-third is-offset-4 has-text-centered">
+            <div class="buttons is-centered">
+                <a href="{{ url_for('webadmin.ethic_detail', ethic_id=ethic_id) }}" class="button is-light">
+                        <span class="icon">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    <span>Back</span>
+                </a>
+                <a href="{{ url_for('webadmin.update_status', project_id=project.id) }}" class="button is-primary">
+                    <span>Update Status</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
