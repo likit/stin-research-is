@@ -1,4 +1,4 @@
-from app.project.models import ProjectReviewSendRecord
+from app.project.models import ProjectReviewSendRecord, ProjectReviewRecord
 from wsgi import db
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from flask_wtf import FlaskForm
@@ -15,3 +15,8 @@ class ModelForm(BaseModelForm):
 class ProjectReviewSendRecordForm(BaseModelForm):
     class Meta:
         model = ProjectReviewSendRecord
+
+
+class ProjectReviewRecordForm(BaseModelForm):
+    class Meta:
+        model = ProjectReviewRecord

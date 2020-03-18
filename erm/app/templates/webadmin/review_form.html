@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Project Review{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-two-thirds is-offset-2">
+                {% for cat,msg in get_flashed_messages(with_categories=true) %}
+                <p class="notification is-{{ cat }}">{{ msg }}</p>
+                {% endfor %}
+                <div class="box">
+                    <h1 class="title has-text-centered">Write Review</h1>
+                    <form class="box" method="post">
+                        {{ form.csrf_token }}
+                        <div class="field">
+                            <label class="label">Project Title Thai</label>
+                            <div class="control">
+                                <input type="input" value="{{ project.title_th }}" disabled class="input">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.comment.label }}</label>
+                            <div class="control">
+                                {{ form.comment(class="textarea") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.status.label }}</label>
+                            <div class="select">
+                                {{ form.status() }}
+                            </div>
+                        </div>
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button type="submit" class="button is-success">Save</button>
+                            </div>
+                            <div class="control">
+                                <a class="button is-light" href="/">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

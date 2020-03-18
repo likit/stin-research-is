@@ -5,7 +5,7 @@ from flask import render_template, redirect, url_for, request, flash
 from app.project.models import (ProjectRecord, ProjectReviewerGroup,
                                 ProjectReviewSendRecord, ProjectReviewRecord,
                                 )
-from app.webadmin.forms import ProjectReviewSendRecordForm
+from app.webadmin.forms import ProjectReviewSendRecordForm, ProjectReviewRecordForm
 
 
 @webadmin.route('/submissions')
@@ -126,3 +126,26 @@ def resend_for_review(project_id, record_id):
             flash('The request has been resent.', 'success')
             return redirect(url_for('webadmin.view_send_records', project_id=project.id))
     return render_template('webadmin/send_reviews.html', project=project, form=form, to=send_record.to)
+
+
+
+@webadmin.route('/submissions/<int:project_id>/reviews/write/<int:review_id>', methods=['GET', 'POST'])
+def write_review(project_id, review_id):
+    project = ProjectRecord.query.get(project_id)
+    review = ProjectReviewRecord.query.get(review_id)
+    form = ProjectReviewRecordForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(review)
+            db.session.add(review)
+            db.session.commit()
+            return redirect(url_for('webadmin.confirm_review', review_id=review.id, project_id=project.id))
+
+    return render_template('webadmin/review_form.html', form=form, project=project, review=review)
+
+
+@webadmin.route('/submissions/<int:project_id>/reviews/write/<int:review_id>/confirm', methods=['GET', 'POST'])
+def confirm_review(project_id, review_id):
+    project = ProjectRecord.query.get(project_id)
+    review = ProjectReviewRecord.query.get(review_id)
+    return render_template('webadmin/review_confirm.html', project=project, review=review)
