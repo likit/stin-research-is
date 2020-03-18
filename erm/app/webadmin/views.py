@@ -133,10 +133,14 @@ def resend_for_review(project_id, record_id):
 def write_review(project_id, review_id):
     project = ProjectRecord.query.get(project_id)
     review = ProjectReviewRecord.query.get(review_id)
+    if review.comment:
+        return redirect(url_for('webadmin.confirm_review',
+                                project_id=project.id, review_id=review.id))
     form = ProjectReviewRecordForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             form.populate_obj(review)
+            review.submitted_at = arrow.now(tz='Asia/Bangkok').datetime
             db.session.add(review)
             db.session.commit()
             return redirect(url_for('webadmin.confirm_review', review_id=review.id, project_id=project.id))
