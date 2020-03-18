@@ -1,8 +1,11 @@
+import arrow
 from app.webadmin import webadmin_bp as webadmin
 from wsgi import db
 from flask import render_template, redirect, url_for, request, flash
 from app.project.models import (ProjectRecord, ProjectReviewerGroup,
-                                ProjectReviewer, ProjectReviewRecord)
+                                ProjectReviewSendRecord, ProjectReviewRecord,
+                                )
+from app.webadmin.forms import ProjectReviewSendRecordForm
 
 
 @webadmin.route('/submissions')
@@ -79,3 +82,47 @@ def remove_all_reviewers(project_id):
 def view_reviews(project_id):
     project = ProjectRecord.query.get(project_id)
     return render_template('webadmin/reviews.html', project=project)
+
+
+@webadmin.route('/submissions/<int:project_id>/reviews/send', methods=['GET', 'POST'])
+def send_for_reviews(project_id):
+    project = ProjectRecord.query.get(project_id)
+    form = ProjectReviewSendRecordForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            for review in project.reviews:
+                new_send = ProjectReviewSendRecord()
+                form.populate_obj(new_send)
+                new_send.review_id = review.id
+                new_send.to = review.reviewer.email
+                new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
+                db.session.add(new_send)
+            db.session.commit()
+            flash('The project has been sent for a review.')
+            return redirect(url_for('webadmin.submission_detail', project_id=project.id))
+    return render_template('webadmin/send_reviews.html', form=form, project=project)
+
+
+@webadmin.route('/submissions/<int:project_id>/reviews/sends', methods=['GET', 'POST'])
+def view_send_records(project_id):
+    project = ProjectRecord.query.get(project_id)
+    return render_template('webadmin/send_records.html', project=project)
+
+
+@webadmin.route('/submissions/<int:project_id>/reviews/sends/<int:record_id>', methods=['GET', 'POST'])
+def resend_for_review(project_id, record_id):
+    project = ProjectRecord.query.get(project_id)
+    send_record = ProjectReviewSendRecord.query.get(record_id)
+    form = ProjectReviewSendRecordForm(obj=send_record)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_send = ProjectReviewSendRecord()
+            form.populate_obj(new_send)
+            new_send.to = send_record.to
+            new_send.review_id = send_record.review.id
+            new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
+            db.session.add(new_send)
+            db.session.commit()
+            flash('The request has been resent.', 'success')
+            return redirect(url_for('webadmin.view_send_records', project_id=project.id))
+    return render_template('webadmin/send_reviews.html', project=project, form=form, to=send_record.to)

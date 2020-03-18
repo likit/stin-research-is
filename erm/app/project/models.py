@@ -224,10 +224,12 @@ class ProjectReviewRecord(db.Model):
 class ProjectReviewSendRecord(db.Model):
     __tablename__ = 'project_review_send_records'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    review_id = db.Column('reviewer_id', db.ForeignKey('project_reviewers.id'))
+    review_id = db.Column('review_id', db.ForeignKey('project_review_records.id'))
     sent_at = db.Column('sent_at', db.DateTime(timezone=True))
-    title = db.Column('title', db.String(), nullable=False)
-    message = db.Column('message', db.Text())
+    title = db.Column('title', db.String(), nullable=False, info={'label': 'Title'})
+    message = db.Column('message', db.Text(), info={'label': 'Message'})
+    footer = db.Column('footer', db.String(), info={'label': 'Footer'})
     deadline = db.Column('deadline', db.DateTime(timezone=True))
-    review = db.relationship('ProjectReviewer', backref=db.backref('send_records'))
+    review = db.relationship('ProjectReviewRecord', backref=db.backref('send_records'))
+    to = db.Column('to', db.String())
 
