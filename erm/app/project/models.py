@@ -64,6 +64,10 @@ class ProjectRecord(db.Model):
     def reviewers(self):
         return set([review.reviewer for review in self.reviews])
 
+    @property
+    def ethic_reviewers(self):
+        return set([review.reviewer for review in self.ethic_reviews])
+
     def __str__(self):
         return self.title_th[:50]
 
@@ -207,10 +211,10 @@ class ProjectReviewRecord(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     reviewer_id = db.Column('reviewer_id', db.ForeignKey('project_reviewers.id'))
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
-    comment = db.Column('comment', db.Text())
+    comment = db.Column('comment', db.Text(), info={'label': 'Comment'})
     status = db.Column('status', db.String(), default='pending',
                        info={
-                           'label': 'decision',
+                           'label': 'Decision',
                            'choices': [(i, i) for i in
                                          ('pending', 'revise',
                                           'approved', 'rejected')]
@@ -233,3 +237,34 @@ class ProjectReviewSendRecord(db.Model):
     review = db.relationship('ProjectReviewRecord', backref=db.backref('send_records'))
     to = db.Column('to', db.String())
 
+
+class ProjectEthicReviewRecord(db.Model):
+    __tablename__ = 'project_ethic_review_records'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    reviewer_id = db.Column('reviewer_id', db.ForeignKey('project_reviewers.id'))
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    comment = db.Column('comment', db.Text(), info={'label': 'Comment'})
+    status = db.Column('status', db.String(), default='pending',
+                       info={
+                           'label': 'Decision',
+                           'choices': [(i, i) for i in
+                                       ('pending', 'revise',
+                                        'approved', 'rejected')]
+                       },
+                       )
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    reviewer = db.relationship('ProjectReviewer', backref=db.backref('ethic_records'))
+    project = db.relationship('ProjectRecord', backref=db.backref('ethic_reviews'))
+
+
+class ProjectEthicReviewSendRecord(db.Model):
+    __tablename__ = 'project_ethic_review_send_records'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    review_id = db.Column('review_id', db.ForeignKey('project_ethic_review_records.id'))
+    sent_at = db.Column('sent_at', db.DateTime(timezone=True))
+    title = db.Column('title', db.String(), nullable=False, info={'label': 'Title'})
+    message = db.Column('message', db.Text(), info={'label': 'Message'})
+    footer = db.Column('footer', db.String(), info={'label': 'Footer'})
+    deadline = db.Column('deadline', db.DateTime(timezone=True))
+    review = db.relationship('ProjectEthicReviewRecord', backref=db.backref('send_records'))
+    to = db.Column('to', db.String())
