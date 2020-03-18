@@ -16,15 +16,171 @@
                 <p class="notification is-{{ cat }}">{{ msg }}</p>
                 {% endfor %}
                 <div class="box">
+                    <h1 class="title has-text-centered">Project Detail</h1>
+                    <table class="table is-fullwidth is-striped">
+                        <tr>
+                            <td class="title is-size-5" width="20%">English Title</td><td>{{ project.title_en }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">Thai Subtitle</td><td>{{ project.subtitle_th }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">English Subtitle</td><td>{{ project.subtitle_en }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">Abstract</td><td>{{ project.abstract }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">Introduction</td><td>{{ project.intro }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">Objective</td><td>{{ project.objective }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">Method</td><td>{{ project.method }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">Updated at</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
+                        </tr>
+                        {% if current_user.is_authenticated and project.creator == current_user %}
+                        <tr>
+                            <td class="title is-size-5" width="20%">Prospected Journals</td><td>{{ project.prospected_journals }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">Uses or Applications</td><td>{{ project.use_applications }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td class="title is-size-5" width="20%">Category</td>
+                            <td>
+                                <div class="field is-grouped is-grouped-multiline">
+                                    {% for cat in project.subcategories %}
+                                    <div class="control">
+                                        <div class="tags has-addons">
+                                            <p class="tag is-light is-medium is-info">{{ cat.category }}</p>
+                                            <p class="tag is-light is-medium">{{ cat.parent }}</p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5">Members</td>
+                            <td>
+                                <table class="table is-striped">
+                                    <thead>
+                                    <th>ชื่อ</th>
+                                    <th>บทบาทหน้าที่</th>
+                                    <th>email</th>
+                                    </thead>
+                                    <tbody>
+                                    {% for member in project.members %}
+                                    <tr>
+                                        <td>{{ member.user.profile }}</td>
+                                        <td>{{ member.role }}</td>
+                                        <td>{{ member.user.email }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5">Application</td>
+                            <td>
+                                <table class="table is-striped">
+                                    <thead>
+                                    <th>องค์กร สถานที่ ชุมชน</th>
+                                    <th>รายละเอียดการใช้งานวิจัย</th>
+                                    <th>วันที่และเวลา</th>
+                                    </thead>
+                                    <tbody>
+                                    {% for app in project.applications %}
+                                    <tr>
+                                        <td>{{ app.org }}</td>
+                                        <td>{{ app.detail }}</td>
+                                        <td>{{ app.date|localdate }}</td>
+                                        <td>
+                                            {% if current_user == project.creator and current_user.is_authenticated %}
+                                            <a href="{{ url_for('project.edit_application', app_id=app.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </span>
+                                                <span>Edit</span>
+                                            </a>
+                                            <a href="{{ url_for('project.remove_application', app_id=app.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </span>
+                                                <span>Remove</span>
+                                            </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5">Figures</td>
+                            <td>
+                                <table class="table">
+                                    <thead>
+                                    <th>No.</th>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>File ID</th>
+                                    <th></th>
+                                    </thead>
+                                    <tbody>
+                                    {% for fig in project.figures %}
+                                    <tr>
+                                        <td>{{ fig.fignum }}</td>
+                                        <td>{{ fig.title }}</td>
+                                        <td>{{ fig.desc }}</td>
+                                        <td><img src="https://drive.google.com/uc?id={{ fig.url }}"></td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5">Timeline</td>
+                            <td>
+                                <table class="table">
+                                    <thead>
+                                    <th>Goal/Task/Requirement</th>
+                                    <th>Deadline</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                    </thead>
+                                    <tbody>
+                                    {% for m in project.milestones %}
+                                    <tr>
+                                        <td>{{ m.goal }}</td>
+                                        {% if m.deadline %}
+                                        <td>{{ m.deadline|localdatetime }}</td>
+                                        {% else %}
+                                        <td>Not specified</td>
+                                        {% endif %}
+                                        <td>{{ m.status }}</td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    {% endfor %}
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="box">
                     <h1 class="title has-text-centered">Write Review</h1>
-                    <form class="box" method="post">
+                    <form method="post">
                         {{ form.csrf_token }}
-                        <div class="field">
-                            <label class="label">Project Title Thai</label>
-                            <div class="control">
-                                <input type="input" value="{{ project.title_th }}" disabled class="input">
-                            </div>
-                        </div>
                         <div class="field">
                             <label class="label">{{ form.comment.label }}</label>
                             <div class="control">
@@ -37,7 +193,7 @@
                                 {{ form.status() }}
                             </div>
                         </div>
-                        <div class="field is-grouped">
+                        <div class="field is-grouped is-grouped-centered">
                             <div class="control">
                                 <button type="submit" class="button is-success">Save</button>
                             </div>

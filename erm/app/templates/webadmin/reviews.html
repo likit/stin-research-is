@@ -45,7 +45,7 @@
                     </tr>
                     <tr>
                         <td class="title is-size-5">Decision</td>
-                        <td>{{ review.status }}</td>
+                        <td><strong class="has-text-info">{{ review.status|title }}</strong></td>
                     </tr>
                 </table>
             </div>
@@ -54,12 +54,17 @@
     </div>
     <div class="columns">
         <div class="column is-one-third is-offset-4 has-text-centered">
-            <a href="{{ url_for('webadmin.submission_detail', project_id=project.id) }}" class="button is-light">
-                    <span class="icon">
-                        <i class="fas fa-chevron-left"></i>
-                    </span>
-                <span>Back</span>
-            </a>
+            <div class="buttons is-centered">
+                <a href="{{ url_for('webadmin.submission_detail', project_id=project.id) }}" class="button is-light">
+                        <span class="icon">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    <span>Back</span>
+                </a>
+                <a href="{{ url_for('webadmin.update_status', project_id=project.id) }}" class="button is-primary">
+                    <span>Update Status</span>
+                </a>
+            </div>
         </div>
     </div>
 </section>
