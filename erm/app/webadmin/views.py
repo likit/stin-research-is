@@ -6,6 +6,7 @@ from app.project.models import (ProjectRecord, ProjectReviewerGroup,
                                 ProjectReviewSendRecord, ProjectReviewRecord,
                                 )
 from app.webadmin.forms import ProjectReviewSendRecordForm, ProjectReviewRecordForm
+from app.project.forms import ProjectRecordForm
 
 
 @webadmin.route('/submissions')
@@ -153,3 +154,20 @@ def confirm_review(project_id, review_id):
     project = ProjectRecord.query.get(project_id)
     review = ProjectReviewRecord.query.get(review_id)
     return render_template('webadmin/review_confirm.html', project=project, review=review)
+
+
+@webadmin.route('/submissions/<int:project_id>/status', methods=['GET', 'POST'])
+def update_status(project_id):
+    project = ProjectRecord.query.get(project_id)
+    form = ProjectRecordForm(obj=project)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(project)
+            project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
+            db.session.add(project)
+            db.session.commit()
+            flash('Status of the project has been changed.', 'success')
+            return redirect(url_for('webadmin.submission_detail', project_id=project.id))
+
+    return render_template('webadmin/status.html', project=project, form=form)
+

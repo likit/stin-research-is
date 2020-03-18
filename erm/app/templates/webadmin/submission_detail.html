@@ -306,14 +306,19 @@
                 </table>
             </div>
             <div class="has-text-centered">
-                <a href="{{ url_for('webadmin.list_submissions') }}" class="button is-light">
-                    <span class="icon">
-                        <i class="fas fa-chevron-left"></i>
-                    </span>
-                    <span>
-                        Back
-                    </span>
-                </a>
+                <div class="buttons is-centered">
+                    <a href="{{ url_for('webadmin.list_submissions') }}" class="button is-light">
+                        <span class="icon">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                        <span>
+                            Back
+                        </span>
+                    </a>
+                    <a href="{{ url_for('webadmin.update_status', project_id=project.id) }}" class="button is-primary">
+                        <span>Update Status</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
