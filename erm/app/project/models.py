@@ -255,12 +255,20 @@ class ProjectEthicReviewRecord(db.Model):
     comment = db.Column('comment', db.Text(), info={'label': 'Comment'})
     status = db.Column('status', db.String(), default='pending',
                        info={
-                           'label': 'Decision',
+                           'label': 'การพิจารณา',
                            'choices': [(i, i) for i in
-                                       ('pending', 'revise',
-                                        'approved', 'rejected')]
-                       },
-                       )
+                                       ('แบบ A ผ่านการพิจารณา', 'แบบ B ผู้วิจัยแก้ไข 3 ชุด ภายใน 4 สัปดาห์',
+                                        'แบบ C นำเข้าพิจารณาในที่ประชุม (Full board)', 'แบบ D ไม่อนุมัติ')]
+                       })
+    project_revision = db.Column('project_revision', db.Text(),
+                                 info={'label': 'โครงการวิจัย ขอให้มีการทบทวนดังนี้'})
+    tool_revision = db.Column('tool_revision', db.Text(),
+                              info={'label': 'เครื่องมือวิจัย เป็นต้นว่าแบบสอบถาม ขอให้มีการทบทวนดังนี้'})
+    doc_revision = db.Column('doc_revision', db.Text(),
+                             info={'label': 'เอกสารข้อมูลสำหรับกลุ่มประชากรหรือผู้ที่มีส่วนร่วมในการวิจัย (Patient/Participant Information Sheet) ขอให้มีการทบทวนดังนี้'})
+    consent_revision = db.Column('consent_revision', db.Text(),
+                                 info={'label': 'ใบยินยอมของกลุ่มประชากรหรือผู้มีส่วนร่วมในการวิจัย (Informed consent form) ขอให้มีการทบทวนดังนี้'})
+    note = db.Column('note', db.Text(), info={'label': 'ข้อสังเกต'})
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     reviewer = db.relationship('ProjectReviewer', backref=db.backref('ethic_records'))
     project = db.relationship('ProjectRecord', backref=db.backref('ethic_reviews'))
