@@ -10,19 +10,25 @@
 <section class="section">
     <div class="columns">
         <div class="column is-half is-offset-one-quarter">
-            <h1 class="title has-text-centered">Add Application</h1>
-            <form method="post">
+            <h1 class="title has-text-centered">เพิ่มข้อมูลการนำผลงานวิจัย/งานสร้างสรรค์ไปใช้ประโยชน์</h1>
+            <form method="post" class="box">
                 {{ form.csrf_token }}
                 <div class="field">
-                    <label class="label">{{ form.org.label }}</label>
+                    <label class="label">{{ form.title.label }}</label>
                     <div class="control">
-                        {{ form.org(placeholder='Organization', class='input is-danger') }}
+                        {{ form.title(class="input") }}
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">{{ form.detail.label }}</label>
+                    <label class="label">{{ form.research_tool.label }}</label>
                     <div class="control">
-                        {{ form.detail(class="textarea") }}
+                        {{ form.research_tool(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.finished_year.label }}</label>
+                    <div class="control">
+                        {{ form.finished_year(class="input") }}
                     </div>
                 </div>
                 <div class="field">
@@ -31,7 +37,55 @@
                         {{ form.date(class="input", type="date") }}
                     </div>
                 </div>
-                <div class="field is-grouped">
+                <div class="field">
+                    <label class="label">{{ form.public_how.label }}</label>
+                    <div class="control">
+                        {{ form.public_how(class="textarea") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.public_outcome.label }}</label>
+                    <div class="control">
+                        {{ form.public_outcome(class="textarea") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.policy_how.label }}</label>
+                    <div class="control">
+                        {{ form.policy_how(class="textarea") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.policy_outcome.label }}</label>
+                    <div class="control">
+                        {{ form.policy_outcome(class="textarea") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.commercial_how.label }}</label>
+                    <div class="control">
+                        {{ form.commercial_how(class="textarea") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.commercial_outcome.label }}</label>
+                    <div class="control">
+                        {{ form.commercial_outcome(class="textarea") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.indirect_how.label }}</label>
+                    <div class="control">
+                        {{ form.indirect_how(class="textarea") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.indirect_outcome.label }}</label>
+                    <div class="control">
+                        {{ form.indirect_outcome(class="textarea") }}
+                    </div>
+                </div>
+                <div class="field is-grouped is-grouped-centered">
                     <div class="control">
                         <button type="submit" class="button is-success">Save</button>
                     </div>

@@ -138,9 +138,18 @@ class SubCategory(db.Model):
 class Application(db.Model):
     __tablename__ = 'applications'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    org = db.Column('organization', db.String(), nullable=False, info={'label': 'Organization'})
-    detail = db.Column('detail', db.Text(), info={'label': 'Detail'})
-    date = db.Column('date', db.Date(), info={'label': 'Date'})
+    title = db.Column('title', db.String(), nullable=False, info={'label': 'ผลงานวิจัย/สร้างสรรค์เรื่อง'})
+    research_tool = db.Column('research_tool', db.String(), nullable=False, info={'label': 'ชื่อเครื่องมือวิจัย'})
+    finished_year = db.Column('finished_year', db.Integer, info={'label': 'แล้วเสร็จในปี'})
+    date = db.Column('date', db.Date(), info={'label': 'วันที่'})
+    public_how = db.Column('public_how', db.Text(), info={'label': 'ใช้ประโยชน์ในเชิงสาธารณะโดยการ'})
+    public_outcome = db.Column('public_outcome', db.Text(), info={'label': 'ผลที่ได้'})
+    policy_how = db.Column('policy_how', db.Text(), info={'label': 'ใช้ประโยชน์ในเชิงนโยบายโดยการ'})
+    policy_outcome = db.Column('policy_outcome', db.Text(), info={'label': 'ผลที่ได้'})
+    commercial_how = db.Column('commercial_how', db.Text(), info={'label': 'ใช้ประโยชน์ในเชิงพานิชย์โดยการ'})
+    commercial_outcome = db.Column('commercial_outcome', db.Text(), info={'label': 'ผลที่ได้'})
+    indirect_how = db.Column('indirect_how', db.Text(), info={'label': 'ใช้ประโยชน์ทางอ้อมของงานสร้างสรรค์'})
+    indirect_outcome = db.Column('indirect_outcome', db.Text(), info={'label': 'ผลที่ได้'})
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     project = db.relationship(ProjectRecord, backref=db.backref('applications'))
 
