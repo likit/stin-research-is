@@ -285,3 +285,48 @@ class ProjectEthicReviewSendRecord(db.Model):
     deadline = db.Column('deadline', db.DateTime(timezone=True))
     review = db.relationship('ProjectEthicReviewRecord', backref=db.backref('send_records'))
     to = db.Column('to', db.String())
+
+
+class ProjectPublicationJournal(db.Model):
+    __tablename__ = 'project_pub_journals'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column('name', db.String(), nullable=False, info={'label': 'ชื่อวารสาร'})
+    abbr = db.Column('abbr', db.String(), info={'label': 'ตัวย่อ'})
+    url = db.Column('url', db.String(), info={'label': 'URL'})
+
+
+class ProjectPublication(db.Model):
+    __tablename__ = 'project_pub_records'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    journal_id = db.Column('journal_id', db.ForeignKey('project_pub_journals.id'))
+    journal = db.relationship(ProjectPublicationJournal, backref=db.backref('articles'))
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    project = db.relationship('ProjectRecord', backref=db.backref('publications'))
+    title = db.Column('title', db.String(), nullable=False)
+    volume = db.Column('volume', db.String())
+    issue_no = db.Column('issue_no', db.String())
+    year = db.Column('year', db.Integer())
+    month = db.Column('month', db.String())
+    page_no = db.Column('page_no', db.String())
+    category = db.Column('category', db.String(), info={'label': 'ประเภทการตีพิมพ์',
+                                                        'choices': [(i, i) for i in
+                                                                    ('บทความวิจัย',
+                                                                     'บทความวิชาการหรือบทความปริทัศน์'
+                                                                     )]})
+
+
+class ProjectLanguageEditingSupport(db.Model):
+    __tablename__ = 'project_language_editing_supports'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    pub_id = db.Column('pub_id', db.ForeignKey('project_pub_records.id'))
+    pub = db.relationship('ProjectPublication', backref=db.backref('language_editing_supports'))
+    amount = db.Column('amount', db.Numeric(), default=0.0)
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    qualification = db.Column('qualification', db.String(),
+                              info={'label': 'คุณสมบัติของผู้ขอรับการสนับสนุนตามประกาศฯ',
+                                    'choices': [(i, i) for i in
+                                                ('บุคลากรของสถาบันฯ ซึ่งไม่อยู่ในระหว่างลาศึกษาต่อ/ไปปฏิบัติงานต่างประเทศ',
+                                                 'เป็นผู้เขียนชื่อแรกหรือผู้รับผิดชอบบทความ',
+                                                 'มีต้นฉบับบทความและได้รับการตีพิมพ์ในวารสารวิชาการระดับนานาชาติที่ปรากฏในฐานข้อมูล ISI (SCI/SSCI/A & HCI) หรือฐานข้อมูล SCOPUS',
+                                                 )]})

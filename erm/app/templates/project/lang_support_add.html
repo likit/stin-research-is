@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Add Language Support{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">แบบบันทึกข้อมูลการสนับสนุนเรื่องการตรวจภาษา</h1>
+            <form method="post" class="box">
+                {{ form.csrf_token }}
+                <div class="field">
+                    <label class="label">{{ form.amount.label }}</label>
+                    <div class="control">
+                        {{ form.amount(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.qualification.label }}</label>
+                    <div class="control">
+                        <div class="select">
+                            {{ form.qualification(class='select') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-grouped is-grouped-centered">
+                    <button type="submit" class="button is-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

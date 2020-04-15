@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Add Journal{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">เพิ่มข้อมูลวารสารวิชาการ</h1>
+            <form method="post" class="box">
+                {{ form.csrf_token }}
+                <div class="field">
+                    <label class="label">Journals</label>
+                    <div class="control">
+                        <div class="select">
+                            {{ form.journals() }}
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.title.label }}</label>
+                    <div class="control">
+                        {{ form.title(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.volume.label }}</label>
+                    <div class="control">
+                        {{ form.volume(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.issue_no.label }}</label>
+                    <div class="control">
+                        {{ form.issue_no(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.year.label }}</label>
+                    <div class="control">
+                        {{ form.year(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.month.label }}</label>
+                    <div class="control">
+                        {{ form.month(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.page_no.label }}</label>
+                    <div class="control">
+                        {{ form.page_no(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.category.label }}</label>
+                    <div class="control">
+                        <div class="select">
+                            {{ form.category(class='select') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-grouped is-grouped-centered">
+                    <button type="submit" class="button is-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

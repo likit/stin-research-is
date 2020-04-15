@@ -317,6 +317,63 @@
                         </table>
                     </td>
                 </tr>
+                <tr>
+                    <td class="title is-size-5">Publications</td>
+                    <td>
+                        <table class="table">
+                            <thead>
+                            <th>Journal</th>
+                            <th>Article Title</th>
+                            <th>Type</th>
+                            <th colspan="2">Financial Support</th>
+                            </thead>
+                            <tbody>
+                            {% for p in project.publications %}
+                            <tr>
+                                <td>{{ p.title }}</td>
+                                <td>{{ p.journal.name }}</td>
+                                <td>{{ p.category }}</td>
+                                <td>
+                                    <a href="{{ url_for('project.add_lang_support', project_id=project.id, pub_id=p.id) }}">Language Edit</a>
+                                </td>
+                                <td>
+                                    <a>Reward</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="4">
+                                    <a href="{{ url_for('project.add_pub', project_id=project.id) }}">
+                                        add
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Language Edit Support Request</td>
+                    <td>
+                        <table class="table">
+                            <thead>
+                            <th>Journal</th>
+                            <th>Article Title</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            </thead>
+                            <tbody>
+                            {% for s in project.language_editing_supports %}
+                            <tr>
+                                <td>{{ s.pub.title }}</td>
+                                <td>{{ s.pub.journal.name }}</td>
+                                <td>{{ s.pub.category }}</td>
+                            </tr>
+                            </tbody>
+                            {% endfor %}
+                        </table>
+                    </td>
+                </tr>
                 {% endif %}
             </table>
             </div>

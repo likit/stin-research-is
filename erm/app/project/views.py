@@ -7,9 +7,7 @@ from werkzeug.utils import secure_filename
 from app import db
 from . import project_bp as project
 from .models import *
-from .forms import (ProjectRecordForm, ApplicationForm,
-                    ProjectMemberForm, ProjectFigureForm,
-                    ProjectMilestoneForm)
+from .forms import *
 from app.main.models import User
 import requests
 from pydrive.auth import ServiceAccountCredentials, GoogleAuth
@@ -348,3 +346,51 @@ def add_milestone(project_id):
 def list_ethics(project_id):
     ethics = ProjectEthicRecord.query.get(project_id)
     return 'Hello'
+
+
+@project.route('/journals/add', methods=['GET', 'POST'])
+def add_journal():
+    form = ProjectJournalForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_journal = ProjectPublicationJournal()
+            form.populate_obj(new_journal)
+            db.session.add(new_journal)
+            db.session.commit()
+            flash('New journal added.')
+            return redirect(request.referrer)
+    return redirect(request.referrer)
+
+
+@project.route('/<int:project_id>/pubs/add', methods=['GET', 'POST'])
+@login_required
+def add_pub(project_id):
+    project = ProjectRecord.query.get(project_id)
+    form = ProjectPublicationForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_pub = ProjectPublication()
+            form.populate_obj(new_pub)
+            new_pub.project_id = project_id
+            new_pub.journal = form.journals.data
+            db.session.add(new_pub)
+            db.session.commit()
+            flash('New publication added.')
+            return redirect(url_for('project.display_project', project_id=project_id))
+    return render_template('project/pub_add.html', project=project, form=form)
+
+
+@project.route('/<int:project_id>/pubs/<int:pub_id>/support/language/add', methods=['GET', 'POST'])
+@login_required
+def add_lang_support(project_id, pub_id):
+    form = ProjectLanguageEditSupportForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_support = ProjectLanguageEditingSupport()
+            form.populate_obj(new_support)
+            new_support.pub_id = pub_id
+            db.session.add(new_support)
+            db.session.commit()
+            flash('New publication added.')
+            return redirect(url_for('project.display_project', project_id=project_id))
+    return render_template('project/lang_support_add.html', project=project, form=form)

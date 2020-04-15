@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from wtforms_components import DateTimeField
 from wtforms.widgets import Select
-from .models import ProjectRecord, Application, ProjectMember, ProjectFigure, ProjectMilestone
+from .models import *
 from app.main.models import User
 
 
@@ -45,3 +45,22 @@ class ProjectFigureForm(ModelForm):
 class ProjectMilestoneForm(ModelForm):
     class Meta:
         model = ProjectMilestone
+
+
+class ProjectJournalForm(ModelForm):
+    class Meta:
+        model = ProjectPublicationJournal
+
+
+class ProjectPublicationForm(ModelForm):
+    class Meta:
+        model = ProjectPublication
+    journals = QuerySelectField(ProjectPublicationJournal,
+                             query_factory=lambda: ProjectPublicationJournal.query.all(),
+                             get_label=lambda x: x.name,
+                             widget=Select())
+
+
+class ProjectLanguageEditSupportForm(ModelForm):
+    class Meta:
+        model = ProjectLanguageEditingSupport
