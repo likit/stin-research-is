@@ -1,7 +1,8 @@
 from flask import request, render_template, flash, redirect, url_for
 from flask_login import login_required, logout_user, login_user, current_user
-from app.auth.forms import RegisterForm, LoginForm
+from app.auth.forms import RegisterForm, LoginForm, NewUserForm
 from app.main.models import User
+from app.researcher.models import Profile
 from app import db, login_manager
 from . import auth_bp as auth
 
@@ -66,3 +67,32 @@ def logout():
         logout_user()
         flash('You have been signed out.', 'is-success')
         return redirect(url_for('main.index'))
+
+
+@auth.route('/users/add', methods=['GET', 'POST'])
+def add_user():
+    form = NewUserForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            email = request.form.get('email')
+            if email:
+                existing_user = User.query.filter_by(email=email).first()
+                if existing_user:
+                    flash('The user with this email already exists.', 'danger')
+                else:
+                    firstname = request.form.get('firstname')
+                    lastname = request.form.get('lastname')
+                    password = request.form.get('password')
+                    new_user = User(email, password)
+                    new_profile = Profile()
+                    new_profile.user = new_user
+                    new_profile.firstname_th = firstname
+                    new_profile.lastname_th = lastname
+                    db.session.add(new_user)
+                    db.session.add(new_profile)
+                    db.session.commit()
+                    flash('The user has been added.', 'success')
+                    return redirect(url_for('auth.add_user'))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('auth/new_user.html', form=form)

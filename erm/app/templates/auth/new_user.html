@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Add User{% endblock %}
+{% block page_content %}
+    <section class="hero is-info">
+        <div class="hero-head">
+            {% include "nav.html" %}
+        </div>
+    </section>
+    <section class="section">
+        <div class="columns">
+            <div class="column is-half is-offset-one-quarter">
+                {% for cat,msg in get_flashed_messages(with_categories=true) %}
+                <p class="notification is-{{ cat }}">{{ msg }}</p>
+                {% endfor %}
+                <h1 class="title has-text-centered">เพิ่มข้อมูลผู้ใช้/นักวิจัย/อาจารย์ในองค์กร</h1>
+                <form method="POST" class="box">
+                    {{ form.csrf_token }}
+                    <div class="field">
+                        <label class="label">{{ form.firstname.label }}</label>
+                        <div class="control">
+                            {{ form.firstname(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.lastname.label }}</label>
+                        <div class="control">
+                            {{ form.lastname(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.email.label }}</label>
+                        <div class="control">
+                            {{ form.email(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.password.label }}</label>
+                        <div class="control">
+                            {{ form.password(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.confirm_password.label }}</label>
+                        <div class="control">
+                            {{ form.confirm_password(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-success" type="submit">Submit</button>
+                        </div>
+                        <div class="control">
+                            <a class="button is-danger" href="{{ url_for('main.index') }}">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}
