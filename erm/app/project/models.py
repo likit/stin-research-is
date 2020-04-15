@@ -292,7 +292,7 @@ class ProjectPublicationJournal(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     name = db.Column('name', db.String(), nullable=False, info={'label': 'ชื่อวารสาร'})
     abbr = db.Column('abbr', db.String(), info={'label': 'ตัวย่อ'})
-    url = db.Column('url', db.String(), info={'label': 'URL'})
+    url = db.Column('url', db.String(), info={'label': 'Journal Website URL'})
 
 
 class ProjectPublication(db.Model):

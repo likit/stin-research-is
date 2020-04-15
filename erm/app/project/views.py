@@ -351,15 +351,19 @@ def list_ethics(project_id):
 @project.route('/journals/add', methods=['GET', 'POST'])
 def add_journal():
     form = ProjectJournalForm()
+    project_id = request.args.get('project_id')
     if request.method == 'POST':
         if form.validate_on_submit():
             new_journal = ProjectPublicationJournal()
             form.populate_obj(new_journal)
             db.session.add(new_journal)
             db.session.commit()
-            flash('New journal added.')
-            return redirect(request.referrer)
-    return redirect(request.referrer)
+            flash('New journal added.', 'success')
+        else:
+            flash(form.errors, 'danger')
+        if project_id:
+            return redirect(url_for('project.add_pub', project_id=project_id))
+    return render_template('project/journal_add.html', form=form, project_id=project_id)
 
 
 @project.route('/<int:project_id>/pubs/add', methods=['GET', 'POST'])

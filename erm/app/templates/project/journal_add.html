@@ -10,6 +10,9 @@
     <section class="section">
         <div class="columns">
             <div class="column is-half is-offset-one-quarter">
+                {% for cat,msg in get_flashed_messages(with_categories=true) %}
+                <p class="notification is-{{ cat }}">{{ msg }}</p>
+                {% endfor %}
                 <h1 class="title has-text-centered">เพิ่มข้อมูลวารสารวิชาการ</h1>
                 <form method="post" class="box">
                     {{ form.csrf_token }}
@@ -28,7 +31,13 @@
                     <div class="field">
                         <label class="label">{{ form.url.label }}</label>
                         <div class="control">
-                            {{ form.url.label(class="input") }}
+                            {{ form.url(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-success" type="submit">Submit</button>
+                            <a href="{{ url_for('project.add_pub', project_id=project_id)}}" class="button is-danger">Cancel</a>
                         </div>
                     </div>
                 </form>
