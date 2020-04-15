@@ -57,7 +57,7 @@ class Profile(db.Model):
     program_id = db.Column('program_id', db.ForeignKey('programs.id'))
     program = db.relationship(Program, backref=db.backref('researchers'))
 
-    def __init__(self, user_id):
+    def __init__(self, user_id=None):
         self.user_id = user_id
 
     def __str__(self):
