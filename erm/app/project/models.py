@@ -294,6 +294,9 @@ class ProjectPublicationJournal(db.Model):
     abbr = db.Column('abbr', db.String(), info={'label': 'ตัวย่อ'})
     url = db.Column('url', db.String(), info={'label': 'Journal Website URL'})
 
+    def __str__(self):
+        return self.name
+
 
 class ProjectPublication(db.Model):
     __tablename__ = 'project_pub_records'
@@ -305,9 +308,17 @@ class ProjectPublication(db.Model):
     project = db.relationship('ProjectRecord', backref=db.backref('publications'))
     title = db.Column('title', db.String(), nullable=False)
     volume = db.Column('volume', db.String())
+    doi = db.Column('DOI', db.String())
+    url = db.Column('url', db.String(), info={'label': 'URL'})
     issue_no = db.Column('issue_no', db.String())
     year = db.Column('year', db.Integer())
-    month = db.Column('month', db.String())
+    month = db.Column('month', db.String(),
+                      info={'choices': [(m, m) for m in ['January', 'February',
+                                                       'March', 'April', 'May',
+                                                       'June', 'July',
+                                                        'August','September',
+                                                        'October', 'November',
+                                                       'December']]})
     page_no = db.Column('page_no', db.String())
     category = db.Column('category', db.String(), info={'label': 'ประเภทการตีพิมพ์',
                                                         'choices': [(i, i) for i in
