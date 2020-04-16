@@ -5,12 +5,13 @@ from flask import render_template, redirect, url_for, request, flash
 from app.project.models import (ProjectRecord, ProjectReviewerGroup,
                                 ProjectReviewSendRecord, ProjectReviewRecord,
                                 ProjectEthicRecord, ProjectEthicReviewRecord,
-                                ProjectEthicReviewSendRecord
+                                ProjectEthicReviewSendRecord, ProjectPublicationJournal,
+                                ProjectPublication,
                                 )
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
                                 ProjectEthicReviewSendRecordForm, ProjectEthicReviewRecordForm
                                 )
-from app.project.forms import ProjectRecordForm
+from app.project.forms import ProjectRecordForm, ProjectPublicationForm, ProjectJournalForm
 
 
 @webadmin.route('/submissions')
@@ -312,3 +313,36 @@ def write_ethic_review(project_id, ethic_id, review_id):
 def view_ethic_reviews(project_id, ethic_id):
     project = ProjectRecord.query.get(project_id)
     return render_template('webadmin/ethic_reviews.html', project=project, ethic_id=ethic_id)
+
+
+@webadmin.route('/pubs/add', methods=['GET', 'POST'])
+def add_pub():
+    form = ProjectPublicationForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_pub = ProjectPublication()
+            form.populate_obj(new_pub)
+            new_pub.journal = form.journals.data
+            db.session.add(new_pub)
+            db.session.commit()
+            flash('New publication added.', 'success')
+        else:
+            flash(form.errors, 'danger')
+        return redirect(url_for('webadmin.add_pub'))
+    return render_template('webadmin/pub_add.html', form=form)
+
+
+@webadmin.route('/journals/add', methods=['GET', 'POST'])
+def add_journal():
+    form = ProjectJournalForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_journal = ProjectPublicationJournal()
+            form.populate_obj(new_journal)
+            db.session.add(new_journal)
+            db.session.commit()
+            flash('New journal added.', 'success')
+            return redirect(url_for('webadmin.add_pub'))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('webadmin/journal_add.html', form=form)

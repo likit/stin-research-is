@@ -1,0 +1,4 @@
+
+{% for cat,msg in get_flashed_messages(with_categories=true) %}
+<p class="notification is-{{ cat }}">{{ msg }}</p>
+{% endfor %}

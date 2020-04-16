@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Add Journal{% endblock %}
+{% block page_content %}
+    <section class="hero is-info">
+        <div class="hero-head">
+            {% include "nav.html" %}
+        </div>
+    </section>
+    <section class="section">
+        <div class="columns">
+            <div class="column is-half is-offset-one-quarter">
+                {% for cat,msg in get_flashed_messages(with_categories=true) %}
+                <p class="notification is-{{ cat }}">{{ msg }}</p>
+                {% endfor %}
+                <h1 class="title has-text-centered">เพิ่มข้อมูลวารสารวิชาการ</h1>
+                <form method="post" class="box">
+                    {{ form.csrf_token }}
+                    <div class="field">
+                        <label class="label">{{ form.name.label }}</label>
+                        <div class="control">
+                            {{ form.name(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.abbr.label }}</label>
+                        <div class="control">
+                            {{ form.abbr(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.url.label }}</label>
+                        <div class="control">
+                            {{ form.url(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-success" type="submit">Submit</button>
+                            <a href="{{ url_for('webadmin.add_pub')}}" class="button is-danger">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}
