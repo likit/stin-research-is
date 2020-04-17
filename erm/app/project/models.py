@@ -306,25 +306,56 @@ class ProjectPublication(db.Model):
     journal = db.relationship(ProjectPublicationJournal, backref=db.backref('articles'))
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     project = db.relationship('ProjectRecord', backref=db.backref('publications'))
-    title = db.Column('title', db.String(), nullable=False)
-    volume = db.Column('volume', db.String())
-    doi = db.Column('DOI', db.String())
+    title = db.Column('title', db.String(), nullable=False, info={'label':
+                                                                  'Title'})
+    volume = db.Column('volume', db.String(), info={'label': 'Volume'})
+    doi = db.Column('DOI', db.String(), info={'label': 'DOI'})
     url = db.Column('url', db.String(), info={'label': 'URL'})
-    issue_no = db.Column('issue_no', db.String())
-    year = db.Column('year', db.Integer())
+    issue_no = db.Column('issue_no', db.String(), info={'label': 'Issue No.'})
+    year = db.Column('year', db.Integer(), info={'label': 'Year'})
     month = db.Column('month', db.String(),
                       info={'choices': [(m, m) for m in ['January', 'February',
                                                        'March', 'April', 'May',
                                                        'June', 'July',
                                                         'August','September',
                                                         'October', 'November',
-                                                       'December']]})
-    page_no = db.Column('page_no', db.String())
-    category = db.Column('category', db.String(), info={'label': 'ประเภทการตีพิมพ์',
+                                                       'December']],
+                            'label': 'Month',
+                           })
+    page_no = db.Column('page_no', db.String(), info={'label': 'Page No.'})
+    category = db.Column('category', db.String(), info={'label': 'Type',
                                                         'choices': [(i, i) for i in
                                                                     ('บทความวิจัย',
                                                                      'บทความวิชาการหรือบทความปริทัศน์'
                                                                      )]})
+
+    @property
+    def authors_list(self):
+        authors = []
+        for a in self.authors:
+            if a.user:
+                authors.append(str(a.user.profile))
+            else:
+                authors.append(a.fullname)
+        return ', '.join(authors)
+
+
+class ProjectPublicationAuthor(db.Model):
+    __tablename__ = 'project_publication_authors'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    pub_id = db.Column('pub_id', db.ForeignKey('project_pub_records.id'))
+    pub = db.relationship('ProjectPublication', backref=db.backref('authors'))
+    user_id = db.Column('user_id', db.ForeignKey('users.id'))
+    user = db.relationship(User, backref=db.backref('publisheds'))
+    firstname = db.Column('firstname', db.String())
+    lastname = db.Column('lastname', db.String())
+    affil = db.Column('affiliation', db.String())
+    corresponding = db.Column('corresponding', db.Boolean(), default=False)
+
+
+    @property
+    def fullname(self):
+        return '{} {}'.format(self.firstname, self.lastname)
 
 
 class ProjectLanguageEditingSupport(db.Model):
