@@ -357,6 +357,12 @@ def list_pubs():
     return render_template('webadmin/pubs.html', pubs=pubs)
 
 
+@webadmin.route('/pubs/<int:pub_id>')
+def show_pub(pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    return render_template('webadmin/pub_detail.html', pub=pub)
+
+
 @webadmin.route('/pubs/<int:pub_id>/edit', methods=['GET', 'POST'])
 def edit_pub(pub_id):
     pub = ProjectPublication.query.get(pub_id)

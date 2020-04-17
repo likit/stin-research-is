@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Add Journal{% endblock %}
+{% block title %}Edit Publication{% endblock %}
 {% block page_content %}
 <section class="hero is-info">
     <div class="hero-head">
@@ -107,10 +107,10 @@
                 </div>
                 <div class="field is-grouped is-grouped-centered">
                     <div class="control">
-                        <button type="submit" class="button is-primary">Add</button>
+                        <button type="submit" class="button is-primary">Save</button>
                     </div>
                     <div class="control">
-                        <a href="{{ url_for('webadmin.list_pubs') }}" class="button is-success">Done</a>
+                        <a href="{{ url_for('webadmin.list_pubs') }}" class="button is-light">Back</a>
                     </div>
                 </div>
             </form>

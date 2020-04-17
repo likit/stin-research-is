@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Publication Detail{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">Publication Detail</h1>
+            {% include 'message.html' %}
+            <div class="box">
+                <h1 class="title is-size-4">{{ pub.title }}</h1>
+                <table class="table is-fullwidth">
+                    <tbody>
+                        <tr>
+                            <td>Authors</td>
+                            <td>
+                                <ol>
+                                    {% for author in pub.authors %}
+                                        {% if author.user_id %}
+                                        <li>
+                                            <strong>{{ author.user.profile }}</strong> {{ author.user.profile.affiliation }}
+                                        </li>
+                                        {% else %}
+                                        <li>
+                                            <strong>{{ author.fullname }}</strong> {{ author.affil }}
+                                        </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ol>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Category</td>
+                            <td>{{ pub.category }}</td>
+                        </tr>
+                        <tr>
+                            <td>Thai Abstract</td>
+                            <td>{{ pub.th_abstract }}</td>
+                        </tr>
+                        <tr>
+                            <td>English Abstract</td>
+                            <td>{{ pub.en_abstract }}</td>
+                        </tr>
+                        <tr>
+                            <td>DOI</td>
+                            <td>{{ pub.doi }}</td>
+                        </tr>
+                        <tr>
+                            <td>URL</td>
+                            <td>
+                                <a href="{{ pub.url }}">{{ pub.url }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Published</td>
+                            <td>{{ pub.month }}, {{ pub.year }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="buttons is-centered">
+                    <a href="{{ url_for('webadmin.list_pubs') }}" class="button
+                        is-light">Back</a>
+                    <a href="{{ url_for('webadmin.edit_pub', pub_id=pub.id) }}"
+                        class="button is-primary">
+                        <span class="icon">
+                            <i class="fas fa-pencil-alt"></i>
+                        </span>
+                        <span>
+                            edit
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

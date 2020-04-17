@@ -8,11 +8,12 @@
     </div>
 </section>
 <section class="section">
+    <div class="container">
     <div class="columns">
-        <div class="column is-two-thirds is-offset-1">
+        <div class="column">
             {% include "message.html" %}
             <h1 class="title has-text-centered">Publications</h1>
-            <table class="table">
+            <table class="table is-fullwidth">
                 <thead>
                     <th>No.</th>
                     <th>Title</th>
@@ -39,6 +40,14 @@
                             {% endif %}
                         </td>
                         <td>
+                            <a href="{{ url_for('webadmin.show_pub', pub_id=pub.id) }}">
+                                <span class="icon">
+                                    <i class="far fa-eye"></i>
+                                </span>
+                                <span>
+                                    view
+                                </span>
+                            </a>
                             <a href="{{ url_for('webadmin.edit_pub', pub_id=pub.id) }}">
                                 <span class="icon">
                                     <i class="fas fa-pencil-alt"></i>
@@ -53,6 +62,7 @@
                 </tbody>
             </table>
         </div>
+    </div>
     </div>
 </section>
 {% endblock %}
