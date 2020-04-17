@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Research Publications{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-two-thirds is-offset-1">
+            {% include "message.html" %}
+            <h1 class="title has-text-centered">Publications</h1>
+            <table class="table">
+                <thead>
+                    <th>No.</th>
+                    <th>Title</th>
+                    <th>Journal</th>
+                    <th>DOI</th>
+                    <th>Published At</th>
+                    <th>URL</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    {% for pub in pubs %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ pub.title }}</td>
+                        <td>{{ pub.journal  }}</td>
+                        <td>{{ pub.doi }}</td>
+                        <td>{{ pub.month }}, {{ pub.year }}</td>
+                        <td>
+                            {% if pub.url %}
+                            <a href="{{ pub.url }}">
+                             {{ pub.url }}
+                            </a>
+                            {% else %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('webadmin.edit_pub', pub_id=pub.id) }}">
+                                <span class="icon">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                                <span>
+                                    edit
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

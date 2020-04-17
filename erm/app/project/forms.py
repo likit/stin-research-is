@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from wtforms_components import DateTimeField
 from wtforms.widgets import Select
+from wtforms.validators import Optional
 from .models import *
 from app.main.models import User
 
@@ -64,3 +65,12 @@ class ProjectPublicationForm(ModelForm):
 class ProjectLanguageEditSupportForm(ModelForm):
     class Meta:
         model = ProjectLanguageEditingSupport
+
+
+class ProjectPublicationAuthorForm(ModelForm):
+    class Meta:
+        model = ProjectPublicationAuthor
+    users = QuerySelectField(User,
+                             query_factory=lambda: User.query.filter_by(role=2),
+                             get_label=lambda x: x.profile.fullname_th,
+                             widget=Select(), validators=[Optional()])

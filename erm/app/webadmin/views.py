@@ -6,12 +6,15 @@ from app.project.models import (ProjectRecord, ProjectReviewerGroup,
                                 ProjectReviewSendRecord, ProjectReviewRecord,
                                 ProjectEthicRecord, ProjectEthicReviewRecord,
                                 ProjectEthicReviewSendRecord, ProjectPublicationJournal,
-                                ProjectPublication,
+                                ProjectPublication, ProjectPublicationAuthor,
                                 )
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
-                                ProjectEthicReviewSendRecordForm, ProjectEthicReviewRecordForm
+                                ProjectEthicReviewSendRecordForm,
+                                ProjectEthicReviewRecordForm,
                                 )
-from app.project.forms import ProjectRecordForm, ProjectPublicationForm, ProjectJournalForm
+from app.project.forms import (ProjectRecordForm, ProjectPublicationForm,
+                               ProjectJournalForm, ProjectPublicationAuthorForm,
+                              )
 
 
 @webadmin.route('/submissions')
@@ -346,3 +349,62 @@ def add_journal():
         else:
             flash(form.errors, 'danger')
     return render_template('webadmin/journal_add.html', form=form)
+
+
+@webadmin.route('/pubs')
+def list_pubs():
+    pubs = ProjectPublication.query.all()
+    return render_template('webadmin/pubs.html', pubs=pubs)
+
+
+@webadmin.route('/pubs/<int:pub_id>/edit', methods=['GET', 'POST'])
+def edit_pub(pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    form = ProjectPublicationForm(obj=pub)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(pub)
+            db.session.add(pub)
+            db.session.commit()
+            flash('Data have been saved.', 'success')
+            return redirect(url_for('webadmin.list_pubs'))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('webadmin/pub_edit.html', form=form, pub=pub)
+
+
+@webadmin.route('/pubs/<int:pub_id>/authors/edit', methods=['GET', 'POST'])
+def edit_pub_authors(pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    return render_template('webadmin/pub_author_edit.html', pub=pub)
+
+
+@webadmin.route('/pubs/<int:pub_id>/authors/add', methods=['GET', 'POST'])
+def add_pub_author(pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    form = ProjectPublicationAuthorForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_author = ProjectPublicationAuthor()
+            form.populate_obj(new_author)
+            new_author.pub = pub
+            new_author.user = form.users.data
+            db.session.add(new_author)
+            db.session.commit()
+            flash('New author has been added.', 'success')
+            return redirect(url_for('webadmin.edit_pub_authors', pub_id=pub_id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('webadmin/pub_author_add.html', pub=pub, form=form)
+
+
+@webadmin.route('/pubs/<int:pub_id>/authors/<int:author_id>/remove', methods=['GET', 'POST'])
+def remove_pub_author(pub_id, author_id):
+    author = ProjectPublicationAuthor.query.get(author_id)
+    if author:
+        db.session.delete(author)
+        db.session.commit()
+        flash('Author has been deleted from publication', 'success')
+    else:
+        flash('The author with that ID was not found.', 'danger',)
+    return redirect(url_for('webadmin.edit_pub_authors', pub_id=pub_id))
