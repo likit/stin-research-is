@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Users{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+    <div class="columns">
+        <div class="column">
+            {% include "message.html" %}
+            <h1 class="title has-text-centered">All Users</h1>
+            <table class="table is-fullwidth">
+                <thead>
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Affiliation</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ user.profile }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>{{ user.profile.program }}</td>
+                        <td>
+                            <a href="">
+                                <span class="icon">
+                                    <i class="far fa-eye"></i>
+                                </span>
+                                <span>
+                                    view
+                                </span>
+                            </a>
+                            <a href="">
+                                <span class="icon">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                                <span>
+                                    edit
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="buttons is-centered">
+                <a href="{{ url_for('auth.add_user') }}" class="button
+                         is-primary">
+                    <span class="icon">
+                        <i class="fas fa-user-plus"></i>
+                    </span>
+                    <span>Add User</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock %}

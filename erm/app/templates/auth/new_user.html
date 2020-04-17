@@ -46,13 +46,9 @@
                             {{ form.confirm_password(class="input") }}
                         </div>
                     </div>
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <button class="button is-success" type="submit">Submit</button>
-                        </div>
-                        <div class="control">
-                            <a class="button is-danger" href="{{ url_for('main.index') }}">Cancel</a>
-                        </div>
+                    <div class="buttons is-centered">
+                        <button class="button is-success" type="submit">Submit</button>
+                        <a class="button is-danger" href="{{ url_for('main.index') }}">Cancel</a>
                     </div>
                 </form>
             </div>

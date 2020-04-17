@@ -92,7 +92,7 @@ def add_user():
                     db.session.add(new_profile)
                     db.session.commit()
                     flash('The user has been added.', 'success')
-                    return redirect(url_for('auth.add_user'))
+                    return redirect(url_for('webadmin.list_users'))
         else:
             flash(form.errors, 'danger')
     return render_template('auth/new_user.html', form=form)

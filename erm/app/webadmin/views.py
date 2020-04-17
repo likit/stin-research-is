@@ -15,6 +15,7 @@ from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecord
 from app.project.forms import (ProjectRecordForm, ProjectPublicationForm,
                                ProjectJournalForm, ProjectPublicationAuthorForm,
                               )
+from app.main.models import User
 
 
 @webadmin.route('/submissions')
@@ -414,3 +415,9 @@ def remove_pub_author(pub_id, author_id):
     else:
         flash('The author with that ID was not found.', 'danger',)
     return redirect(url_for('webadmin.edit_pub_authors', pub_id=pub_id))
+
+
+@webadmin.route('/users')
+def list_users():
+    users = User.query.all()
+    return render_template('webadmin/users.html', users=users)
