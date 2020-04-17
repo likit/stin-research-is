@@ -311,6 +311,8 @@ class ProjectPublication(db.Model):
     volume = db.Column('volume', db.String(), info={'label': 'Volume'})
     doi = db.Column('DOI', db.String(), info={'label': 'DOI'})
     url = db.Column('url', db.String(), info={'label': 'URL'})
+    th_abstract = db.Column('th_abstract', db.Text(), info={'label': 'Thai Abstract'})
+    en_abstract = db.Column('en_abstract', db.Text(), info={'label': 'English Abstract'})
     issue_no = db.Column('issue_no', db.String(), info={'label': 'Issue No.'})
     year = db.Column('year', db.Integer(), info={'label': 'Year'})
     month = db.Column('month', db.String(),
