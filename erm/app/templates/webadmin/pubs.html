@@ -19,9 +19,9 @@
                     <th>Title</th>
                     <th>Journal</th>
                     <th>DOI</th>
-                    <th>Published At</th>
                     <th>URL</th>
-                    <th></th>
+                    <th>Published At</th>
+                    <th colspan="2"></th>
                 </thead>
                 <tbody>
                     {% for pub in pubs %}
@@ -30,7 +30,6 @@
                         <td>{{ pub.title }}</td>
                         <td>{{ pub.journal  }}</td>
                         <td>{{ pub.doi }}</td>
-                        <td>{{ pub.month }}, {{ pub.year }}</td>
                         <td>
                             {% if pub.url %}
                             <a href="{{ pub.url }}">
@@ -39,23 +38,21 @@
                             {% else %}
                             {% endif %}
                         </td>
+                        <td>{{ pub.month }}, {{ pub.year }}</td>
                         <td>
                             <a href="{{ url_for('webadmin.show_pub', pub_id=pub.id) }}">
                                 <span class="icon">
                                     <i class="far fa-eye"></i>
                                 </span>
-                                <span>
-                                    view
-                                </span>
                             </a>
+                        </td>
+                        <td>
                             <a href="{{ url_for('webadmin.edit_pub', pub_id=pub.id) }}">
                                 <span class="icon">
                                     <i class="fas fa-pencil-alt"></i>
                                 </span>
-                                <span>
-                                    edit
-                                </span>
                             </a>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}

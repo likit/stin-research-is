@@ -330,6 +330,7 @@ def add_pub():
             db.session.add(new_pub)
             db.session.commit()
             flash('New publication added.', 'success')
+            return redirect(url_for('webadmin.add_pub_author', pub_id=new_pub.id))
         else:
             flash(form.errors, 'danger')
         return redirect(url_for('webadmin.add_pub'))
