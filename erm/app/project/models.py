@@ -1,7 +1,6 @@
 from app import db
 from app.main.models import User
 
-
 class ProjectMember(db.Model):
     __tablename__ = 'project_members'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -365,12 +364,16 @@ class ProjectLanguageEditingSupport(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     pub_id = db.Column('pub_id', db.ForeignKey('project_pub_records.id'))
     pub = db.relationship('ProjectPublication', backref=db.backref('language_editing_supports'))
-    amount = db.Column('amount', db.Numeric(), default=0.0)
+    amount = db.Column('amount', db.Numeric(), default=0.0, info={'label': 'รวมจำนวนที่ขอรับการสนับสนุนการตรวจคุณภาพ/การตรวจทานภาษาของต้นฉบับทั้งสิ้นคือ'})
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    edited_at = db.Column('edited_at', db.DateTime(timezone=True))
+    approved_at = db.Column('approved_at', db.DateTime(timezone=True))
     qualification = db.Column('qualification', db.String(),
-                              info={'label': 'คุณสมบัติของผู้ขอรับการสนับสนุนตามประกาศฯ',
-                                    'choices': [(i, i) for i in
-                                                ('บุคลากรของสถาบันฯ ซึ่งไม่อยู่ในระหว่างลาศึกษาต่อ/ไปปฏิบัติงานต่างประเทศ',
-                                                 'เป็นผู้เขียนชื่อแรกหรือผู้รับผิดชอบบทความ',
-                                                 'มีต้นฉบับบทความและได้รับการตีพิมพ์ในวารสารวิชาการระดับนานาชาติที่ปรากฏในฐานข้อมูล ISI (SCI/SSCI/A & HCI) หรือฐานข้อมูล SCOPUS',
-                                                 )]})
+                              info={'label': 'คุณสมบัติของผู้ขอรับการสนับสนุนตามประกาศฯ'})
+    criteria = db.Column('criteria', db.Unicode())
+    docs = db.Column('docs', db.Unicode())
+    other_docs = db.Column('other_docs', db.Unicode(), info={'label': 'หลักฐานอื่นๆ'})
+    request = db.Column('request', db.Unicode())
+    status = db.Column('status', db.Unicode(), default='กำลังดำเนินการ',
+                       info={'label': 'สถานะ',
+                             'choices': [(c, c) for c in ('อนุมัติ', 'ไม่อนุมัติ', 'กำลังดำเนินการ')]})
