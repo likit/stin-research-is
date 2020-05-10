@@ -366,10 +366,26 @@ def add_journal():
     return render_template('project/journal_add.html', form=form, project_id=project_id)
 
 
+@project.route('/projects/<int:project_id>/pubs/<int:pub_id>/authors/add', methods=['GET', 'POST'])
+def add_pub_author(project_id, pub_id):
+    form = ProjectPublicationAuthorForm()
+    pub = ProjectPublication.query.get(pub_id)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_author = ProjectPublicationAuthor()
+            form.populate_obj(new_author)
+            new_author.pub = pub
+            new_author.user = form.users.data
+            db.session.add(new_author)
+            db.session.commit()
+            flash('New author has been added.', 'success')
+            return redirect(url_for('project.edit_pub_authors', pub_id=pub_id, project_id=project_id))
+    return render_template('webadmin/pub_author_add.html', form=form)
+
+
 @project.route('/<int:project_id>/pubs/add', methods=['GET', 'POST'])
 @login_required
 def add_pub(project_id):
-    project = ProjectRecord.query.get(project_id)
     form = ProjectPublicationForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -380,8 +396,44 @@ def add_pub(project_id):
             db.session.add(new_pub)
             db.session.commit()
             flash('New publication added.')
+            return redirect(url_for('project.edit_pub_authors',
+                                    project_id=project_id, pub_id=new_pub.id))
+    return render_template('webadmin/pub_add.html', form=form, project_id=project_id)
+
+
+@project.route('projects/<int:project_id>/pubs/<int:pub_id>/edit', methods=['GET', 'POST'])
+def edit_pub(project_id, pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    form = ProjectPublicationForm(obj=pub)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(pub)
+            db.session.add(pub)
+            db.session.commit()
+            flash('Data have been saved.', 'success')
             return redirect(url_for('project.display_project', project_id=project_id))
-    return render_template('project/pub_add.html', project=project, form=form)
+        else:
+            flash(form.errors, 'danger')
+    return render_template('webadmin/pub_edit.html', form=form, pub=pub, project_id=project_id)
+
+
+@project.route('projects/<int:project_id>/pubs/<int:pub_id>/authors/edit', methods=['GET', 'POST'])
+def edit_pub_authors(project_id, pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    return render_template('webadmin/pub_author_edit.html', pub=pub, project_id=project_id)
+
+
+
+@project.route('/projects/<int:project_id>/pubs/<int:pub_id>/authors/<int:author_id>/remove')
+def remove_pub_author(project_id, pub_id, author_id):
+    author = ProjectPublicationAuthor.query.get(author_id)
+    if author:
+        db.session.delete(author)
+        db.session.commit()
+        flash('Author has been deleted from publication', 'success')
+    else:
+        flash('The author with that ID was not found.', 'danger',)
+    return redirect(url_for('project.edit_pub_authors', project_id=project_id, pub_id=pub_id))
 
 
 @project.route('/<int:project_id>/pubs/<int:pub_id>/support/language/add', methods=['GET', 'POST'])

@@ -32,7 +32,11 @@
                                 <td>{{ a.affil }}</td>
                             {% endif %}
                             <td>
+                                {% if project_id %}
+                                <a href="{{ url_for('project.remove_pub_author', pub_id=pub.id, author_id=a.id, project_id=project_id) }}">
+                                {% else %}
                                 <a href="{{ url_for('webadmin.remove_pub_author', pub_id=pub.id, author_id=a.id) }}">
+                                {% endif %}
                                     <span class="icon">
                                         <i class="fas fa-trash-alt
                                             has-text-danger"></i>
@@ -43,15 +47,26 @@
                     </tbody>
                 </table>
             </div>
-            <a href="{{ url_for('webadmin.add_pub_author', pub_id=pub.id) }}" class="button is-primary">
+            {% if project_id %}
+            <a href="{{ url_for('project.add_pub_author', pub_id=pub.id, project_id=project_id) }}"
+            {% else %}
+            <a href="{{ url_for('webadmin.add_pub_author', pub_id=pub.id) }}"
+            {% endif %}
+               class="button is-primary">
                 <span class="icon">
                     <i class="fas fa-user-plus"></i>
                 </span>
                 <span>Add</span>
             </a>
-            <a href="{{ url_for('webadmin.edit_pub', pub_id=pub.id)}}" class="button is-success">
+            {% if project_id %}
+            <a href="{{ url_for('project.edit_pub', pub_id=pub.id, project_id=project_id)}}" class="button is-success">
                 <span>Done</span>
             </a>
+            {% else %}
+            <a href="{{ url_for('webadmin.edit_pub', pub_id=pub.id) }}" class="button is-success">
+                <span>Done</span>
+            </a>
+            {% endif %}
         </div>
     </div>
 </section>

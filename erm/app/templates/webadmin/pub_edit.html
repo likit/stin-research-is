@@ -37,10 +37,17 @@
                         <input type="text" class="input" value="{{ pub.authors_list }}" readonly>
                     </div>
                     <div class="control">
-                        <a class="button is-primary" href="{{
-                            url_for('webadmin.edit_pub_authors', pub_id=pub.id) }}">
+                        {% if project_id %}
+                        <a class="button is-primary"
+                           href="{{ url_for('project.edit_pub_authors', pub_id=pub.id, project_id=project_id) }}">
                             Edit Authors
                         </a>
+                        {% else %}
+                        <a class="button is-primary"
+                           href="{{ url_for('webadmin.edit_pub_authors', pub_id=pub.id) }}">
+                            Edit Authors
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="field">
@@ -110,7 +117,11 @@
                         <button type="submit" class="button is-primary">Save</button>
                     </div>
                     <div class="control">
+                        {% if project_id %}
+                        <a href="{{ url_for('project.display_project', project_id=project_id) }}" class="button is-light">Back</a>
+                        {% else %}
                         <a href="{{ url_for('webadmin.list_pubs') }}" class="button is-light">Back</a>
+                        {% endif %}
                     </div>
                 </div>
             </form>

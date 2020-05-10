@@ -115,10 +115,10 @@
                                        {% if current_user != project.creator or not current_user.is_authenticated or project.status != 'draft' %}
                                        disabled
                                        {% endif %}
-                                       class="is-link is-outlined button">
+                                       class="is-link is-small is-outlined is-rounded button">
                                             <span class="icon">
                                                 <i class="fas fa-plus"></i>
-                                            </span><span>Add Member</span>
+                                            </span><span>Add</span>
                                     </a>
                                 </td>
                             </tr>
@@ -127,67 +127,14 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Application</td>
+                    <td class="title is-size-5">Figures</td>
                     <td>
                         <table class="table is-striped">
                             <thead>
-                                <th>องค์กร สถานที่ ชุมชน</th>
-                                <th>รายละเอียดการใช้งานวิจัย</th>
-                                <th>วันที่และเวลา</th>
-                            </thead>
-                            <tbody>
-                                {% for app in project.applications %}
-                                <tr>
-                                    <td>{{ app.org }}</td>
-                                    <td>{{ app.detail }}</td>
-                                    <td>{{ app.date|localdate }}</td>
-                                    <td>
-                                        {% if current_user == project.creator and current_user.is_authenticated %}
-                                        <a href="{{ url_for('project.edit_application', app_id=app.id) }}">
-                                            <span class="icon">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </span>
-                                            <span>Edit</span>
-                                        </a>
-                                        <a href="{{ url_for('project.remove_application', app_id=app.id) }}">
-                                            <span class="icon">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </span>
-                                            <span>Remove</span>
-                                        </a>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                                {% if current_user == project.creator and current_user.is_authenticated %}
-                                <tr>
-                                    <td colspan="4" class="has-text-centered">
-                                        <a href="{{ url_for('project.add_application', project_id=project.id) }}"
-                                            {% if project.status !="finished"%}
-                                            disabled
-                                            {% endif %}
-                                            class="is-link is-outlined button">
-                                            <span class="icon">
-                                                <i class="fas fa-plus"></i>
-                                            </span><span>Add Application</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endif %}
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="title is-size-5">Figures</td>
-                    <td>
-                        <table class="table">
-                            <thead>
-                            <th>No.</th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>File ID</th>
-                            <th></th>
+                            <th>ลำดับ</th>
+                            <th>ชื่อภาพ</th>
+                            <th>คำอธิบาย</th>
+                            <th colspan="2">รหัสไฟล์</th>
                             </thead>
                             <tbody>
                             {% for fig in project.figures %}
@@ -214,7 +161,7 @@
                             {% endfor %}
                             <tr>
                                 <td colspan="5" class="has-text-centered">
-                                    <a class="is-link is-outlined button"
+                                    <a class="is-link is-outlined is-small is-rounded button"
                                        href="{{ url_for('project.add_figure', project_id=project.id) }}"
                                        {% if current_user != project.creator or project.status != "draft" %}
                                        disabled
@@ -222,7 +169,7 @@
                                         >
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
-                                        </span><span>Add Figure</span>
+                                        </span><span>Add</span>
                                     </a>
                                 </td>
                             </tr>
@@ -234,10 +181,10 @@
                 <tr>
                     <td class="title is-size-5">Ethic Requests</td>
                     <td>
-                        <table class="table">
+                        <table class="table is-striped">
                             <thead>
-                            <th>Submitted</th>
-                            <th>Status</th>
+                            <th>ส่งเมื่อ</th>
+                            <th>สถานะ</th>
                             </thead>
                             <tbody>
                             {% for e in project.ethics %}
@@ -262,10 +209,10 @@
                 <tr>
                     <td class="title is-size-5">Archives</td>
                     <td>
-                        <table class="table">
+                        <table class="table is-striped">
                             <thead>
-                            <th>Timestamp</th>
-                            <th>Status</th>
+                            <th>ประทับเวลา</th>
+                            <th>สถานะ</th>
                             <th></th>
                             </thead>
                             <tbody>
@@ -285,11 +232,11 @@
                 <tr>
                     <td class="title is-size-5">Milestones</td>
                     <td>
-                        <table class="table">
+                        <table class="table is-striped">
                             <thead>
-                            <th>Goal/Task/Requirement</th>
-                            <th>Deadline</th>
-                            <th>Status</th>
+                            <th>เป้าหมาย</th>
+                            <th>กำหนดส่ง</th>
+                            <th>สถานะ</th>
                             <th></th>
                             </thead>
                             <tbody>
@@ -308,9 +255,13 @@
                             </tbody>
                             {% endfor %}
                             <tr>
-                                <td colspan="4">
-                                    <a href="{{ url_for('project.add_milestone', project_id=project.id) }}">
-                                        add
+                                <td colspan="4" class="has-text-centered">
+                                    <a href="{{ url_for('project.add_milestone', project_id=project.id) }}"
+                                        class="button is-small is-rounded is-outlined is-link">
+                                        <span class="icon">
+                                                <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>Add</span>
                                     </a>
                                 </td>
                             </tr>
@@ -320,12 +271,12 @@
                 <tr>
                     <td class="title is-size-5">Publications</td>
                     <td>
-                        <table class="table">
+                        <table class="table is-striped">
                             <thead>
-                            <th>Journal</th>
-                            <th>Article Title</th>
-                            <th>Type</th>
-                            <th colspan="2">Financial Support</th>
+                            <th>เรื่อง</th>
+                            <th>วารสาร</th>
+                            <th>ประเภท</th>
+                            <th colspan="2">ทุนสนับสนุน</th>
                             </thead>
                             <tbody>
                             {% for p in project.publications %}
@@ -339,13 +290,24 @@
                                 <td>
                                     <a>Reward</a>
                                 </td>
+                                <td>
+                                    <a href="{{ url_for('project.edit_pub', pub_id=p.id, project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
+                                    </a>
+                                </td>
                             </tr>
                             </tbody>
                             {% endfor %}
                             <tr>
-                                <td colspan="4">
-                                    <a href="{{ url_for('project.add_pub', project_id=project.id) }}">
-                                        add
+                                <td colspan="4" class="has-text-centered">
+                                    <a href="{{ url_for('project.add_pub', project_id=project.id) }}"
+                                        class="is-link is-outlined is-rounded is-small button">
+                                        <span class="icon">
+                                                <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>Add</span>
                                     </a>
                                 </td>
                             </tr>
@@ -355,12 +317,12 @@
                 <tr>
                     <td class="title is-size-5">Language Edit Support Request</td>
                     <td>
-                        <table class="table">
+                        <table class="table is-striped">
                             <thead>
-                            <th>Journal</th>
-                            <th>Article Title</th>
-                            <th>Type</th>
-                            <th>Amount</th>
+                            <th>เรื่อง</th>
+                            <th>วารสาร</th>
+                            <th>ประเภท</th>
+                            <th>ยอดรวม</th>
                             </thead>
                             <tbody>
                             {% for s in project.language_editing_supports %}
@@ -368,9 +330,62 @@
                                 <td>{{ s.pub.title }}</td>
                                 <td>{{ s.pub.journal.name }}</td>
                                 <td>{{ s.pub.category }}</td>
+                                <td></td>
                             </tr>
                             </tbody>
                             {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">Application</td>
+                    <td>
+                        <table class="table is-striped">
+                            <thead>
+                            <th>องค์กร สถานที่ ชุมชน</th>
+                            <th>รายละเอียดการใช้งานวิจัย</th>
+                            <th>วันที่และเวลา</th>
+                            </thead>
+                            <tbody>
+                            {% for app in project.applications %}
+                            <tr>
+                                <td>{{ app.org }}</td>
+                                <td>{{ app.detail }}</td>
+                                <td>{{ app.date|localdate }}</td>
+                                <td>
+                                    {% if current_user == project.creator and current_user.is_authenticated %}
+                                    <a href="{{ url_for('project.edit_application', app_id=app.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </span>
+                                        <span>Edit</span>
+                                    </a>
+                                    <a href="{{ url_for('project.remove_application', app_id=app.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </span>
+                                        <span>Remove</span>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% if current_user == project.creator and current_user.is_authenticated %}
+                            <tr>
+                                <td colspan="4" class="has-text-centered">
+                                    <a href="{{ url_for('project.add_application', project_id=project.id) }}"
+                                       {% if project.status !="finished"%}
+                                       disabled
+                                       {% endif %}
+                                       class="is-link is-outlined is-small is-rounded button">
+                                            <span class="icon">
+                                                <i class="fas fa-plus"></i>
+                                            </span><span>Add</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            </tbody>
                         </table>
                     </td>
                 </tr>
