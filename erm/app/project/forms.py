@@ -2,10 +2,16 @@ from app import db
 from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from wtforms_components import DateTimeField
-from wtforms.widgets import Select
-from wtforms.validators import Optional
+from wtforms.widgets import Select, ListWidget, CheckboxInput
+from wtforms.fields import SelectMultipleField, DecimalField
+from wtforms.validators import Optional, InputRequired
 from .models import *
 from app.main.models import User
+
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = ListWidget(prefix_label=False)
+    option_widget = CheckboxInput()
 
 
 BaseModelForm = model_form_factory(FlaskForm)
@@ -65,6 +71,31 @@ class ProjectPublicationForm(ModelForm):
 class ProjectLanguageEditSupportForm(ModelForm):
     class Meta:
         model = ProjectLanguageEditingSupport
+
+    qual_choices = [(i, i) for i in
+               ('บุคลากรของสถาบันฯ ซึ่งไม่อยู่ในระหว่างลาศึกษาต่อ/ไปปฏิบัติงานต่างประเทศ',
+                'เป็นผู้เขียนชื่อแรกหรือผู้รับผิดชอบบทความ',
+                'มีต้นฉบับบทความและได้รับการตีพิมพ์ในวารสารวิชาการระดับนานาชาติที่ปรากฏในฐานข้อมูล ISI (SCI/SSCI/A & HCI) หรือฐานข้อมูล SCOPUS'
+                )]
+    qualification_select = MultiCheckboxField('คุณสมบัติของผู้ขอรับการสนับสนุนตามประกาศ', choices=qual_choices)
+    criteria = [(i, i) for i in
+                ("เป็นผลงานที่ได้รับการตีพิมพ์ในวารสารวิชาการระดับนานาชาติที่อยู่ในฐานข้อมูล ISI (SCI/SSCI/A&HCI), Scopus",
+                "เป็นผลงานที่ยังไม่เคยขอรับเงินสนับสนุนการตรวจคุณภาพ/การตรวจทานภาษาของต้นฉบับ",
+                "เป็นผลงานที่ตีพิมพ์ไม่เกิน 6 เดือน นับตั้งแต่วันที่ได้รับการสนับสนุน",
+                "ไม่เป็นผลงานที่ได้รับเงินสนับสนุนจากวารสารที่ลงตีพิมพ์หรือแหล่งทุนอื่น หรือแหล่งทุนสนับสนุนการวิจัยซึ่งระบุไว้ในโครงการวิจัยแล้ว")
+                ]
+    criteria_select = MultiCheckboxField('เกณฑ์การให้เงินสนับสนุนการตรวจคุณภาพและการตรวจทานภาษาของต้นฉบับ', choices=criteria)
+    request_select = MultiCheckboxField('การขอรับเงินสนับสนุน',
+                                        choices=[(i, i) for i in
+                                                 ('การตรวจคุณภาพต้นฉบับบทความ (Manuscript) จ่ายเรื่องละไม่เกิน 5,000 บาท',
+                                                  'การตรวจทานภาษาอังกฤษต้นฉบับบทความ (Manuscript) คำละ 1 บาท จ่ายเรื่องละไม่เกิน 5,000 บาท')])
+    docs_select = MultiCheckboxField('หลักฐานประกอบการขอรับเงินสนับสนุน',
+                                        choices=[(i, i) for i in
+                                                 ('หลักฐานการชำระเงินโดยต้องระบุชื่อผู้รับการสนับสนุนเช่น ใบเสร็จรับเงิน ใบแจ้งหนี้บัตรเครดิต ชื่อบทความ หลักฐานการโอนเงิน (ฉบับจริง) หากเป็นสำเนาต้องรับรองสำเนาถุกต้องและลงชื่อกำกับ',
+                                                  'ใบสำคัญรับเงินจากผู้ทรงคุณวุฒิพร้อมระบุลักษณะการตรวจ (ตรวจทานต้นฉบับ/ตรวจทานภาษาอังกฤษ) ชื่อบทความและจำนวนค่า พร้อมลงนามกำกับ',
+                                                  'สำเนาบัตรประชาชนของผู้ทรงคุณวุฒิ',
+                                                  'สำเนาบทความที่ได้รับการตีพิมพ์พร้อมรายละเอียดของวารสารที่มีชื่อปรากฏในฐานข้อมูล (SCI/SSCI/A&HCI) หรือ Scopus',
+                                                  )])
 
 
 class ProjectPublicationAuthorForm(ModelForm):

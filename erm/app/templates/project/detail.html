@@ -285,10 +285,22 @@
                                 <td>{{ p.journal.name }}</td>
                                 <td>{{ p.category }}</td>
                                 <td>
-                                    <a href="{{ url_for('project.add_lang_support', project_id=project.id, pub_id=p.id) }}">Language Edit</a>
-                                </td>
-                                <td>
-                                    <a>Reward</a>
+                                    <div class="buttons">
+                                        <a href="{{ url_for('project.add_lang_support', project_id=project.id, pub_id=p.id) }}"
+                                           class="button is-small is-rounded is-outlined is-link">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                            <span>ตรวจภาษา</span>
+                                        </a>
+                                        <a
+                                                class="button is-small is-rounded is-outlined is-link">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                            <span>รางวัลการตีพิมพ์</span>
+                                        </a>
+                                    </div>
                                 </td>
                                 <td>
                                     <a href="{{ url_for('project.edit_pub', pub_id=p.id, project_id=project.id) }}">
@@ -320,20 +332,31 @@
                         <table class="table is-striped">
                             <thead>
                             <th>เรื่อง</th>
-                            <th>วารสาร</th>
-                            <th>ประเภท</th>
-                            <th>ยอดรวม</th>
+                            <th>รายการ</th>
+                            <th>ยอดรวม (บาท)</th>
+                            <th>สถานะ</th>
+                            <th>ยื่นเมื่อ</th>
                             </thead>
                             <tbody>
-                            {% for s in project.language_editing_supports %}
-                            <tr>
-                                <td>{{ s.pub.title }}</td>
-                                <td>{{ s.pub.journal.name }}</td>
-                                <td>{{ s.pub.category }}</td>
-                                <td></td>
-                            </tr>
-                            </tbody>
+                            {% for pub in project.publications %}
+                                {% for support in pub.language_editing_supports %}
+                                <tr>
+                                    <td>{{ pub.title }}</td>
+                                    <td>{{ support.request[:20] }}...</td>
+                                    <td>{{ support.amount }}</td>
+                                    <td>{{ support.status }}</td>
+                                    <td>{{ support.submitted_at|localdate }}</td>
+                                    <td>
+                                        <a href="{{ url_for('project.edit_lang_support', pub_id=pub.id, project_id=project.id, record_id=support.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
                             {% endfor %}
+                            </tbody>
                         </table>
                     </td>
                 </tr>

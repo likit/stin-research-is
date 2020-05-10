@@ -14,17 +14,39 @@
             <form method="post" class="box">
                 {{ form.csrf_token }}
                 <div class="field">
-                    <label class="label">{{ form.amount.label }}</label>
+                    <label class="label">{{ form.qualification_select.label }}</label>
                     <div class="control">
-                        {{ form.amount(class="input") }}
+                        {{ form.qualification_select }}
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">{{ form.qualification.label }}</label>
+                    <label class="label">{{ form.criteria_select.label }}</label>
                     <div class="control">
-                        <div class="select">
-                            {{ form.qualification(class='select') }}
-                        </div>
+                        {{ form.criteria_select }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.request_select.label }}</label>
+                    <div class="control">
+                        {{ form.request_select }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.docs_select.label }}</label>
+                    <div class="control">
+                        {{ form.docs_select }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.other_docs.label }}</label>
+                    <div class="control">
+                        {{ form.other_docs(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.amount.label }}</label>
+                    <div class="control">
+                        {{ form.amount(class="input") }}
                     </div>
                 </div>
                 <div class="field is-grouped is-grouped-centered">

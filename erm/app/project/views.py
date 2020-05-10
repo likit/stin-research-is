@@ -444,9 +444,42 @@ def add_lang_support(project_id, pub_id):
         if form.validate_on_submit():
             new_support = ProjectLanguageEditingSupport()
             form.populate_obj(new_support)
+            new_support.qualification = '|'.join(form.qualification_select.data)
+            new_support.criteria = '|'.join(form.criteria_select.data)
+            new_support.docs = '|'.join(form.docs_select.data)
+            new_support.request = '|'.join(form.request_select.data)
             new_support.pub_id = pub_id
+            new_support.submitted_at = arrow.now(tz='Asia/Bangkok').datetime,
             db.session.add(new_support)
             db.session.commit()
-            flash('New publication added.')
+            flash('New language edit request added.')
             return redirect(url_for('project.display_project', project_id=project_id))
     return render_template('project/lang_support_add.html', project=project, form=form)
+
+
+@project.route('/<int:project_id>/pubs/<int:pub_id>/support/language/<int:record_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_lang_support(project_id, pub_id, record_id):
+    record = ProjectLanguageEditingSupport.query.get(record_id)
+    form = ProjectLanguageEditSupportForm(obj=record)
+    criteria = record.criteria.split('|')
+    qualification = record.qualification.split('|')
+    docs = record.docs.split('|')
+    request_data = record.request.split('|')
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(record)
+            record.qualification = '|'.join(form.qualification_select.data)
+            record.criteria = '|'.join(form.criteria_select.data)
+            record.docs = '|'.join(form.docs_select.data)
+            record.request = '|'.join(form.request_select.data)
+            record.pub_id = pub_id
+            record.edited_at = arrow.now(tz='Asia/Bangkok').datetime,
+            db.session.add(record)
+            db.session.commit()
+            flash('New language edit request edited.')
+            return redirect(url_for('project.display_project', project_id=project_id))
+    return render_template('project/lang_support_edit.html',
+                           project=project, form=form,
+                           docs=docs, request_data=request_data,
+                           qualification=qualification, criteria=criteria)
