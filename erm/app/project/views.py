@@ -337,9 +337,55 @@ def add_milestone(project_id):
             new_milestone.created_at = arrow.now(tz='Asia/Bangkok').datetime
             db.session.add(new_milestone)
             db.session.commit()
-            flash('New milestone added.')
+            flash('New milestone added.', 'success')
             return redirect(url_for('project.display_project', project_id=project_id))
     return render_template('project/milestone_add.html', project=project, form=form)
+
+
+@project.route('/<int:project_id>/milestone/<int:milestone_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_milestone(project_id, milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    project = ProjectRecord.query.get(project_id)
+    form = ProjectMilestoneForm(obj=milestone)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(milestone)
+            db.session.add(milestone)
+            db.session.commit()
+            flash('The milestone has been update.', 'success')
+            return redirect(url_for('project.display_project', project_id=project_id))
+    return render_template('project/milestone_add.html', project=project, form=form)
+
+
+@project.route('/<int:project_id>/milestone/clone')
+@login_required
+def clone_milestone(project_id):
+    milestone = ProjectMilestone.query.filter_by(project_id=project_id)\
+                    .order_by(ProjectMilestone.created_at.desc()).first()
+    if milestone:
+        new_milestone = ProjectMilestone()
+        new_milestone.project_id = milestone.project_id
+        new_milestone.created_at = arrow.now(tz='Asia/Bangkok').datetime
+        new_milestone.detail = milestone.detail
+        new_milestone.status = milestone.status
+        if milestone.gantt_activities:
+            for a in milestone.gantt_activities:
+                new_activity = ProjectGanttActivity()
+                new_activity.created_at = arrow.now(tz='Asia/Bangkok').datetime
+                new_activity.completion = a.completion
+                new_activity.start_date = a.start_date
+                new_activity.end_date = a.end_date
+                new_activity.detail = a.detail
+                new_activity.task_id = a.task_id
+                new_milestone.gantt_activities.append(new_activity)
+                db.session.add(new_activity)
+        db.session.add(new_milestone)
+        db.session.commit()
+        flash('New milestone added.', 'success')
+    else:
+        flash('No milestone to clone.', 'warning')
+    return redirect(url_for('project.display_project', project_id=project_id))
 
 
 @project.route('/<int:project_id>/milestone/<int:milestone_id>/gantt-activities')
@@ -378,6 +424,7 @@ def add_gantt_activity(project_id, milestone_id):
             new_activity = ProjectGanttActivity()
             form.populate_obj(new_activity)
             new_activity.milestone_id = milestone_id
+            new_activity.dirty = True
             new_activity.created_at = arrow.now(tz='Asia/Bangkok').datetime
             if new_activity.completion > 100 or new_activity.completion < 0:
                 new_activity.completion = 100.0
@@ -389,6 +436,29 @@ def add_gantt_activity(project_id, milestone_id):
         else:
             flash(form.errors, 'danger')
     return render_template('project/gantt_activity_add.html', form=form)
+
+
+@project.route('projects/<int:project_id>/milestone/<int:milestone_id>/gantt-activities/<int:record_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_gantt_activity(project_id, milestone_id, record_id):
+    record = ProjectGanttActivity.query.get(record_id)
+    form = ProjectGanttActivityForm(obj=record)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(record)
+            record.dirty = True
+            db.session.add(record)
+            db.session.commit()
+            flash('Activity has been updated.', 'success')
+            return redirect(url_for('project.list_gantt_activity',
+                                    project_id=project_id,
+                                    milestone_id=milestone_id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('project/gantt_activity_add.html',
+                           project_id=project_id,
+                           milestone=record.milestone,
+                           form=form, record=record)
 
 
 @project.route('/admin/ethics', methods=['GET', 'POST'])

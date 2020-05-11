@@ -15,9 +15,16 @@
                 <h1 class="title has-text-centered">Project Activities</h1>
                 <h3 class="title is-size-4">รายงานความก้าวหน้า</h3>
                 <h3 class="subtitle is-size-6">วันที่ {{ milestone.created_at|localdate }}</h3>
-                <br>
-                <h3 class="title is-size-5">สถานะ</h3>
-                <h3 class="subtitle is-size-6">{{ milestone.status }}</h3>
+                <table class="table is-fullwidth">
+                    <tr>
+                        <td class="title is-size-5">สถานะ</td>
+                        <td class="is-size-5">{{ milestone.status }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">รายละเอียด</td>
+                        <td class="is-size-5">{{ milestone.detail }}</td>
+                    </tr>
+                </table>
             </div>
         </div>
         <div class="columns">
@@ -28,6 +35,7 @@
                     <th>วันเริ่มต้น</th>
                     <th>วันสิ้นสุด</th>
                     <th>รายละเอียด</th>
+                    <th>ร้อยละความสำเร็จ</th>
                     <th></th>
                     </thead>
                     <tbody>
@@ -37,7 +45,15 @@
                         <td>{{ a.start_date|localdate }}</td>
                         <td>{{ a.end_date|localdate }}</td>
                         <td>{{ a.detail }}</td>
-                        <td></td>
+                        <td>{{ a.completion }}</td>
+                        <td>
+                            <a href="{{ url_for('project.edit_gantt_activity', project_id=project_id, milestone_id=milestone.id, record_id=a.id) }}">
+                                <span class="icon">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                                <span>แก้ไข</span>
+                            </a>
+                        </td>
                     </tr>
                     {% endfor %}
                     </tbody>
