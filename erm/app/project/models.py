@@ -214,6 +214,41 @@ class ProjectGanttActivity(db.Model):
                             })
 
 
+class ProjectBudgetCategory(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    category_id = db.Column('category_id', db.Integer())
+    category = db.Column('category', db.String())
+
+    def __str__(self):
+        return '{} {}'.format(self.category_id, self.category)
+
+
+class ProjectBudgetSubCategory(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    sub_category_id = db.Column('sub_category_id', db.Integer())
+    sub_category = db.Column('sub_category', db.String())
+    category_id = db.Column('category_id', db.ForeignKey('project_budget_category.id'))
+    category = db.relationship(ProjectBudgetCategory, backref=db.backref('subcategories'))
+
+    def __str__(self):
+        return '<{}> {} {}'.format(self.category.category, self.sub_category_id, self.sub_category)
+
+
+class ProjectBudgetItem(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    sub_category_id = db.Column('sub_category_id', db.ForeignKey('project_budget_sub_category.id'))
+    sub_category = db.relationship(ProjectBudgetSubCategory, backref=db.backref('items'))
+    item = db.Column('item', db.String())
+    phase = db.Column('phase', db.String(),
+                      info={'label': 'งวด',
+                            'choices': [(1, 'งวดที่ 1'), (2, 'งวดที่ 2'),
+                                        (3, 'งวดที่ 3'), (4, 'งวดที่ 4')]})
+    wage = db.Column('wage', db.Numeric(), default=0.0)
+    amount_spent = db.Column('amount_spent', db.Numeric(), default=0.0)
+    created_at = db.Column('created_at', db.DateTime(timezone=True))
+    edited_at = db.Column('edited_at', db.DateTime(timezone=True))
+
+
 reviewer_groups = db.Table('reviewer_groups',
     db.Column('group_id', db.Integer, db.ForeignKey('project_reviewer_groups.id'), primary_key=True),
     db.Column('reviewer_id', db.Integer, db.ForeignKey('project_reviewers.id'), primary_key=True)
