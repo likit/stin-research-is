@@ -101,6 +101,9 @@ class ProjectLanguageEditSupportForm(ModelForm):
 class ProjectPublishedRewardForm(ModelForm):
     class Meta:
         model = ProjectPublishedReward
+        field_args = {'reward': {'validators': [Optional()]},
+                      'apc': {'validators': [Optional()]}
+                      }
     qualifications = [(c, c) for c in
                       ('บุคลากรสถาบันฯและไม่อยู่ระหว่างลาศึกษา/ไปปฏิบัติงานเพื่อเพิ่มพูนความรู้',
                        'เป็นผู้ประพันธ์ชื่อแรก (first author)',
