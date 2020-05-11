@@ -194,6 +194,7 @@ class ProjectGanttActivity(db.Model):
     start_date = db.Column('start_date', db.Date(), info={'label': 'เริ่มต้น'})
     end_date = db.Column('end_date', db.Date(), info={'label': 'สิ้นสุด'})
     completion = db.Column('completion', db.Numeric(), info={'label': 'ร้อยละความสำเร็จ'}, default=100.0)
+    dirty = db.Column('dirty', db.Boolean(), default=False)
     task_id = db.Column('task_id', db.Integer(),
                             info={
                                 'label': 'กิจกรรม',
