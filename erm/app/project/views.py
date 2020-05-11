@@ -67,8 +67,6 @@ def make_project_archive(project):
     milestones = []
     for milestone in project.milestones:
         mst = {
-            'deadline': milestone.deadline,
-            'goal': milestone.goal,
             'status': milestone.status,
             'detail': milestone.detail
         }
@@ -336,11 +334,61 @@ def add_milestone(project_id):
             new_milestone = ProjectMilestone()
             form.populate_obj(new_milestone)
             new_milestone.project_id = project_id
+            new_milestone.created_at = arrow.now(tz='Asia/Bangkok').datetime
             db.session.add(new_milestone)
             db.session.commit()
             flash('New milestone added.')
             return redirect(url_for('project.display_project', project_id=project_id))
     return render_template('project/milestone_add.html', project=project, form=form)
+
+
+@project.route('/<int:project_id>/milestone/<int:milestone_id>/gantt-activities')
+@login_required
+def list_gantt_activity(project_id, milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    activities = dict([(1, '1. พัฒนาโครงร่างการวิจัยและเครื่องมือการวิจัย'),
+                        (2, '2. เสนอโครงร่างการวิจัยเพื่อขอรับการพิจารณาจริยธรรมฯ'),
+                        (3, '3. เสนอขอรับทุนอุดหนุนการวิจัย'),
+                        (4, '4. ผู้ทรงคุณวุฒิตรวจสอบและแก้ไข'),
+                        (5, '5. ติดต่อประสานงานเพื่อขอเก็บข้อมูล'),
+                        (6, '6. ดำเนินการเก็บรวบรวมข้อมูล'),
+                        (7, '7. วิเคราะห์ผลการวิจัยและอภิปรายผล'),
+                        (8, '8. จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย')]
+                      )
+    gantt_activities = []
+    for a in sorted(milestone.gantt_activities, key=lambda x: x.task_id):
+        gantt_activities.append([
+            str(a.task_id),
+            activities.get(a.task_id),
+            a.start_date.isoformat(),
+            a.end_date.isoformat(),
+            None, float(a.completion), None
+        ])
+    return render_template('project/gantt_chart.html',
+                           project_id=project_id,
+                           milestone=milestone, gantt_activities=gantt_activities)
+
+
+@project.route('/<int:project_id>/milestone/<int:milestone_id>/gantt-activities/add', methods=['GET', 'POST'])
+@login_required
+def add_gantt_activity(project_id, milestone_id):
+    form = ProjectGanttActivityForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_activity = ProjectGanttActivity()
+            form.populate_obj(new_activity)
+            new_activity.milestone_id = milestone_id
+            new_activity.created_at = arrow.now(tz='Asia/Bangkok').datetime
+            if new_activity.completion > 100 or new_activity.completion < 0:
+                new_activity.completion = 100.0
+            db.session.add(new_activity)
+            db.session.commit()
+            flash('New activity has been added.', 'success')
+            return redirect(url_for('project.list_gantt_activity',
+                                    project_id=project_id, milestone_id=milestone_id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('project/gantt_activity_add.html', form=form)
 
 
 @project.route('/admin/ethics', methods=['GET', 'POST'])

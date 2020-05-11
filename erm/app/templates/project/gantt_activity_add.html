@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Project Milestone Edit Page{% endblock %}
+{% block title %}Gantt Chart Activity Page{% endblock %}
 
 {% block page_content %}
 <section class="hero is-info">
@@ -12,13 +12,31 @@
     <div class="container">
         <div class="columns">
             <div class="column is-one-third is-offset-4">
-                <h1 class="title has-text-centered">Add Milestone</h1>
+                <h1 class="title has-text-centered">Add Gantt Chart Activity</h1>
                 <form class="box" method="post" enctype=multipart/form-data>
                     {{ form.csrf_token }}
                     <div class="field">
-                        <label class="label">{{ form.status.label }}</label>
+                        <label class="label">{{ form.task_id.label }}</label>
                         <div class="select">
-                            {{ form.status() }}
+                            {{ form.task_id() }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.start_date.label }}</label>
+                        <div class="control">
+                            {{ form.start_date(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.end_date.label }}</label>
+                        <div class="control">
+                            {{ form.end_date(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.completion.label }}</label>
+                        <div class="control">
+                            {{ form.completion(class="input") }}
                         </div>
                     </div>
                     <div class="field">

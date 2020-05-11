@@ -122,3 +122,8 @@ class ProjectPublicationAuthorForm(ModelForm):
                              query_factory=lambda: User.query.filter_by(role=2),
                              get_label=lambda x: x.profile.fullname_th,
                              widget=Select(), validators=[Optional()])
+
+
+class ProjectGanttActivityForm(ModelForm):
+    class Meta:
+        model = ProjectGanttActivity

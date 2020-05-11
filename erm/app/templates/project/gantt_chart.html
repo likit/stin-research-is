@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Gantt Chart Activities{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                {% include "message.html" %}
+                <h1 class="title has-text-centered">Project Activities</h1>
+                <h3 class="title is-size-4">รายงานความก้าวหน้า</h3>
+                <h3 class="subtitle is-size-6">วันที่ {{ milestone.created_at|localdate }}</h3>
+                <br>
+                <h3 class="title is-size-5">สถานะ</h3>
+                <h3 class="subtitle is-size-6">{{ milestone.status }}</h3>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <table class="table is-fullwidth">
+                    <thead>
+                    <th>กิจกรรม</th>
+                    <th>วันเริ่มต้น</th>
+                    <th>วันสิ้นสุด</th>
+                    <th>รายละเอียด</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+                    {% for a in milestone.gantt_activities|sort(attribute='task_id') %}
+                    <tr>
+                        <td>{{ a.task_id }}</td>
+                        <td>{{ a.start_date|localdate }}</td>
+                        <td>{{ a.end_date|localdate }}</td>
+                        <td>{{ a.detail }}</td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="buttons is-centered">
+                    <a class="button is-info"
+                       href="{{ url_for('project.add_gantt_activity', project_id=project_id, milestone_id=milestone.id) }}">
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span>เพิ่มรายการกิจกรรม</span>
+                    </a>
+                    <a href="{{ url_for('project.display_project', project_id=project_id) }}"
+                        class="button is-light">
+                        กลับ
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <hr>
+                <h1 class="title has-text-centered">Gantt Chart</h1>
+                <div id="chart_div"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    google.charts.load('current', {'packages':['gantt']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function daysToMilliseconds(days) {
+      return days * 24 * 60 * 60 * 1000;
+    }
+
+    function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Task ID');
+      data.addColumn('string', 'Task Name');
+      data.addColumn('date', 'Start Date');
+      data.addColumn('date', 'End Date');
+      data.addColumn('number', 'Duration');
+      data.addColumn('number', 'Percent Complete');
+      data.addColumn('string', 'Dependencies');
+
+      var activities = {{ gantt_activities|tojson|safe }};
+      var gantt_activities = [];
+      activities.forEach(function(item) {
+          start_date = new Date(item[2]);
+          end_date = new Date(item[3]);
+          gantt_activities.push([item[0],
+                                  item[1], start_date, end_date,
+                                  item[4], item[5], item[6]]);
+      });
+      data.addRows(gantt_activities);
+      var options = {
+        height: 275
+      };
+
+      var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+    }
+</script>
+{% endblock %}
