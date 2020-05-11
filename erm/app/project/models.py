@@ -377,3 +377,45 @@ class ProjectLanguageEditingSupport(db.Model):
     status = db.Column('status', db.Unicode(), default='กำลังดำเนินการ',
                        info={'label': 'สถานะ',
                              'choices': [(c, c) for c in ('อนุมัติ', 'ไม่อนุมัติ', 'กำลังดำเนินการ')]})
+
+
+class ProjectPublishedReward(db.Model):
+    __tablename__ = 'project_pub_rewards'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    pub_id = db.Column('pub_id', db.ForeignKey('project_pub_records.id'))
+    pub = db.relationship('ProjectPublication', backref=db.backref('pub_rewards'))
+    amount = db.Column('amount', db.Numeric(), default=0.0, info={'label': 'รวมเงินรางวัลทั้งหมด'})
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    edited_at = db.Column('edited_at', db.DateTime(timezone=True))
+    approved_at = db.Column('approved_at', db.DateTime(timezone=True))
+    qualification = db.Column('qualification', db.String(),
+                              info={'label': 'คุณสมบัติของผู้ขอรับการสนับสนุนและรางวัลการตีพิมพ์ผลงานวิชาการ'})
+    apc = db.Column('apc', db.Unicode(),
+                    info={
+                        'label': 'เงินสนับสนุนการตีพิมพ์ผลงานวิชาการ',
+                        'choices': [(c, c) for c in (
+                                        'วารสารวิชาการระดับชาติ (TCI) IF>0 สนับสนุน 3,500 บาท',
+                                        'วารสารวิชาการระดับนานาชาติ (ISI/Scopus) Q3 หรือ Q4 สนับสนุน 10,000 บาท',
+                                        'วารสารวิชาการระดับนานาชาติ (ISI/Scopus) Q1 หรือ Q2 สนับสนุน 20,000 บาท',
+                                    )]
+                    })
+    reward = db.Column('reward', db.Unicode(),
+                       info={
+                           'label': 'เงินรางวัลการตีพิมพ์ผลงานวิชาการ',
+                           'choices': [(c, c) for c in (
+                                        'บทความวิจัยระดับชาติ IF 0.0-1.0 รางวัล 2,000 บาท',
+                                        'บทความวิจัยระดับชาติ IF 1.0-2.0 รางวัล 4,000 บาท',
+                                        'บทความวิจัยระดับชาติ IF > 2.0 รางวัล 6,000 บาท',
+                                        'บทความวิชาการหรือปรทัศน์ระดับชาติ IF 0.0-1.0 รางวัล 1,000 บาท',
+                                        'บทความวิชาการหรือปรทัศน์ระดับชาติ IF 1.0-2.0 รางวัล 2,000 บาท',
+                                        'บทความวิชาการหรือปรทัศน์ระดับชาติ IF > 2.0 รางวัล 3,000 บาท',
+                                        'บทความวิจัยระดับนานาชาติ Q4 รางวัล 5,000 บาท',
+                                        'บทความวิจัยระดับนานาชาติ Q3 รางวัล 10,000 บาท',
+                                        'บทความวิจัยระดับนานาชาติ Q2 รางวัล 15,000 บาท',
+                                        'บทความวิจัยระดับนานาชาติ Q1 รางวัล 20,000 บาท',
+                                        'บทความวิชาการหรือปริทัศน์ระดับนานาชาติ Q4 รางวัล 3,000 บาท',
+                                        'บทความวิชาการหรือปริทัศน์ระดับนานาชาติ Q3 รางวัล 6,000 บาท',
+                                        'บทความวิชาการหรือปริทัศน์ระดับนานาชาติ Q2 รางวัล 9,000 บาท',
+                                        'บทความวิชาการหรือปริทัศน์ระดับนานาชาติ Q1 รางวัล 12,000 บาท',
+                                    )]
+                       })

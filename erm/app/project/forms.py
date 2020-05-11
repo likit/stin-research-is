@@ -98,6 +98,20 @@ class ProjectLanguageEditSupportForm(ModelForm):
                                                   )])
 
 
+class ProjectPublishedRewardForm(ModelForm):
+    class Meta:
+        model = ProjectPublishedReward
+    qualifications = [(c, c) for c in
+                      ('บุคลากรสถาบันฯและไม่อยู่ระหว่างลาศึกษา/ไปปฏิบัติงานเพื่อเพิ่มพูนความรู้',
+                       'เป็นผู้ประพันธ์ชื่อแรก (first author)',
+                       'เป็นผู้รับผิดชอบบทความหลัก (corresponding author) กรณีนี้ต้องแนบใบยินยอมจากผู้เขียนชื่อแรกมาด้วย',
+                       'เป็นผู้มีส่วนร่วมเท่ากัน (equal contribution)',
+                       'บทความนี้ไม่มีการตีพิมพ์ซ้ำซ้อน',
+                       'บทความนี้ไม่เคยขอหรืออยู่ระหว่างการขอรับเงินสนับสนุนการตีพิมพ์จากแหล่งทุนอื่น')]
+    qualification_select = MultiCheckboxField(
+        'คุณสมบัติของผู้ขอรับเงินสนับสนุนและรางวัลการตีพิมพ์ผลงานวิชาการ', choices=qualifications)
+
+
 class ProjectPublicationAuthorForm(ModelForm):
     class Meta:
         model = ProjectPublicationAuthor
