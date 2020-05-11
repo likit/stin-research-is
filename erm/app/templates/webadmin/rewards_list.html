@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Publication Reward and Fee Support Requests {% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                {% include "message.html" %}
+                <h1 class="title has-text-centered">Publication Reward and Fee Support Requests</h1>
+                <table class="table is-fullwidth">
+                    <thead>
+                    <th>No.</th>
+                    <th>Title</th>
+                    <th>Journal</th>
+                    <th>Published</th>
+                    <th>Request</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+                    {% for rw in rewards|sort(attribute='submitted_at', reverse=True) %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ rw.pub.title }}</td>
+                        <td>{{ rw.pub.journal  }}</td>
+                        <td>{{ rw.pub.month }}, {{ rw.pub.year }}</td>
+                        <td>{{ rw.apc or rw.reward }}</td>
+                        <td>{{ rw.amount }}</td>
+                        <td>
+                            <span class="tag is-medium">
+                            {{ rw.status }}
+                            </span>
+                        </td>
+                        <td>{{ rw.submitted_at|localdate }}</td>
+                        <td>
+                            <a href="{{ url_for('webadmin.edit_pub_reward', pub_id=rw.pub.id, record_id=rw.id) }}">
+                                <span class="icon">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

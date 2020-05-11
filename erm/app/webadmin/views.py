@@ -476,8 +476,9 @@ def edit_lang_support(pub_id, record_id):
             record.criteria = '|'.join(form.criteria_select.data)
             record.docs = '|'.join(form.docs_select.data)
             record.request = '|'.join(form.request_select.data)
-            record.pub_id = pub_id
             record.edited_at = arrow.now(tz='Asia/Bangkok').datetime,
+            if record.status == 'อนุมัติ':
+                record.approved_at = arrow.now(tz='Asia/Bangkok').datetime
             db.session.add(record)
             db.session.commit()
             flash('The language edit request has been edited.', 'success')
@@ -488,3 +489,44 @@ def edit_lang_support(pub_id, record_id):
                            form=form,
                            docs=docs, request_data=request_data,
                            qualification=qualification, criteria=criteria)
+
+
+@webadmin.route('/support/rewards')
+@login_required
+def list_pub_rewards():
+    rewards = ProjectPublishedReward.query.all()
+    return render_template('webadmin/rewards_list.html', rewards=rewards)
+
+
+@webadmin.route('/pubs/<int:pub_id>/support/reward/<int:record_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_pub_reward(pub_id, record_id):
+    pub = ProjectPublication.query.get(pub_id)
+    record = ProjectPublishedReward.query.get(record_id)
+    qualification = record.qualification.split('|')
+    form = ProjectPublishedRewardForm(obj=record)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(record)
+            record.qualification = '|'.join(form.qualification_select.data)
+            record.edited_at = arrow.now(tz='Asia/Bangkok').datetime
+            if record.status == 'อนุมัติ':
+                record.approved_at = arrow.now(tz='Asia/Bangkok').datetime
+            if record.reward:
+                reward_amt = float(record.reward.split()[-2])
+            else:
+                reward_amt = 0.0
+            if record.apc:
+                apc_amt = float(record.apc.split()[-2])
+            else:
+                apc_amt = 0.0
+            record.amount = reward_amt + apc_amt
+            db.session.add(record)
+            db.session.commit()
+            flash('The publication reward/fee request has been edited.', 'success')
+            return redirect(url_for('webadmin.list_pub_rewards'))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('webadmin/reward_edit.html',
+                           record=record, form=form,
+                           pub=pub, qualification=qualification)
