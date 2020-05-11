@@ -1,36 +1,33 @@
 import arrow
 from app.webadmin import webadmin_bp as webadmin
+from flask_login import login_required
 from wsgi import db
 from flask import render_template, redirect, url_for, request, flash
-from app.project.models import (ProjectRecord, ProjectReviewerGroup,
-                                ProjectReviewSendRecord, ProjectReviewRecord,
-                                ProjectEthicRecord, ProjectEthicReviewRecord,
-                                ProjectEthicReviewSendRecord, ProjectPublicationJournal,
-                                ProjectPublication, ProjectPublicationAuthor,
-                                )
+from app.project.models import *
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
                                 ProjectEthicReviewSendRecordForm,
                                 ProjectEthicReviewRecordForm,
                                 )
-from app.project.forms import (ProjectRecordForm, ProjectPublicationForm,
-                               ProjectJournalForm, ProjectPublicationAuthorForm,
-                              )
+from app.project.forms import *
 from app.main.models import User
 
 
 @webadmin.route('/submissions')
+@login_required
 def list_submissions():
     submissions = ProjectRecord.query.filter_by(status='submitted')
     return render_template('webadmin/submissions.html', submissions=submissions)
 
 
 @webadmin.route('/submissions/<int:project_id>')
+@login_required
 def submission_detail(project_id):
     project = ProjectRecord.query.get(project_id)
     return render_template('webadmin/submission_detail.html', project=project)
 
 
 @webadmin.route('/submissions/<int:project_id>/reviewers/add')
+@login_required
 def list_reviewers(project_id):
     project = ProjectRecord.query.get(project_id)
     groups = ProjectReviewerGroup.query.all()
@@ -40,6 +37,7 @@ def list_reviewers(project_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/reviewers/add/<int:reviewer_id>')
+@login_required
 def add_reviewer(project_id, reviewer_id):
     review = ProjectReviewRecord.query.filter_by(reviewer_id=reviewer_id,
                                                  project_id=project_id).first()
@@ -55,6 +53,7 @@ def add_reviewer(project_id, reviewer_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/reviewers/add/all/<int:group_id>')
+@login_required
 def add_all_reviewers(project_id, group_id):
     reviewer_group = ProjectReviewerGroup.query.get(group_id)
     project = ProjectRecord.query.get(project_id)
@@ -69,6 +68,7 @@ def add_all_reviewers(project_id, group_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/reviewers/remove/<int:reviewer_id>')
+@login_required
 def remove_reviewer(project_id, reviewer_id):
     review = ProjectReviewRecord.query.filter_by(reviewer_id=reviewer_id,
                                                  project_id=project_id).first()
@@ -79,6 +79,7 @@ def remove_reviewer(project_id, reviewer_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/reviewers/remove/all')
+@login_required
 def remove_all_reviewers(project_id):
     project = ProjectRecord.query.get(project_id)
     for review in project.reviews:
@@ -89,12 +90,14 @@ def remove_all_reviewers(project_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/reviews')
+@login_required
 def view_reviews(project_id):
     project = ProjectRecord.query.get(project_id)
     return render_template('webadmin/reviews.html', project=project)
 
 
 @webadmin.route('/submissions/<int:project_id>/reviews/send', methods=['GET', 'POST'])
+@login_required
 def send_for_reviews(project_id):
     project = ProjectRecord.query.get(project_id)
     form = ProjectReviewSendRecordForm()
@@ -114,12 +117,14 @@ def send_for_reviews(project_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/reviews/sends', methods=['GET', 'POST'])
+@login_required
 def view_send_records(project_id):
     project = ProjectRecord.query.get(project_id)
     return render_template('webadmin/send_records.html', project=project)
 
 
 @webadmin.route('/submissions/<int:project_id>/reviews/sends/<int:record_id>', methods=['GET', 'POST'])
+@login_required
 def resend_for_review(project_id, record_id):
     project = ProjectRecord.query.get(project_id)
     send_record = ProjectReviewSendRecord.query.get(record_id)
@@ -139,6 +144,7 @@ def resend_for_review(project_id, record_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/reviews/write/<int:review_id>', methods=['GET', 'POST'])
+@login_required
 def write_review(project_id, review_id):
     project = ProjectRecord.query.get(project_id)
     review = ProjectReviewRecord.query.get(review_id)
@@ -157,11 +163,13 @@ def write_review(project_id, review_id):
 
 
 @webadmin.route('/submissions/confirm', methods=['GET', 'POST'])
+@login_required
 def confirm_review():
     return render_template('webadmin/review_confirm.html')
 
 
 @webadmin.route('/submissions/<int:project_id>/status', methods=['GET', 'POST'])
+@login_required
 def update_status(project_id):
     project = ProjectRecord.query.get(project_id)
     form = ProjectRecordForm(obj=project)
@@ -178,18 +186,21 @@ def update_status(project_id):
 
 
 @webadmin.route('/ethics')
+@login_required
 def list_ethics():
     ethics = ProjectEthicRecord.query.all()
     return render_template('webadmin/ethics.html', ethics=ethics)
 
 
 @webadmin.route('/ethics/<int:ethic_id>')
+@login_required
 def ethic_detail(ethic_id):
     ethic = ProjectEthicRecord.query.get(ethic_id)
     return render_template('webadmin/ethic_detail.html', ethic=ethic, project=ethic.project)
 
 
 @webadmin.route('/project/<int:project_id>/ethic/<int:ethic_id>/reviewers/add')
+@login_required
 def list_ethic_reviewers(project_id, ethic_id):
     project = ProjectRecord.query.get(project_id)
     groups = ProjectReviewerGroup.query.all()
@@ -198,6 +209,7 @@ def list_ethic_reviewers(project_id, ethic_id):
 
 
 @webadmin.route('/ethics/<int:project_id>/reviewers/add/<int:reviewer_id>')
+@login_required
 def add_ethic_reviewer(project_id, reviewer_id):
     review = ProjectEthicReviewRecord.query.filter_by(reviewer_id=reviewer_id,
                                                       project_id=project_id).first()
@@ -213,6 +225,7 @@ def add_ethic_reviewer(project_id, reviewer_id):
 
 
 @webadmin.route('/ethics/<int:project_id>/reviewers/add/all/<int:group_id>')
+@login_required
 def add_all_ethic_reviewers(project_id, group_id):
     reviewer_group = ProjectReviewerGroup.query.get(group_id)
     project = ProjectRecord.query.get(project_id)
@@ -226,6 +239,7 @@ def add_all_ethic_reviewers(project_id, group_id):
 
 
 @webadmin.route('/ethics/<int:project_id>/reviewers/remove/<int:reviewer_id>')
+@login_required
 def remove_ethic_reviewer(project_id, reviewer_id):
     review = ProjectEthicReviewRecord.query.filter_by(reviewer_id=reviewer_id,
                                                       project_id=project_id).first()
@@ -236,6 +250,7 @@ def remove_ethic_reviewer(project_id, reviewer_id):
 
 
 @webadmin.route('/ethics/<int:project_id>/reviewers/remove/all')
+@login_required
 def remove_all_ethic_reviewers(project_id):
     project = ProjectRecord.query.get(project_id)
     for review in project.ethic_reviews:
@@ -247,6 +262,7 @@ def remove_all_ethic_reviewers(project_id):
 
 @webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviews/send',
                 methods=['GET', 'POST'])
+@login_required
 def send_for_ethic_reviews(project_id, ethic_id):
     project = ProjectRecord.query.get(project_id)
     form = ProjectEthicReviewSendRecordForm()
@@ -266,6 +282,7 @@ def send_for_ethic_reviews(project_id, ethic_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviews/sends', methods=['GET', 'POST'])
+@login_required
 def view_send_ethic_records(project_id, ethic_id):
     project = ProjectRecord.query.get(project_id)
     ethic = ProjectEthicRecord.query.get(ethic_id)
@@ -273,6 +290,7 @@ def view_send_ethic_records(project_id, ethic_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviews/sends/<int:record_id>', methods=['GET', 'POST'])
+@login_required
 def resend_for_ethic_review(project_id, record_id, ethic_id):
     project = ProjectRecord.query.get(project_id)
     send_record = ProjectEthicReviewSendRecord.query.get(record_id)
@@ -292,6 +310,7 @@ def resend_for_ethic_review(project_id, record_id, ethic_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviews/<int:review_id>/add', methods=['GET', 'POST'])
+@login_required
 def write_ethic_review(project_id, ethic_id, review_id):
     project = ProjectRecord.query.get(project_id)
     review = ProjectEthicReviewRecord.query.get(review_id)
@@ -314,12 +333,14 @@ def write_ethic_review(project_id, ethic_id, review_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviews')
+@login_required
 def view_ethic_reviews(project_id, ethic_id):
     project = ProjectRecord.query.get(project_id)
     return render_template('webadmin/ethic_reviews.html', project=project, ethic_id=ethic_id)
 
 
 @webadmin.route('/pubs/add', methods=['GET', 'POST'])
+@login_required
 def add_pub():
     form = ProjectPublicationForm()
     if request.method == 'POST':
@@ -338,6 +359,7 @@ def add_pub():
 
 
 @webadmin.route('/journals/add', methods=['GET', 'POST'])
+@login_required
 def add_journal():
     form = ProjectJournalForm()
     if request.method == 'POST':
@@ -354,18 +376,21 @@ def add_journal():
 
 
 @webadmin.route('/pubs')
+@login_required
 def list_pubs():
     pubs = ProjectPublication.query.all()
     return render_template('webadmin/pubs.html', pubs=pubs)
 
 
 @webadmin.route('/pubs/<int:pub_id>')
+@login_required
 def show_pub(pub_id):
     pub = ProjectPublication.query.get(pub_id)
     return render_template('webadmin/pub_detail.html', pub=pub)
 
 
 @webadmin.route('/pubs/<int:pub_id>/edit', methods=['GET', 'POST'])
+@login_required
 def edit_pub(pub_id):
     pub = ProjectPublication.query.get(pub_id)
     form = ProjectPublicationForm(obj=pub)
@@ -382,12 +407,14 @@ def edit_pub(pub_id):
 
 
 @webadmin.route('/pubs/<int:pub_id>/authors/edit', methods=['GET', 'POST'])
+@login_required
 def edit_pub_authors(pub_id):
     pub = ProjectPublication.query.get(pub_id)
     return render_template('webadmin/pub_author_edit.html', pub=pub)
 
 
 @webadmin.route('/pubs/<int:pub_id>/authors/add', methods=['GET', 'POST'])
+@login_required
 def add_pub_author(pub_id):
     pub = ProjectPublication.query.get(pub_id)
     form = ProjectPublicationAuthorForm()
@@ -407,6 +434,7 @@ def add_pub_author(pub_id):
 
 
 @webadmin.route('/pubs/<int:pub_id>/authors/<int:author_id>/remove', methods=['GET', 'POST'])
+@login_required
 def remove_pub_author(pub_id, author_id):
     author = ProjectPublicationAuthor.query.get(author_id)
     if author:
@@ -419,6 +447,44 @@ def remove_pub_author(pub_id, author_id):
 
 
 @webadmin.route('/users')
+@login_required
 def list_users():
     users = User.query.all()
     return render_template('webadmin/users.html', users=users)
+
+
+@webadmin.route('/support/lang-edit/requests')
+@login_required
+def list_lang_edit_requests():
+    requests = ProjectLanguageEditingSupport.query.all()
+    return render_template('webadmin/lang_edit_list.html', requests=requests)
+
+
+@webadmin.route('/pubs/<int:pub_id>/support/language/<int:record_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_lang_support(pub_id, record_id):
+    record = ProjectLanguageEditingSupport.query.get(record_id)
+    form = ProjectLanguageEditSupportForm(obj=record)
+    criteria = record.criteria.split('|')
+    qualification = record.qualification.split('|')
+    docs = record.docs.split('|')
+    request_data = record.request.split('|')
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(record)
+            record.qualification = '|'.join(form.qualification_select.data)
+            record.criteria = '|'.join(form.criteria_select.data)
+            record.docs = '|'.join(form.docs_select.data)
+            record.request = '|'.join(form.request_select.data)
+            record.pub_id = pub_id
+            record.edited_at = arrow.now(tz='Asia/Bangkok').datetime,
+            db.session.add(record)
+            db.session.commit()
+            flash('The language edit request has been edited.', 'success')
+            return redirect(url_for('webadmin.list_lang_edit_requests'))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('webadmin/lang_support_edit.html',
+                           form=form,
+                           docs=docs, request_data=request_data,
+                           qualification=qualification, criteria=criteria)

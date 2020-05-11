@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Language Editing Support Requests {% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                {% include "message.html" %}
+                <h1 class="title has-text-centered">Requests</h1>
+                <table class="table is-fullwidth">
+                    <thead>
+                    <th>No.</th>
+                    <th>Title</th>
+                    <th>Journal</th>
+                    <th>Published</th>
+                    <th>Request</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+                    {% for req in requests|sort(attribute='submitted_at', reverse=True) %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ req.pub.title }}</td>
+                        <td>{{ req.pub.journal  }}</td>
+                        <td>{{ req.pub.month }}, {{ req.pub.year }}</td>
+                        <td>{{ req.request }}</td>
+                        <td>{{ req.amount }}</td>
+                        <td>
+                            <span class="tag is-medium">
+                            {{ req.status }}
+                            </span>
+                        </td>
+                        <td>{{ req.submitted_at|localdate }}</td>
+                        <td>
+                            <a href="{{ url_for('webadmin.edit_lang_support', pub_id=req.pub.id, record_id=req.id) }}">
+                                <span class="icon">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

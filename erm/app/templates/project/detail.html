@@ -332,7 +332,6 @@
                         <table class="table is-striped">
                             <thead>
                             <th>เรื่อง</th>
-                            <th>รายการ</th>
                             <th>ยอดรวม (บาท)</th>
                             <th>สถานะ</th>
                             <th>ยื่นเมื่อ</th>
@@ -342,17 +341,26 @@
                                 {% for support in pub.language_editing_supports %}
                                 <tr>
                                     <td>{{ pub.title }}</td>
-                                    <td>{{ support.request[:20] }}...</td>
                                     <td>{{ support.amount }}</td>
-                                    <td>{{ support.status }}</td>
-                                    <td>{{ support.submitted_at|localdate }}</td>
                                     <td>
-                                        <a href="{{ url_for('project.edit_lang_support', pub_id=pub.id, project_id=project.id, record_id=support.id) }}">
+                                        {% if support.status == 'อนุมัติ' %}
                                         <span class="icon">
-                                            <i class="fas fa-pencil-alt"></i>
+                                            <i class="far fa-check-circle has-text-success"></i>
                                         </span>
-                                        </a>
+                                        {% elif support.status == 'ยกเลิก' or support.status == 'ไม่อนุมัติ' %}
+                                        <span class="icon">
+                                            <i class="far fa-times-circle has-text-danger"></i>
+                                        </span>
+                                        {% else %}
+                                        <span class="icon">
+                                            <i class="far fa-clock"></i>
+                                        </span>
+                                        {% endif %}
+                                        <span>
+                                            {{ support.status }}
+                                        </span>
                                     </td>
+                                    <td>{{ support.submitted_at|localdate }}</td>
                                 </tr>
                                 {% endfor %}
                             {% endfor %}
@@ -366,7 +374,6 @@
                         <table class="table is-striped">
                             <thead>
                             <th>เรื่อง</th>
-                            <th>รายการ</th>
                             <th>ยอดรวม (บาท)</th>
                             <th>สถานะ</th>
                             <th>ยื่นเมื่อ</th>
@@ -376,17 +383,26 @@
                             {% for reward in pub.pub_rewards %}
                             <tr>
                                 <td>{{ pub.title }}</td>
-                                <td>{{ reward.reward or reward.apc }}...</td>
                                 <td>{{ reward.amount }}</td>
-                                <td>{{ reward.status }}</td>
-                                <td>{{ reward.submitted_at|localdate }}</td>
                                 <td>
-                                    <a href="{{ url_for('project.edit_lang_support', pub_id=pub.id, project_id=project.id, record_id=reward.id) }}">
-                                        <span class="icon">
-                                            <i class="fas fa-pencil-alt"></i>
+                                    {% if reward.status == 'อนุมัติ' %}
+                                    <span class="icon">
+                                            <i class="far fa-check-circle has-text-success"></i>
                                         </span>
-                                    </a>
+                                    {% elif reward.status == 'ยกเลิก' or reward.status == 'ไม่อนุมัติ' %}
+                                    <span class="icon">
+                                            <i class="far fa-times-circle has-text-danger"></i>
+                                        </span>
+                                    {% else %}
+                                    <span class="icon">
+                                            <i class="far fa-clock"></i>
+                                        </span>
+                                    {% endif %}
+                                    <span>
+                                            {{ reward.status }}
+                                        </span>
                                 </td>
+                                <td>{{ reward.submitted_at|localdate }}</td>
                             </tr>
                             {% endfor %}
                             {% endfor %}
