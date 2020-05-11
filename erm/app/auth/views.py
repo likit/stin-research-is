@@ -51,25 +51,27 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user.check_password(password):
             login_user(user)
-            flash('You have been signed in.', 'is-success')
+            flash('You have been signed in.', 'success')
             return redirect(url_for('main.index'))
         else:
-            flash('Password is incorrect. Please try again.', 'is-danger')
+            flash('Password is incorrect. Please try again.', 'danger')
     return render_template('auth/login.html', form=form)
 
 
 @auth.route('/logout', methods=['GET', 'POST'])
+@login_required
 def logout():
     if not current_user.is_authenticated:
-        flash('You were already signed out.', 'is-success')
+        flash('You were already signed out.', 'success')
         return redirect(request.referrer)
     else:
         logout_user()
-        flash('You have been signed out.', 'is-success')
+        flash('You have been signed out.', 'success')
         return redirect(url_for('main.index'))
 
 
 @auth.route('/users/add', methods=['GET', 'POST'])
+@login_required
 def add_user():
     form = NewUserForm()
     if request.method == 'POST':
