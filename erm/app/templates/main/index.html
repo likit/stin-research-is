@@ -11,6 +11,31 @@
                 <div class="column">
                     <h1 class="title">Welcome to the STIN Research Management System.</h1>
                 </div>
+                {% if current_user.is_authenticated %}
+                <div class="column is-one-third">
+                    <div class="box has-text-centered">
+                        <h1 class="title is-size-4 has-text-dark"><strong>Welcome {{ current_user.profile }}</strong></h1>
+                        <h1 class="subtitle has-text-dark">You're now logged in.</h1>
+                        <hr>
+                        <div class="buttons is-centered">
+                            <a class="button is-primary"
+                               href="{{ url_for('researcher.show_profile', user_id=current_user.id) }}">
+                                <span class="icon">
+                                    <i class="fas fa-user-circle"></i>
+                                </span>
+                                <span>Your Profile</span>
+                            </a>
+                            <a class="button is-success"
+                               href="{{ url_for('project.add_project') }}">
+                                <span class="icon">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                                <span>New Project</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
                 <div class="column is-one-third">
                     {% include "messages.html" %}
                     <div class="box has-text-centered">
@@ -45,6 +70,7 @@
                         </form>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
