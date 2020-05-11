@@ -104,6 +104,7 @@ def display_project(project_id):
 def edit_project(project_id):
     project = ProjectRecord.query.get(project_id)
     form = ProjectRecordForm(obj=project)
+    title = 'Edit Project Record'
     if request.method == 'POST':
         if form.validate_on_submit():
             form.populate_obj(project)
@@ -114,13 +115,14 @@ def edit_project(project_id):
         else:
             flash('Error occurred.', 'danger')
         return redirect(url_for('project.display_project', project_id=project.id))
-    return render_template('project/project_edit.html', form=form)
+    return render_template('project/project_edit.html', form=form, title=title)
 
 
 @project.route('/add', methods=['GET', 'POST'])
 @login_required
 def add_project():
     form = ProjectRecordForm()
+    title = 'New Project Record'
     if request.method == 'POST':
         if form.validate_on_submit():
             new_proj = ProjectRecord()
@@ -136,7 +138,7 @@ def add_project():
         else:
             flash('Error occurred.', 'danger')
         return redirect(url_for('project.display_project', project_id=new_proj.id))
-    return render_template('project/project_edit.html', form=form)
+    return render_template('project/project_edit.html', form=form, title=title)
 
 @project.route('/<int:project_id>/member/add', methods=['GET', 'POST'])
 @login_required
