@@ -1,11 +1,12 @@
 import os
 from flask_mail import Mail, Message
-from flask import Flask
+from flask import Flask, flash, redirect
 from flask_migrate import Migrate
 from flask_admin import Admin
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
+from functools import wraps
 
 load_dotenv()
 
@@ -55,3 +56,13 @@ def create_app():
     login_manager.login_view = 'auth.login'
 
     return app
+
+
+def superuser(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or current_user.role != 1:
+            flash('You do not have permission to view access this page.', 'warning')
+            return redirect('/')
+        return f(*args, **kwargs)
+    return decorated_function
