@@ -361,6 +361,40 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="title is-size-5">Publication Fee/Reward</td>
+                    <td>
+                        <table class="table is-striped">
+                            <thead>
+                            <th>เรื่อง</th>
+                            <th>รายการ</th>
+                            <th>ยอดรวม (บาท)</th>
+                            <th>สถานะ</th>
+                            <th>ยื่นเมื่อ</th>
+                            </thead>
+                            <tbody>
+                            {% for pub in project.publications %}
+                            {% for reward in pub.pub_rewards %}
+                            <tr>
+                                <td>{{ pub.title }}</td>
+                                <td>{{ reward.reward or reward.apc }}...</td>
+                                <td>{{ reward.amount }}</td>
+                                <td>{{ reward.status }}</td>
+                                <td>{{ reward.submitted_at|localdate }}</td>
+                                <td>
+                                    <a href="{{ url_for('project.edit_lang_support', pub_id=pub.id, project_id=project.id, record_id=reward.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
                     <td class="title is-size-5">Application</td>
                     <td>
                         <table class="table is-striped">

@@ -477,8 +477,10 @@ def edit_lang_support(project_id, pub_id, record_id):
             record.edited_at = arrow.now(tz='Asia/Bangkok').datetime,
             db.session.add(record)
             db.session.commit()
-            flash('New language edit request edited.')
+            flash('New language edit request edited.', 'success')
             return redirect(url_for('project.display_project', project_id=project_id))
+        else:
+            flash(form.errors, 'danger')
     return render_template('project/lang_support_edit.html',
                            project=project, form=form,
                            docs=docs, request_data=request_data,
@@ -490,5 +492,27 @@ def edit_lang_support(project_id, pub_id, record_id):
 def add_pub_reward(project_id, pub_id):
     pub = ProjectPublication.query.get(pub_id)
     form = ProjectPublishedRewardForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_record = ProjectPublishedReward()
+            form.populate_obj(new_record)
+            new_record.pub_id = pub_id
+            new_record.qualification = '|'.join(form.qualification_select.data)
+            new_record.submitted_at = arrow.now(tz='Asia/Bangkok').datetime,
+            if new_record.reward:
+                reward_amt = float(new_record.reward.split()[-2])
+            else:
+                reward_amt = 0.0
+            if new_record.apc:
+                apc_amt = float(new_record.apc.split()[-2])
+            else:
+                apc_amt = 0.0
+            new_record.amount = reward_amt + apc_amt
+            db.session.add(new_record)
+            db.session.commit()
+            flash('Reward/Fee request has been added.', 'success')
+            return redirect(url_for('project.display_project', project_id=project_id))
+        else:
+            flash(form.errors, 'danger')
     return render_template('project/reward_add.html',
                            pub=pub, project_id=project_id, form=form)
