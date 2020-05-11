@@ -27,8 +27,9 @@
             </div>
           </div>
           <a class="navbar-item" href="{{ url_for('project.list_projects') }}">
-            Projects
+            All Projects
           </a>
+          {% if current_user.is_authenticated and current_user.role == 1 %}
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
                 Admin
@@ -60,8 +61,11 @@
               </a>
             </div>
           </div>
+          {% endif %}
           <a class="navbar-item" href="{{ url_for('auth.logout') }}">
-            Sign Out
+              <button class="button is-rounded is-light">
+                Sign Out
+              </button>
           </a>
           {% else %}
           {% endif %}
