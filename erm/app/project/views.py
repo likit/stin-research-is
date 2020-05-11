@@ -483,3 +483,12 @@ def edit_lang_support(project_id, pub_id, record_id):
                            project=project, form=form,
                            docs=docs, request_data=request_data,
                            qualification=qualification, criteria=criteria)
+
+
+@project.route('/<int:project_id>/pubs/<int:pub_id>/support/reward/add', methods=['GET', 'POST'])
+@login_required
+def add_pub_reward(project_id, pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    form = ProjectPublishedRewardForm()
+    return render_template('project/reward_add.html',
+                           pub=pub, project_id=project_id, form=form)
