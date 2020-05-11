@@ -28,50 +28,50 @@
             <div class="box">
             <table class="table is-fullwidth is-striped">
                 <tr>
-                    <td class="title is-size-5" width="20%">English Title</td><td>{{ project.title_en }}</td>
+                    <td class="title is-size-5" width="20%">ชื่อภาษาอังกฤษ</td><td>{{ project.title_en }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">Thai Subtitle</td><td>{{ project.subtitle_th }}</td>
+                    <td class="title is-size-5" width="20%">ชื่อรองภาษาไทย</td><td>{{ project.subtitle_th }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">English Subtitle</td><td>{{ project.subtitle_en }}</td>
+                    <td class="title is-size-5" width="20%">ชื่อรองภาษาอังกฤษ</td><td>{{ project.subtitle_en }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">Abstract</td><td>{{ project.abstract }}</td>
+                    <td class="title is-size-5" width="20%">บทคัดย่อ</td><td>{{ project.abstract }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">Introduction</td><td>{{ project.intro }}</td>
+                    <td class="title is-size-5" width="20%">บทนำ</td><td>{{ project.intro }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">Objective</td><td>{{ project.objective }}</td>
+                    <td class="title is-size-5" width="20%">จุดประสงค์</td><td>{{ project.objective }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">Method</td><td>{{ project.method }}</td>
+                    <td class="title is-size-5" width="20%">ระเบียบวิธีวิจัย</td><td>{{ project.method }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">Created at</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
+                    <td class="title is-size-5" width="20%">เพิ่มโครงวันที่</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">Updated at</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
+                    <td class="title is-size-5" width="20%">แก้ไขวันที่</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
                 </tr>
                 {% if current_user.is_authenticated and project.creator == current_user %}
                 <tr>
-                    <td class="title is-size-5" width="20%">Status</td><td>{{ project.status }}</td>
+                    <td class="title is-size-5" width="20%">สถานะ</td><td>{{ project.status }}</td>
                 </tr>
                 {% if project.status == 'submitted' %}
                 <tr>
-                    <td class="title is-size-5" width="20%">Submitted at</td><td>วันที่ {{ project.submitted_at|localdatetime }} นาฬิกา</td>
+                    <td class="title is-size-5" width="20%">ส่งเมื่อวันที่</td><td>วันที่ {{ project.submitted_at|localdatetime }} นาฬิกา</td>
                 </tr>
                 {% endif %}
                 <tr>
-                    <td class="title is-size-5" width="20%">Prospected Journals</td><td>{{ project.prospected_journals }}</td>
+                    <td class="title is-size-5" width="20%">วารสารที่คาดว่าจะเผยแพร่</td><td>{{ project.prospected_journals }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">Uses or Applications</td><td>{{ project.use_applications }}</td>
+                    <td class="title is-size-5" width="20%">การนำไปใช้ประโยชน์</td><td>{{ project.use_applications }}</td>
                 </tr>
                 {% endif %}
                 <tr>
-                    <td class="title is-size-5" width="20%">Category</td>
+                    <td class="title is-size-5" width="20%">หมวดหมู่</td>
                     <td>
                         <div class="field is-grouped is-grouped-multiline">
                             {% for cat in project.subcategories %}
@@ -86,7 +86,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Members</td>
+                    <td class="title is-size-5">สมาชิก</td>
                     <td>
                         <table class="table is-striped">
                             <thead>
@@ -118,7 +118,7 @@
                                        class="is-link is-small is-outlined is-rounded button">
                                             <span class="icon">
                                                 <i class="fas fa-plus"></i>
-                                            </span><span>Add</span>
+                                            </span><span>เพิ่มรายชื่อนักวิจัย</span>
                                     </a>
                                 </td>
                             </tr>
@@ -127,7 +127,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Figures</td>
+                    <td class="title is-size-5">รูปภาพ/กราฟ</td>
                     <td>
                         <table class="table is-striped">
                             <thead>
@@ -169,7 +169,7 @@
                                         >
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
-                                        </span><span>Add</span>
+                                        </span><span>เพิ่มรูป</span>
                                     </a>
                                 </td>
                             </tr>
@@ -179,7 +179,7 @@
                 </tr>
                 {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
                 <tr>
-                    <td class="title is-size-5">Ethic Requests</td>
+                    <td class="title is-size-5">จริยธรรมวิจัย</td>
                     <td>
                         <table class="table is-striped">
                             <thead>
@@ -203,7 +203,7 @@
                                         <span class="icon">
                                             <i class="fas fa-paper-plane"></i>
                                         </span>
-                                        <span>Submit</span>
+                                        <span>ยื่นขออนุมัติ</span>
                                     </a>
                                 </td>
                             </tr>
@@ -242,12 +242,20 @@
                             <th>สถานะ</th>
                             <th>รายงานเมื่อ</th>
                             <th></th>
+                            <th></th>
                             </thead>
                             <tbody>
                             {% for m in project.milestones %}
                             <tr>
                                 <td>{{ m.status }}</td>
                                 <td>{{ m.created_at|localdatetime }}</td>
+                                <td>
+                                    <a href="{{ url_for('project.edit_milestone', project_id=project.id, milestone_id=m.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
+                                    </a>
+                                </td>
                                 <td>
                                     <div class="buttons">
                                         <a href="{{ url_for('project.list_gantt_activity', project_id=project.id, milestone_id=m.id) }}"
@@ -270,6 +278,7 @@
                             {% endfor %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
+                                    <div class="buttons is-centered">
                                     <a href="{{ url_for('project.add_milestone', project_id=project.id) }}"
                                         class="button is-small is-rounded is-outlined is-link">
                                         <span class="icon">
@@ -277,13 +286,21 @@
                                         </span>
                                         <span>เพิ่มรายการ</span>
                                     </a>
+                                    <a href="{{ url_for('project.clone_milestone', project_id=project.id) }}"
+                                       class="button is-small is-rounded is-outlined is-primary">
+                                        <span class="icon">
+                                                <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>คัดลอกและเพิ่มรายการ</span>
+                                    </a>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Publications</td>
+                    <td class="title is-size-5">ผลงานวิจัยตีพิมพ์</td>
                     <td>
                         <table class="table is-striped">
                             <thead>
@@ -333,7 +350,7 @@
                                         <span class="icon">
                                                 <i class="fas fa-plus"></i>
                                         </span>
-                                        <span>Add</span>
+                                        <span>เพิ่มผลงานวิจัย</span>
                                     </a>
                                 </td>
                             </tr>
@@ -341,7 +358,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Language Edit Support Request</td>
+                    <td class="title is-size-5">ทุนสนับสนุนการตรวจภาษา</td>
                     <td>
                         <table class="table is-striped">
                             <thead>
@@ -395,7 +412,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Publication Fee/Reward</td>
+                    <td class="title is-size-5">รางวัลค่าตีพิมพ์หรือทุนสนับสนุนการตีพิมพ์</td>
                     <td>
                         <table class="table is-striped">
                             <thead>
@@ -449,7 +466,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">Application</td>
+                    <td class="title is-size-5">การนำงานวิจัยไปใช้ประโยชน์</td>
                     <td>
                         <table class="table is-striped">
                             <thead>
@@ -469,13 +486,13 @@
                                             <span class="icon">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </span>
-                                        <span>Edit</span>
+                                        <span>แก้ไข</span>
                                     </a>
                                     <a href="{{ url_for('project.remove_application', app_id=app.id) }}">
                                             <span class="icon">
                                                 <i class="fas fa-trash-alt"></i>
                                             </span>
-                                        <span>Remove</span>
+                                        <span>ลบออก</span>
                                     </a>
                                     {% endif %}
                                 </td>
@@ -491,7 +508,7 @@
                                        class="is-link is-outlined is-small is-rounded button">
                                             <span class="icon">
                                                 <i class="fas fa-plus"></i>
-                                            </span><span>Add</span>
+                                            </span><span>เพิ่มรายการ</span>
                                     </a>
                                 </td>
                             </tr>
