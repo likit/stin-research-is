@@ -194,12 +194,17 @@
                             </tr>
                             {% endfor %}
                             <tr>
-                                <td colspan="2">
+                                <td colspan="2" class="has-text-centered">
                                     <a href="{{ url_for('project.confirm_add_ethic', project_id=project.id) }}"
                                        {% if project.status != "full" %}
                                        disabled
                                        {% endif %}
-                                       class="button is-link">Submit Ethic Request</a>
+                                       class="button is-small is-outlined is-link is-rounded">
+                                        <span class="icon">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </span>
+                                        <span>Submit</span>
+                                    </a>
                                 </td>
                             </tr>
                             </tbody>
@@ -335,6 +340,8 @@
                             <th>ยอดรวม (บาท)</th>
                             <th>สถานะ</th>
                             <th>ยื่นเมื่อ</th>
+                            <th>แก้ไขเมื่อ</th>
+                            <th>อนุมัติเมื่อ</th>
                             </thead>
                             <tbody>
                             {% for pub in project.publications %}
@@ -360,7 +367,17 @@
                                             {{ support.status }}
                                         </span>
                                     </td>
-                                    <td>{{ support.submitted_at|localdate }}</td>
+                                    <td>{{ support.submitted_at|localdatetime }}</td>
+                                    {% if support.edited_at %}
+                                    <td>{{ support.edited_at|localdatetime }}</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+                                    {% if support.approved_at %}
+                                    <td>{{ support.approved_at|localdatetime }}</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             {% endfor %}
@@ -377,6 +394,8 @@
                             <th>ยอดรวม (บาท)</th>
                             <th>สถานะ</th>
                             <th>ยื่นเมื่อ</th>
+                            <th>แก้ไขเมื่อ</th>
+                            <th>อนุมัติเมื่อ</th>
                             </thead>
                             <tbody>
                             {% for pub in project.publications %}
@@ -392,7 +411,7 @@
                                     {% elif reward.status == 'ยกเลิก' or reward.status == 'ไม่อนุมัติ' %}
                                     <span class="icon">
                                             <i class="far fa-times-circle has-text-danger"></i>
-                                        </span>
+                                    </span>
                                     {% else %}
                                     <span class="icon">
                                             <i class="far fa-clock"></i>
@@ -400,9 +419,19 @@
                                     {% endif %}
                                     <span>
                                             {{ reward.status }}
-                                        </span>
+                                    </span>
                                 </td>
-                                <td>{{ reward.submitted_at|localdate }}</td>
+                                <td>{{ reward.submitted_at|localdatetime }}</td>
+                                {% if reward.edited_at %}
+                                <td>{{ reward.edited_at|localdatetime }}</td>
+                                {% else %}
+                                <td></td>
+                                {% endif %}
+                                {% if reward.approved_at %}
+                                <td>{{ reward.approved_at|localdatetime }}</td>
+                                {% else %}
+                                <td></td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                             {% endfor %}
