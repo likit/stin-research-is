@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Project Edit Page{% endblock %}
+{% block title %}{{ title }} Page{% endblock %}
 {% block page_content %}
 <section class="hero is-info">
     <div class="hero-head">
@@ -10,7 +10,7 @@
 <section class="section">
     <div class="columns">
         <div class="column is-half is-offset-one-quarter">
-            <h1 class="title has-text-centered">Edit Project Record</h1>
+            <h1 class="title has-text-centered">{{ title }}</h1>
             <form method="post">
                 {{ form.csrf_token }}
                 <div class="field">
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 {% endif %}
-                <div class="field is-grouped">
+                <div class="field is-grouped is-grouped-centered">
                     <div class="control">
                         <button type="submit" class="button is-success">Save</button>
                     </div>
