@@ -15,21 +15,38 @@
                 <h1 class="title has-text-centered">Project Activities</h1>
                 <h3 class="title is-size-4">รายงานความก้าวหน้า</h3>
                 <h3 class="subtitle is-size-6">วันที่ {{ milestone.created_at|localdate }}</h3>
-                <table class="table is-fullwidth">
+                <table class="table is-fullwidth is-bordered is-striped">
                     <tr>
                         <td class="title is-size-5">สถานะ</td>
                         <td class="is-size-5">{{ milestone.status }}</td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5">รายละเอียด</td>
+                        <td class="title is-size-5">รายละเอียดการเปลี่ยนแปลงแผนงาน</td>
                         <td class="is-size-5">{{ milestone.detail }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">การดำเนินงานในช่วงต่อไป</td>
+                        <td class="is-size-5">{{ milestone.plan }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">กิจกรรมอื่นๆ ที่เกี่ยวข้อง</td>
+                        <td class="is-size-5">{{ milestone.related_activity }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">อุปสรรคในการดำเนินงานและแนวทางแก้ไข</td>
+                        <td class="is-size-5">{{ milestone.obstacle }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">ความเห็นของผู้วิจัย</td>
+                        <td class="is-size-5">{{ milestone.opinion }}</td>
                     </tr>
                 </table>
             </div>
         </div>
         <div class="columns">
             <div class="column">
-                <table class="table is-fullwidth">
+                <hr>
+                <table class="table is-fullwidth is-striped">
                     <thead>
                     <th>กิจกรรม</th>
                     <th>วันเริ่มต้น</th>

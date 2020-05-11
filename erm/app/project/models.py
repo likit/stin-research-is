@@ -171,6 +171,11 @@ class ProjectMilestone(db.Model):
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     created_at = db.Column('created_at', db.DateTime(timezone=True))
     detail = db.Column('detail', db.Text(), info={'label': 'หากเปลี่ยนแปลงแผนงานโปรดระบุ'})
+    plan = db.Column('plan', db.Text(), info={'label': 'การดำเนินงานในช่วงต่อไป'})
+    related_activity = db.Column('related_activity', db.Text(),
+                                 info={'label': 'กิจกรรมอื่นๆ ที่เกี่ยวข้อง'})
+    obstacle = db.Column('obstacle', db.Text(), info={'label': 'อุปสรรคในการทำงานและแนวทางแก้ไข'})
+    opinion = db.Column('opinion', db.Text(), info={'label': 'ความเห็นของผู้วิจัย'})
     status = db.Column('status', db.String(),
                        info={'label': 'สถานะการดำเนินงาน',
                              'choices': [(i, i) for i in
