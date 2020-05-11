@@ -85,3 +85,4 @@ admin.add_view(ModelView(ProjectPublicationJournal, db.session, category='Projec
 admin.add_view(ModelView(ProjectPublication, db.session, category='Project'))
 admin.add_view(ModelView(ProjectPublicationAuthor, db.session, category='Project'))
 admin.add_view(ModelView(ProjectLanguageEditingSupport, db.session, category='Project'))
+admin.add_view(ModelView(ProjectMilestone, db.session, category='Project'))
