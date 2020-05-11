@@ -170,13 +170,42 @@ class ProjectMilestone(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     created_at = db.Column('created_at', db.DateTime(timezone=True))
-    deadline = db.Column('deadline', db.DateTime(timezone=True), info={'label': 'Deadline Date'})
-    goal = db.Column('goal', db.String(), nullable=False, info={'label': 'Goal/Task/Requirement'})
-    detail = db.Column('detail', db.Text(), info={'label': 'Detail'})
+    detail = db.Column('detail', db.Text(), info={'label': 'หากเปลี่ยนแปลงแผนงานโปรดระบุ'})
     status = db.Column('status', db.String(),
-                       info={'label': 'Status',
-                             'choices': [(i, i) for i in ['started', 'ended', 'delayed']]})
+                       info={'label': 'สถานะการดำเนินงาน',
+                             'choices': [(i, i) for i in
+                                         ('ดำเนินงานตามแผนที่ได้วางไว้ได้ทุกประการ',
+                                          'ได้เปลี่ยนแปลงแผนงานที่ได้วางไว้ดังนี้'
+                                          )]
+                             })
     project = db.relationship('ProjectRecord', backref=db.backref('milestones'))
+
+    @property
+    def gantt_activity_count(self):
+        return len(self.gantt_activities)
+
+
+class ProjectGanttActivity(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    milestone_id = db.Column('milestone_id', db.ForeignKey('project_milestone.id'))
+    milestone = db.relationship(ProjectMilestone, backref=db.backref('gantt_activities'))
+    created_at = db.Column('created_at', db.DateTime(timezone=True))
+    detail = db.Column('detail', db.Text(), info={'label': 'รายละเอียด'})
+    start_date = db.Column('start_date', db.Date(), info={'label': 'เริ่มต้น'})
+    end_date = db.Column('end_date', db.Date(), info={'label': 'สิ้นสุด'})
+    completion = db.Column('completion', db.Numeric(), info={'label': 'ร้อยละความสำเร็จ'}, default=100.0)
+    task_id = db.Column('task_id', db.Integer(),
+                            info={
+                                'label': 'กิจกรรม',
+                                'choices': ((1, '1. พัฒนาโครงร่างการวิจัยและเครื่องมือการวิจัย'),
+                                            (2, '2. เสนอโครงร่างการวิจัยเพื่อขอรับการพิจารณาจริยธรรมฯ'),
+                                            (3, '3. เสนอขอรับทุนอุดหนุนการวิจัย'),
+                                            (4, '4. ผู้ทรงคุณวุฒิตรวจสอบและแก้ไข'),
+                                            (5, '5. ติดต่อประสานงานเพื่อขอเก็บข้อมูล'),
+                                            (6, '6. ดำเนินการเก็บรวบรวมข้อมูล'),
+                                            (7, '7. วิเคราะห์ผลการวิจัยและอภิปรายผล'),
+                                            (8, '8. จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย'))
+                            })
 
 
 reviewer_groups = db.Table('reviewer_groups',
