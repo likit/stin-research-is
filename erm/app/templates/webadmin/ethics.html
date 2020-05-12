@@ -21,13 +21,15 @@
                         <thead>
                         <th>No.</th>
                         <th>Title TH</th>
+                        <th>Status</th>
                         <th>Submitted at</th>
                         <th></th>
                         </thead>
-                    {% for et in ethics %}
+                    {% for et in ethics|sort(attribute='submitted_at', reverse=True) %}
                         <tr>
                             <td>{{ et.id }}</td>
                             <td>{{ et.project.title_th }}</td>
+                            <td>{{ et.status }}</td>
                             <td>{{ et.submitted_at|localdatetime }}</td>
                             <td>
                                 <a href="{{ url_for('webadmin.ethic_detail', ethic_id=et.id) }}" class="button is-primary">

@@ -154,30 +154,67 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5">Milestones</td>
+                        <td class="title is-size-5">ความก้าวหน้า</td>
                         <td>
-                            <table class="table">
+                            <table class="table is-striped">
                                 <thead>
-                                <th>Goal/Task/Requirement</th>
-                                <th>Deadline</th>
-                                <th>Status</th>
+                                <th>สถานะ</th>
+                                <th>รายงานเมื่อ</th>
                                 <th></th>
                                 </thead>
                                 <tbody>
                                 {% for m in project.milestones %}
                                 <tr>
-                                    <td>{{ m.goal }}</td>
-                                    {% if m.deadline %}
-                                    <td>{{ m.deadline|localdatetime }}</td>
-                                    {% else %}
-                                    <td>Not specified</td>
-                                    {% endif %}
                                     <td>{{ m.status }}</td>
+                                    <td>{{ m.created_at|localdatetime }}</td>
                                     <td>
+                                        <div class="buttons has-addons">
+                                            <a href="{{ url_for('project.list_gantt_activity', project_id=project.id, milestone_id=m.id) }}"
+                                               class="button is-small is-primary is-outlined">
+                                            <span class="icon">
+                                               <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                                <span>Gantt Chart</span>
+                                            </a>
+                                            <a class="button is-small is-primary is-outlined"
+                                               href="{{ url_for('project.list_budget_items', project_id=project.id, milestone_id=m.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-dollar-sign"></i>
+                                            </span>
+                                                <span>งบประมาณ</span>
+                                            </a>
+                                            <a class="button is-small is-primary is-outlined"
+                                               href="{{ url_for('project.list_summaries', project_id=project.id, milestone_id=m.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-flag"></i>
+                                            </span>
+                                                <span>ผลการดำเนินงาน</span>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 </tbody>
                                 {% endfor %}
+                                <tr>
+                                    <td colspan="4" class="has-text-centered">
+                                        <div class="buttons is-centered">
+                                            <a href="{{ url_for('project.add_milestone', project_id=project.id) }}"
+                                               class="button is-small is-rounded is-outlined is-link">
+                                        <span class="icon">
+                                                <i class="fas fa-plus"></i>
+                                        </span>
+                                                <span>เพิ่มรายการ</span>
+                                            </a>
+                                            <a href="{{ url_for('project.clone_milestone', project_id=project.id) }}"
+                                               class="button is-small is-rounded is-outlined is-primary">
+                                        <span class="icon">
+                                                <i class="fas fa-plus"></i>
+                                        </span>
+                                                <span>คัดลอกและเพิ่มรายการ</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
                             </table>
                         </td>
                     </tr>

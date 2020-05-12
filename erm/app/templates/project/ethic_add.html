@@ -12,17 +12,17 @@
     <div class="container">
         <div class="columns">
             <div class="column is-two-thirds is-offset-2">
-                <h1 class="title has-text-centered">Submit Research Ethic Review</h1>
+                <h1 class="title has-text-centered">ยื่นข้อมูลโครงการเพื่อรับการพิจารณาอนุมัติจริยธรรมการวิจัย</h1>
                 <div class="box">
                     <h2 class="title is-size-4">{{ project.title_th }}</h2>
                     <h2 class="subtitle">{{ project.subtitle_th }}</h2>
                     <hr>
                     <div class="has-text-centered">
-                        <p>Do you want to submit this project for a review?</p>
-                        <p>Note that once it is submitted, it cannot be withdrawn.</p>
+                        <p>ท่านกำลังส่งยื่นเสนอเพื่อขอพิจารณาอนุมัติจริยธรรมวิจัย</p>
+                        <p>เมื่อท่านคลิกเพื่อส่งข้อมูลแล้วจะไม่สามารถยกเลิกได้ โปรดติดต่อเจ้าหน้าที่ศูนย์วิจัยหากต้องการแก้ไขหรือยกเลิก</p>
                         <br>
-                        <a href="{{ url_for('project.add_ethic_request', project_id=project.id) }}" class="button is-link">Submit</a>
-                        <a href="{{ request.referrer }}" class="button is-danger">Cancel</a>
+                        <a href="{{ url_for('project.add_ethic_request', project_id=project.id) }}" class="button is-link">ยืนยันส่งข้อมูล</a>
+                        <a href="{{ request.referrer }}" class="button is-danger">ยกเลิก</a>
                     </div>
                 </div>
             </div>
