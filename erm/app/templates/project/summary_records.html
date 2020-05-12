@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Project Summary Page{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                {% include "message.html" %}
+                <h1 class="title has-text-centered">สรุปผลการดำเนินงาน</h1>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <hr>
+                <table class="table is-fullwidth is-striped">
+                    <thead>
+                    <th>ลำดับ</th>
+                    <th>กิจกรรมตามแผนงาน</th>
+                    <th>ผลผลิตที่ระบุไว้</th>
+                    <th>ผลผลิตที่เกิดขึ้นจริง</th>
+                    <th>แก้ไขเมื่อ</th>
+                    </thead>
+                    <tbody>
+                    {% for rec in milestone.summaries %}
+                    <tr>
+                        <td>{{ rec.activity }}</td>
+                        <td>{{ rec.expected_outcome }}</td>
+                        <td>{{ rec.outcome }}</td>
+                        <td>{{ rec.edited_at|localdatetime }} น.</td>
+                        <td>
+                            <a href="{{ url_for('project.edit_summary_record', project_id=project_id, milestone_id=milestone.id, record_id=rec.id) }}">
+                                <span class="icon">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                                <span>แก้ไข</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="buttons is-centered">
+                    <a class="button is-info"
+                       href="{{ url_for('project.add_summary_record', project_id=project_id, milestone_id=milestone.id) }}">
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span>เพิ่มรายการผลการดำเนินกิจกรรม</span>
+                    </a>
+                    <a href="{{ url_for('project.display_project', project_id=project_id) }}"
+                       class="button is-light">
+                        กลับ
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <hr>
+                <h1 class="title has-text-centered">Gantt Chart</h1>
+                <div id="chart_div"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}
