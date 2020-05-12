@@ -41,20 +41,24 @@ def register():
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        if current_user.is_authenticated:
-            flash('User already logged in.', 'is-success')
-            return redirect(url_for('main.index'))
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if current_user.is_authenticated:
+                flash('You have been already logged in.', 'success')
+                return redirect(url_for('main.index'))
 
-        email = request.form.get('email')
-        password = request.form.get('password')
-        user = User.query.filter_by(email=email).first()
-        if user.check_password(password):
-            login_user(user)
-            flash('You have been signed in.', 'success')
-            return redirect(url_for('main.index'))
-        else:
-            flash('Password is incorrect. Please try again.', 'danger')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            user = User.query.filter_by(email=email).first()
+            if user:
+                if user.check_password(password):
+                    login_user(user)
+                    flash('You have been signed in.', 'success')
+                    return redirect(url_for('main.index'))
+                else:
+                    flash('Password is incorrect. Please try again.', 'danger')
+            else:
+                flash('The email has not been registered in this system.', 'warning')
     return render_template('auth/login.html', form=form)
 
 
