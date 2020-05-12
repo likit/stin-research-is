@@ -247,6 +247,8 @@ class ProjectBudgetItem(db.Model):
     amount_spent = db.Column('amount_spent', db.Numeric(), default=0.0)
     created_at = db.Column('created_at', db.DateTime(timezone=True))
     edited_at = db.Column('edited_at', db.DateTime(timezone=True))
+    milestone_id = db.Column('milestone_id', db.ForeignKey('project_milestone.id'))
+    milestone = db.relationship(ProjectMilestone, backref=db.backref('budget_items'))
 
 
 reviewer_groups = db.Table('reviewer_groups',
