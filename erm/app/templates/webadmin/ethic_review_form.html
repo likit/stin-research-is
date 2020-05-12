@@ -40,7 +40,7 @@
                             <td class="title is-size-5" width="20%">Method</td><td>{{ project.method }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">Updated at</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
+                            <td class="title is-size-5" width="20%">Updated at</td><td> วันที่ {{ project.updated_at|localdatetime }} น.</td>
                         </tr>
                         <tr>
                             <td class="title is-size-5" width="20%">Category</td>
@@ -107,23 +107,14 @@
                             <td>
                                 <table class="table">
                                     <thead>
-                                    <th>Goal/Task/Requirement</th>
-                                    <th>Deadline</th>
                                     <th>Status</th>
-                                    <th></th>
+                                    <th>Submitted</th>
                                     </thead>
                                     <tbody>
                                     {% for m in project.milestones %}
                                     <tr>
-                                        <td>{{ m.goal }}</td>
-                                        {% if m.deadline %}
-                                        <td>{{ m.deadline|localdatetime }}</td>
-                                        {% else %}
-                                        <td>Not specified</td>
-                                        {% endif %}
                                         <td>{{ m.status }}</td>
-                                        <td>
-                                        </td>
+                                        <td>{{ m.created_at|localdatetime }} น.</td>
                                     </tr>
                                     </tbody>
                                     {% endfor %}
