@@ -413,7 +413,7 @@ class ProjectReviewSendRecord(db.Model):
     title = db.Column('title', db.String(), nullable=False, info={'label': 'Title'})
     message = db.Column('message', db.Text(), info={'label': 'Message'})
     footer = db.Column('footer', db.String(), info={'label': 'Footer'})
-    deadline = db.Column('deadline', db.DateTime(timezone=True))
+    deadline = db.Column('deadline', db.Date())
     review = db.relationship('ProjectReviewRecord', backref=db.backref('send_records'))
     to = db.Column('to', db.String())
 
