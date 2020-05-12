@@ -74,7 +74,6 @@ def add_all_reviewers(project_id, group_id):
     return redirect(request.referrer)
 
 
-
 @webadmin.route('/submissions/<int:project_id>/reviewers/remove/<int:reviewer_id>')
 @superuser
 @login_required
@@ -169,6 +168,9 @@ def write_review(project_id, review_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             form.populate_obj(review)
+            review.alignment = '|'.join(form.alignment_select.data)
+            review.outcome_detail = '|'.join(form.outcome_detail_select.data)
+            review.benefit_detail = '|'.join(form.benefit_detail_select.data)
             review.submitted_at = arrow.now(tz='Asia/Bangkok').datetime
             db.session.add(review)
             db.session.commit()

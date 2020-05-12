@@ -34,13 +34,24 @@
                                 <table class="table is-striped is-fullwidth">
                                     <thead>
                                     <th>To</th>
-                                    <th colspan="2">At</th>
+                                    <th>At</th>
+                                    <th>Form</th>
+                                    <th></th>
                                     </thead>
                                     {% for record in review.send_records %}
                                     <tbody>
                                     <tr>
                                         <td>{{ record.to }}</td>
                                         <td>{{ record.sent_at|localdatetime }}</td>
+                                        <td>
+                                            <a href="{{ url_for('webadmin.write_review', project_id=project.id, review_id=record.review_id) }}"
+                                               class="button is-link is-outlined">
+                                                <span class="icon">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </span>
+                                                <span>Write</span>
+                                            </a>
+                                        </td>
                                         <td>
                                             <a href="{{ url_for('webadmin.resend_for_review', project_id=project.id, record_id=record.id) }}"
                                                class="button is-link is-outlined">
