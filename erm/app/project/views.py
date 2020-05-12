@@ -455,7 +455,7 @@ def edit_gantt_activity(project_id, milestone_id, record_id):
                                     milestone_id=milestone_id))
         else:
             flash(form.errors, 'danger')
-    return render_template('project/gantt_activity_add.html',
+    return render_template('project/gantt_activity_edit.html',
                            project_id=project_id,
                            milestone=record.milestone,
                            form=form, record=record)

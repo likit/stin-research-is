@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Gantt Chart Activity Page{% endblock %}
+{% block title %}Gantt Chart Activity Edit Page{% endblock %}
 
 {% block page_content %}
 <section class="hero is-info">
@@ -12,25 +12,37 @@
     <div class="container">
         <div class="columns">
             <div class="column is-one-third is-offset-4">
-                <h1 class="title has-text-centered">Add Gantt Chart Activity</h1>
+                <h1 class="title has-text-centered">Edit Gantt Chart Activity</h1>
                 <form class="box" method="post" enctype=multipart/form-data>
                     {{ form.csrf_token }}
                     <div class="field">
                         <label class="label">{{ form.task_id.label }}</label>
                         <div class="select">
+                            {% if record.dirty == True %}
+                            {{ form.task_id(disabled=True) }}
+                            {% else %}
                             {{ form.task_id() }}
+                            {% endif %}
                         </div>
                     </div>
                     <div class="field">
                         <label class="label">{{ form.start_date.label }}</label>
                         <div class="control">
+                            {% if record.dirty %}
+                            {{ form.start_date(class="input", disabled=True) }}
+                            {% else %}
                             {{ form.start_date(class="input") }}
+                            {% endif %}
                         </div>
                     </div>
                     <div class="field">
                         <label class="label">{{ form.end_date.label }}</label>
                         <div class="control">
+                            {% if record.dirty %}
+                            {{ form.end_date(class="input", disabled=True) }}
+                            {% else %}
                             {{ form.end_date(class="input") }}
+                            {% endif %}
                         </div>
                     </div>
                     <div class="field">
