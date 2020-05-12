@@ -101,11 +101,13 @@
                                 <td>{{ member.role }}</td>
                                 <td>{{ member.user.email }}</td>
                                 <td>
+                                    {% if project.status != 'approved' %}
                                     <a href="{{ url_for('project.remove_member', project_id=project.id, member_id=member.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-trash-alt"></i>
                                         </span>
                                     </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endfor %}
@@ -315,7 +317,10 @@
                             <th>เรื่อง</th>
                             <th>วารสาร</th>
                             <th>ประเภท</th>
-                            <th colspan="2">ทุนสนับสนุน</th>
+                            {% if project.status == 'approved' %}
+                            <th>ทุนสนับสนุน</th>
+                            {% endif %}
+                            <th></th>
                             </thead>
                             <tbody>
                             {% for p in project.publications %}
@@ -324,6 +329,7 @@
                                 <td>{{ p.journal.name }}</td>
                                 <td>{{ p.category }}</td>
                                 <td>
+                                    {% if project.status == 'approved' %}
                                     <div class="buttons">
                                         <a href="{{ url_for('project.add_lang_support', project_id=project.id, pub_id=p.id) }}"
                                            class="button is-small is-rounded is-outlined is-link">
@@ -340,6 +346,7 @@
                                             <span>รางวัลการตีพิมพ์</span>
                                         </a>
                                     </div>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     <a href="{{ url_for('project.edit_pub', pub_id=p.id, project_id=project.id) }}">
@@ -365,6 +372,7 @@
                         </table>
                     </td>
                 </tr>
+                {% if project.status == 'approved' %}
                 <tr>
                     <td class="title is-size-5">ทุนสนับสนุนการตรวจภาษา</td>
                     <td>
@@ -473,6 +481,7 @@
                         </table>
                     </td>
                 </tr>
+                {% endif %}
                 <tr>
                     <td class="title is-size-5">การนำงานวิจัยไปใช้ประโยชน์</td>
                     <td>
@@ -533,13 +542,13 @@
                 {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
                 <a href="{{ url_for('project.edit_project', project_id=project.id) }}"
                    class="button is-link"
-                   {% if project.status == 'submitted' %}
+                   {% if project.status != 'draft' %}
                     disabled
                     {% endif %}
                 >Edit</a>
                 <a href="{{ url_for('project.submit_project', project_id=project.id) }}"
                    class="button is-primary"
-                   {% if project.status == 'submitted' %}
+                   {% if project.status != 'draft' %}
                     disabled
                     {% endif %}
                 >Submit</a>
