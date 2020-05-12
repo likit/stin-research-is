@@ -303,7 +303,7 @@ class ProjectReviewRecord(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     reviewer_id = db.Column('reviewer_id', db.ForeignKey('project_reviewers.id'))
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
-    comment = db.Column('comment', db.Text(), info={'label': 'Comment'})
+    comment = db.Column('comment', db.Text(), info={'label': 'สรุปความคิดเห็นและข้อเสนอแนะอื่นๆ'})
     status = db.Column('status', db.String(), default='pending',
                        info={
                            'label': 'Decision',
@@ -312,6 +312,94 @@ class ProjectReviewRecord(db.Model):
                                           'approved', 'rejected')]
                              },
                        )
+    alignment = db.Column('alignment', db.Text())
+    alignment_other = db.Column('alignment_other', db.Unicode(),
+                                info={'label': 'อื่นๆ'})
+    alignment_comment = db.Column('alignment_comment', db.Text(),
+                                  info={'label': 'ข้อคิดเห็น'})
+
+    importance = db.Column('importance', db.Unicode(),
+                           info={'label': 'ความสำคัญและที่มาของการวิจัย',
+                                 'choices': [(c, c) for c in ('ดีมาก', 'ดี', 'พอใช้')]})
+    importance_comment = db.Column('importance_comment', db.Text(),
+                                   info={'label': 'ข้อคิดเห็น'})
+
+    objective = db.Column('objective', db.Unicode(),
+                     info={'label': 'วัตถุประสงค์ของการวิจัย',
+                           'choices': [(c, c) for c in ('ชัดเจน', 'ไม่ชัดเจน')]})
+    objective_comment = db.Column('objective_comment', db.Text(),
+                             info={'label': 'ข้อคิดเห็น'})
+
+    idea = db.Column('idea', db.Unicode(),
+                           info={'label': 'แนวคิดพื้นฐาน/กรอบทฤษฎีที่ใช้วิจัย',
+                                 'choices': [(c, c) for c in ('ชัดเจน', 'ไม่ชัดเจน')]})
+    idea_comment = db.Column('idea_comment', db.Text(),
+                                   info={'label': 'ข้อคิดเห็น'})
+
+    sampling = db.Column('sampling', db.Unicode(),
+                     info={'label': 'การเลือกสุ่มตัวอย่าง',
+                           'choices': [(c, c) for c in ('ถูกต้อง', 'ควรปรับปรุง')]})
+    sampling_comment = db.Column('sampling_comment', db.Text(),
+                             info={'label': 'ข้อคิดเห็น'})
+
+    variable = db.Column('variable', db.Unicode(),
+                         info={'label': 'การกำหนดตัวแปรต่างๆ',
+                               'choices': [(c, c) for c in ('ถูกต้อง', 'ควรปรับปรุง')]})
+    variable_comment = db.Column('variable_comment', db.Text(),
+                                 info={'label': 'ข้อคิดเห็น'})
+
+    tool = db.Column('tool', db.Unicode(),
+                         info={'label': 'เครื่องมือการวิจัยและการตรวจสอบคุณภาพ',
+                               'choices': [(c, c) for c in ('ถูกต้อง', 'ควรปรับปรุง')]})
+    tool_comment = db.Column('tool_comment', db.Text(),
+                                 info={'label': 'ข้อคิดเห็น'})
+
+    data_collection = db.Column('data_collection', db.Unicode(),
+                     info={'label': 'การเก็บรวบรวมข้อมูล',
+                           'choices': [(c, c) for c in ('ถูกต้อง', 'ควรปรับปรุง')]})
+    data_collection_comment = db.Column('data_collection_comment', db.Text(),
+                             info={'label': 'ข้อคิดเห็น'})
+
+    data_analyze = db.Column('data_analyze', db.Unicode(),
+                                info={'label': 'การวิเคราะห์ข้อมูล',
+                                      'choices': [(c, c) for c in ('ถูกต้อง', 'ควรปรับปรุง')]})
+    data_analyze_comment = db.Column('data_analyze_comment', db.Text(),
+                                        info={'label': 'ข้อคิดเห็น'})
+
+    plan = db.Column('plan', db.Unicode(),
+                             info={'label': 'การวิเคราะห์ข้อมูล',
+                                   'choices': [(c, c) for c in ('เหมาะสม', 'ควรปรับปรุง')]})
+    plan_comment = db.Column('plan_comment', db.Text(),
+                                     info={'label': 'ข้อคิดเห็น'})
+
+    outcome = db.Column('outcome', db.Unicode(),
+                     info={'label': 'ผลผลิตที่ได้จากการวิจัย',
+                           'choices': [(c, c) for c in ('เหมาะสม', 'ควรปรับปรุง')]})
+    outcome_comment = db.Column('outcome_comment', db.Text(),
+                             info={'label': 'ข้อคิดเห็น'})
+
+    outcome_detail = db.Column('outcome_detail', db.Text(),
+                        info={'label': 'รายการผลผลิตที่ได้จากการวิจัย'})
+    outcome_detail_other = db.Column('outcome_detail_other', db.Unicode(),
+                                info={'label': 'อื่นๆ'})
+
+    benefit = db.Column('benefit', db.Unicode(),
+                        info={'label': 'ผลประโยชน์ที่คาดว่าจะได้รับ',
+                              'choices': [(c, c) for c in ('เหมาะสม', 'ควรปรับปรุง')]})
+    benefit_comment = db.Column('benefit_comment', db.Text(),
+                                info={'label': 'ข้อคิดเห็น'})
+
+    benefit_detail = db.Column('benefit_detail', db.Text(),
+                               info={'label': 'รายการผลประโยชน์ที่คาดว่าจะได้รับ'})
+    benefit_detail_other = db.Column('benefit_detail_other', db.Unicode(),
+                                     info={'label': 'อื่นๆ'})
+
+    budget = db.Column('budget', db.Unicode(),
+                     info={'label': 'งบประมาณ',
+                           'choices': [(c, c) for c in ('เหมาะสม', 'ควรปรับปรุง')]})
+    budget_comment = db.Column('budget_comment', db.Text(),
+                             info={'label': 'ข้อคิดเห็น'})
+
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     reviewer = db.relationship('ProjectReviewer', backref=db.backref('records'))
     project = db.relationship('ProjectRecord', backref=db.backref('reviews'))
