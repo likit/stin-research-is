@@ -231,7 +231,7 @@ class ProjectBudgetSubCategory(db.Model):
     category = db.relationship(ProjectBudgetCategory, backref=db.backref('subcategories'))
 
     def __str__(self):
-        return '<{}> {} {}'.format(self.category.category, self.sub_category_id, self.sub_category)
+        return '<{}> {}. {}'.format(self.category.category, self.sub_category_id, self.sub_category)
 
 
 class ProjectBudgetItem(db.Model):
@@ -241,10 +241,10 @@ class ProjectBudgetItem(db.Model):
     item = db.Column('item', db.String())
     phase = db.Column('phase', db.String(),
                       info={'label': 'งวด',
-                            'choices': [(1, 'งวดที่ 1'), (2, 'งวดที่ 2'),
-                                        (3, 'งวดที่ 3'), (4, 'งวดที่ 4')]})
-    wage = db.Column('wage', db.Numeric(), default=0.0)
-    amount_spent = db.Column('amount_spent', db.Numeric(), default=0.0)
+                            'choices': [('1', 'งวดที่ 1'), ('2', 'งวดที่ 2'),
+                                        ('3', 'งวดที่ 3'), ('4', 'งวดที่ 4')]})
+    wage = db.Column('wage', db.Numeric(), default=0.0, info={'label': 'ค่าตอบแทน (บาท)'})
+    amount_spent = db.Column('amount_spent', db.Numeric(), default=0.0, info={'label': 'งบประมาณที่ใช้ไปแล้ว (บาท)'})
     created_at = db.Column('created_at', db.DateTime(timezone=True))
     edited_at = db.Column('edited_at', db.DateTime(timezone=True))
     milestone_id = db.Column('milestone_id', db.ForeignKey('project_milestone.id'))

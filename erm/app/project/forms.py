@@ -127,3 +127,11 @@ class ProjectPublicationAuthorForm(ModelForm):
 class ProjectGanttActivityForm(ModelForm):
     class Meta:
         model = ProjectGanttActivity
+
+
+class ProjectBudgetItemForm(ModelForm):
+    class Meta:
+        model = ProjectBudgetItem
+    sub_category = QuerySelectField(ProjectBudgetSubCategory,
+                                    query_factory=lambda: ProjectBudgetSubCategory.query.all(),
+                                    widget=Select())

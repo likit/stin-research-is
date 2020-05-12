@@ -265,7 +265,8 @@
                                             </span>
                                             <span>Gantt Chart</span>
                                         </a>
-                                        <a class="button is-small is-info">
+                                        <a class="button is-small is-info"
+                                            href="{{ url_for('project.list_budget_items', project_id=project.id, milestone_id=m.id) }}">
                                             <span class="icon">
                                                 <i class="fas fa-dollar-sign"></i>
                                             </span>

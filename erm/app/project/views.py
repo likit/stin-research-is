@@ -380,6 +380,16 @@ def clone_milestone(project_id):
                 new_activity.task_id = a.task_id
                 new_milestone.gantt_activities.append(new_activity)
                 db.session.add(new_activity)
+        if milestone.budget_items:
+            for b in milestone.budget_items:
+                new_item = ProjectBudgetItem()
+                new_item.sub_category = b.sub_category
+                new_item.wage = b.wage
+                new_item.phase = b.phase
+                new_item.amount_spent = b.amount_spent
+                new_item.created_at = arrow.now(tz='Asia/Bangkok').datetime
+                new_item.edited_at = new_item.created_at
+                new_milestone.budget_items.append(new_item)
         db.session.add(new_milestone)
         db.session.commit()
         flash('New milestone added.', 'success')
@@ -459,6 +469,54 @@ def edit_gantt_activity(project_id, milestone_id, record_id):
                            project_id=project_id,
                            milestone=record.milestone,
                            form=form, record=record)
+
+
+@project.route('projects/<int:project_id>/milestone/<int:milestone_id>/budgets')
+@login_required
+def list_budget_items(project_id, milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    return render_template('project/budgets.html',
+                           milestone=milestone, project_id=project_id)
+
+
+@project.route('projects/<int:project_id>/milestone/<int:milestone_id>/budgets/add', methods=['GET', 'POST'])
+@login_required
+def add_budget_item(project_id, milestone_id):
+    form = ProjectBudgetItemForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_item = ProjectBudgetItem()
+            form.populate_obj(new_item)
+            new_item.milestone_id = milestone_id
+            new_item.created_at = arrow.now(tz='Asia/Bangkok').datetime
+            new_item.edited_at = new_item.created_at
+            db.session.add(new_item)
+            db.session.commit()
+            flash('New budget item has been added.', 'success')
+            return redirect(url_for('project.list_budget_items',
+                                    project_id=project_id, milestone_id=milestone_id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('project/budget_item_add.html', form=form)
+
+
+@project.route('projects/<int:project_id>/milestone/<int:milestone_id>/budgets/<int:item_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_budget_item(project_id, milestone_id, item_id):
+    item = ProjectBudgetItem.query.get(item_id)
+    form = ProjectBudgetItemForm(obj=item)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(item)
+            item.edited_at = arrow.now(tz='Asia/Bangkok').datetime
+            db.session.add(item)
+            db.session.commit()
+            flash('The budget item has been updated.', 'success')
+            return redirect(url_for('project.list_budget_items',
+                                    project_id=project_id, milestone_id=milestone_id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('project/budget_item_add.html', form=form)
 
 
 @project.route('/admin/ethics', methods=['GET', 'POST'])

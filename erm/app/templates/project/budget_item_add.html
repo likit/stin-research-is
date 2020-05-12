@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Add Budget Item Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-one-third is-offset-4">
+                <h1 class="title has-text-centered">เพิ่มรายการใช้จ่าย</h1>
+                <form class="box" method="post" enctype=multipart/form-data>
+                    {{ form.csrf_token }}
+                    <div class="field">
+                        <label class="label">หมวดค่าใช้จ่าย</label>
+                        <div class="select">
+                            {{ form.sub_category() }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.phase.label }}</label>
+                        <div class="select">
+                            {{ form.phase() }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.wage.label }}</label>
+                        <div class="control">
+                            {{ form.wage(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.amount_spent.label }}</label>
+                        <div class="control">
+                            {{ form.amount_spent(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                            <button type="submit" class="button is-success">Create</button>
+                        </div>
+                        <div class="control">
+                            <a class="button is-light" href="{{ request.referrer }}">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

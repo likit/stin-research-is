@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Budgets{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                {% include "message.html" %}
+                <h1 class="title has-text-centered">Project Budgets</h1>
+                <h3 class="title is-size-4">รายการค่าใช้จ่าย</h3>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <hr>
+                <table class="table is-fullwidth is-striped">
+                    <thead>
+                    <th>หมวด</th>
+                    <th>รายการย่อย</th>
+                    <th>งวด</th>
+                    <th>ค่าตอบแทน (บาท)</th>
+                    <th>งบที่ใช้ไปแล้ว (บาท)</th>
+                    <th>แก้ไขเมื่อ</th>
+                    </thead>
+                    <tbody>
+                    {% for item in milestone.budget_items %}
+                    <tr>
+                        <td>{{ item.sub_category.category }}</td>
+                        <td>{{ item.sub_category.sub_category }}</td>
+                        <td>{{ item.phase }}</td>
+                        <td>{{ item.wage }}</td>
+                        <td>{{ item.amount_spent }}</td>
+                        <td>{{ item.edited_at|localdatetime }} น.</td>
+                        <td>
+                            <a href="{{ url_for('project.edit_budget_item', project_id=project_id, milestone_id=milestone.id, item_id=item.id) }}">
+                                <span class="icon">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                                <span>แก้ไข</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="buttons is-centered">
+                    <a class="button is-info"
+                       href="{{ url_for('project.add_budget_item', project_id=project_id, milestone_id=milestone.id) }}">
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span>เพิ่มรายการค่าใช้จ่าย</span>
+                    </a>
+                    <a href="{{ url_for('project.display_project', project_id=project_id) }}"
+                       class="button is-light">
+                        กลับ
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <hr>
+                <h1 class="title has-text-centered">Gantt Chart</h1>
+                <div id="chart_div"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}
