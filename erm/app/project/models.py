@@ -367,7 +367,7 @@ class ProjectReviewRecord(db.Model):
                                         info={'label': 'ข้อคิดเห็น'})
 
     plan = db.Column('plan', db.Unicode(),
-                             info={'label': 'การวิเคราะห์ข้อมูล',
+                             info={'label': 'แผนการดำเนินการวิจัย',
                                    'choices': [(c, c) for c in ('เหมาะสม', 'ควรปรับปรุง')]})
     plan_comment = db.Column('plan_comment', db.Text(),
                                      info={'label': 'ข้อคิดเห็น'})
