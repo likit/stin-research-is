@@ -9,13 +9,17 @@
         <div class="container">
             <div class="columns">
                 <div class="column">
-                    <h1 class="title">Welcome to the STIN Research Management System.</h1>
+                    <img src="{{ url_for('static', filename='images/engineers.jpg') }}">
                 </div>
                 {% if current_user.is_authenticated %}
-                <div class="column is-one-third">
+                <div class="column is-two-fifths">
+                    <h1 class="title">STIN Research Management System.</h1>
                     <div class="box has-text-centered">
-                        <h1 class="title is-size-4 has-text-dark"><strong>Welcome {{ current_user.profile }}</strong></h1>
-                        <h1 class="subtitle has-text-dark">You're now logged in.</h1>
+                        <h1 class="title is-size-5 has-text-dark">You're now logged in.</h1>
+                        <h1 class="title is-size-4 has-text-dark">
+                            <strong>{{ current_user.profile }}</strong>
+                        </h1>
+                        <h1 class="subtitle is-size-4 has-text-dark">Welcome</h1>
                         <hr>
                         <div class="buttons is-centered">
                             <a class="button is-primary"
