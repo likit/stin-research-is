@@ -214,6 +214,18 @@ class ProjectGanttActivity(db.Model):
                             })
 
 
+class ProjectSummary(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    milestone_id = db.Column('milestone_id', db.ForeignKey('project_milestone.id'))
+    milestone = db.relationship(ProjectMilestone, backref=db.backref('summaries'))
+    created_at = db.Column('created_at', db.DateTime(timezone=True))
+    edited_at = db.Column('edited_at', db.DateTime(timezone=True))
+    activity = db.Column('activity', db.Unicode(), info={'label': 'กิจกรรมตามแผนงาน'})
+    expected_outcome = db.Column('expected_outcome', db.Text(),
+                                 info={'label': 'ผลผลิตที่ระบุไว้'})
+    outcome = db.Column('outcome', db.Text(), info={'label': 'ผลผลิตที่เกิดขึ้นจริง'})
+
+
 class ProjectBudgetCategory(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     category_id = db.Column('category_id', db.Integer())
