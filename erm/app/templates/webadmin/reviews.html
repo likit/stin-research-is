@@ -15,8 +15,8 @@
             {% for review in project.reviews %}
             <div class="box">
                 <table class="table is-fullwidth">
-                    <col width="30">
-                    <col width="60">
+                    <col width="40">
+                    <col width="50">
                     <col width="10">
                     <tr>
                         <td class="title is-size-5">Reviewer</td>
@@ -35,7 +35,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5">Submitted at</td>
+                        <td class="title is-size-5">Submitted</td>
                         {% if review.submitted_at %}
                         <td>{{ review.submitted_at|localdatetime }}</td>
                         {% else %}
