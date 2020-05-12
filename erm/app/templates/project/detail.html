@@ -257,20 +257,27 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <div class="buttons">
+                                    <div class="buttons has-addons">
                                         <a href="{{ url_for('project.list_gantt_activity', project_id=project.id, milestone_id=m.id) }}"
-                                            class="button is-small is-info">
+                                            class="button is-small is-primary is-outlined">
                                             <span class="icon">
                                                <i class="far fa-calendar-alt"></i>
                                             </span>
                                             <span>Gantt Chart</span>
                                         </a>
-                                        <a class="button is-small is-info"
+                                        <a class="button is-small is-primary is-outlined"
                                             href="{{ url_for('project.list_budget_items', project_id=project.id, milestone_id=m.id) }}">
                                             <span class="icon">
                                                 <i class="fas fa-dollar-sign"></i>
                                             </span>
                                             <span>งบประมาณ</span>
+                                        </a>
+                                        <a class="button is-small is-primary is-outlined"
+                                           href="{{ url_for('project.list_summaries', project_id=project.id, milestone_id=m.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-flag"></i>
+                                            </span>
+                                            <span>ผลการดำเนินงาน</span>
                                         </a>
                                     </div>
                                 </td>
