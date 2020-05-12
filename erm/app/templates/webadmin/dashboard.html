@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Main Dashboard{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="column">
+            <div class="has-text-centered">
+                <h1 class="title">Main Dashboard</h1>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-header-title">Projects</h1>
+                    </div>
+                    <div class="card-content">
+                        <div class="columns">
+                            <div class="column">
+                                <div id="project_status_pie" style="width: 600px; height: 400px;"></div>
+                            </div>
+                            <div class="column">
+                                <div id="project_per_month_count_bar" style="width: 600px; height: 400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-header-title">Publication</h1>
+                    </div>
+                    <div class="card-content">
+                        <div class="columns">
+                            <div class="column">
+                                <div id="reward_line_chart" style="width: 600px; height: 400px;"></div>
+                            </div>
+                            <div class="column">
+                                <div id="pub_month_bar" style="width: 600px; height: 400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load("current", {packages:["corechart", "bar"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var projectStatus = {{ project_status|tojson|safe }};
+    var data = google.visualization.arrayToDataTable(projectStatus);
+
+    var options = {
+      title: 'Status',
+      is3D: false, pieHole: 0.4,
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('project_status_pie'));
+    chart.draw(data, options);
+
+    var data = google.visualization.arrayToDataTable({{ project_per_month_count_data|tojson|safe }});
+    var ProjectPerMonthBarChart = new google.charts.Bar(document.getElementById('project_per_month_count_bar'));
+    var options = {
+      title: 'Count per month',
+    };
+    ProjectPerMonthBarChart.draw(data, google.charts.Bar.convertOptions(options));
+
+    var rewardLineChart = new google.visualization.LineChart(document.getElementById('reward_line_chart'));
+    var data = google.visualization.arrayToDataTable({{ reward_sum_data|tojson|safe }});
+    var options = {
+        title: 'Reward/Publication Fee per Month',
+    };
+    rewardLineChart.draw(data, options);
+
+    var data = google.visualization.arrayToDataTable({{ pub_month_data|tojson|safe }});
+    var PubMonthBarChart = new google.charts.Bar(document.getElementById('pub_month_bar'));
+    var options = {
+        title: 'Publication per month',
+    };
+    PubMonthBarChart.draw(data, google.charts.Bar.convertOptions(options));
+
+  }
+</script>
+{% endblock %}

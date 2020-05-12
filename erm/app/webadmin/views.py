@@ -1,8 +1,10 @@
 import arrow
+from collections import defaultdict
 from app.webadmin import webadmin_bp as webadmin
 from flask_login import login_required
 from app import superuser
 from flask import render_template, redirect, url_for, request, flash
+import pandas as pd
 from wsgi import db
 from app.project.models import *
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
@@ -570,3 +572,66 @@ def edit_pub_reward(pub_id, record_id):
     return render_template('webadmin/reward_edit.html',
                            record=record, form=form,
                            pub=pub, qualification=qualification)
+
+
+@webadmin.route('/dashboard')
+@superuser
+@login_required
+def dashboard():
+    projstat = defaultdict(int)
+    for project in ProjectRecord.query.all():
+        projstat[project.status] += 1
+    project_status = [(k, v) for k, v in projstat.items()]
+    project_status = [('Status', 'Count')] + project_status
+
+    df = pd.read_sql_query('select * from projects;', con=db.engine)
+    per_month = df.created_at.dt.to_period('M')
+    per_month_counts = df.groupby([per_month, 'status']).count()
+    per_month_count_dict = per_month_counts['id'].to_dict()
+    months = per_month_count_dict.keys()
+    all_status = set()
+    for m in months:
+        all_status.add(m[1])
+    all_status = list(all_status)
+    all_status_dict = dict(list(zip(all_status, range(len(all_status)))))
+    per_month_count_data = {}
+    for k in months:
+        month_data = [0] * len(all_status)
+        label = '{}/{}'.format(k[0].month,k[0].year)
+        per_month_count_data[label] = month_data
+
+    for k in months:
+        label = '{}/{}'.format(k[0].month, k[0].year)
+        cnt = per_month_count_dict[k]
+        idx = all_status_dict[k[1]]
+        per_month_count_data[label][idx] = cnt
+
+    labels = ['Month'] + all_status
+    per_month_count_data_list = [labels]
+    for k,v in per_month_count_data.items():
+        v.insert(0, k)
+        per_month_count_data_list.append(v)
+
+    reward_df = pd.read_sql_query('select * from project_pub_rewards;', con=db.engine)
+    per_month = reward_df.submitted_at.dt.to_period('M')
+    per_month_count = reward_df.groupby([per_month]).sum().amount
+    reward_sum_data = [['Month', 'Total']]
+    for mnt, total in per_month_count.to_dict().items():
+        label = '{}/{}'.format(mnt.month, mnt.year)
+        reward_sum_data.append([label, total])
+    month_names = dict(list(zip(['January', 'February', 'March', 'April', 'May',
+                      'June', 'July', 'August', 'September',
+                      'October', 'November', 'December'], range(1,13))))
+
+    pub_df = pd.read_sql_query('select * from project_pub_records', con=db.engine)
+    pub_month_data = pub_df.groupby(['year', 'month']).count().id.reset_index()
+    pub_month_data_list = [['Month', 'Count']]
+    for idx, row in pub_month_data.iterrows():
+        label = '{}/{}'.format(month_names.get(row[1], ''), row[0])
+        pub_month_data_list.append([label, row[2]])
+
+    return render_template('webadmin/dashboard.html',
+                           project_status=project_status,
+                           project_per_month_count_data=per_month_count_data_list,
+                           reward_sum_data=reward_sum_data,
+                           pub_month_data=pub_month_data_list)

@@ -329,7 +329,7 @@
                                 <td>{{ p.journal.name }}</td>
                                 <td>{{ p.category }}</td>
                                 <td>
-                                    {% if project.status == 'approved' %}
+                                    {% if project.status != 'draft' %}
                                     <div class="buttons">
                                         <a href="{{ url_for('project.add_lang_support', project_id=project.id, pub_id=p.id) }}"
                                            class="button is-small is-rounded is-outlined is-link">
@@ -372,7 +372,7 @@
                         </table>
                     </td>
                 </tr>
-                {% if project.status == 'approved' %}
+                {% if project.status != 'draft' %}
                 <tr>
                     <td class="title is-size-5">ทุนสนับสนุนการตรวจภาษา</td>
                     <td>
