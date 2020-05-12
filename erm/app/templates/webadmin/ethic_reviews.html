@@ -10,29 +10,41 @@
 </section>
 <section class="section">
     <div class="columns">
-        <div class="column has-text-centered is-one-third is-offset-4">
+        <div class="column has-text-centered is-two-thirds is-offset-2">
             <h1 class="title">Project Ethic Approval Reviews</h1>
             {% for review in project.ethic_reviews %}
             <div class="box">
                 <table class="table is-fullwidth">
-                    <col width="40">
-                    <col width="50">
-                    <col width="10">
+                    <thead>
+                    <col width="40%">
+                    <col width="60%">
+                        <th></th>
+                        <th>ผลการประเมิน</th>
+                    </thead>
                     <tr>
-                        <td class="title is-size-5">Reviewer</td>
+                        <td class="title is-size-5">ผู้ประเมิน</td>
                         <td>{{ review.reviewer.academic_title or '' }}{{ review.reviewer.fullname }}</td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5">Comment</td>
-                        <td>{{ review.comment or '' }}</td>
-                        <td>
-                            {% if review.comment %}
-                            <span class="icon">
-                                <i class="fas fa-check has-text-success"></i>
-                            </span>
-                            {% endif %}
-                        </td>
+                        <td class="title is-size-5">โครงการวิจัยขอให้ทบทวนดังนี้</td>
+                        <td>{{ review.project_revision }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">เครื่องมือวิจัย เป็นต้นว่าแบบสอบถาม ขอให้มีการทบทวนดังนี้</td>
+                        <td>{{ review.tool_revision }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">เอกสารข้อมูลสำหรับกลุ่มประชากรหรือผู้ที่มีส่วนร่วมในการวิจัย (Patient/Participant Information Sheet) ขอให้มีการทบทวนดังนี้</td>
+                        <td>{{ review.doc_revision }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">ใบยินยอมของกลุ่มประชากรหรือผู้มีส่วนร่วมในการวิจัย (Informed consent form) ขอให้มีการทบทวนดังนี้</td>
+                        <td>{{ review.consent_revision }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">ข้อสังเกต</td>
+                        <td>{{ review.note }}</td>
                     </tr>
                     <tr>
                         <td class="title is-size-5">Submitted</td>

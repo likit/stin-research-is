@@ -12,9 +12,7 @@
     <div class="container">
         <div class="columns">
             <div class="column is-two-thirds is-offset-2">
-                {% for cat,msg in get_flashed_messages(with_categories=true) %}
-                <p class="notification is-{{ cat }}">{{ msg }}</p>
-                {% endfor %}
+                {% include "messages.html" %}
                 <div class="box">
                     <h1 class="title has-text-centered">Send History</h1>
                     {% for review in project.ethic_reviews %}
@@ -34,7 +32,8 @@
                                 <table class="table is-striped is-fullwidth">
                                     <thead>
                                     <th>To</th>
-                                    <th colspan="2">At</th>
+                                    <th>At</th>
+                                    <th></th>
                                     </thead>
                                     {% for record in review.send_records %}
                                     <tbody>
@@ -42,6 +41,10 @@
                                         <td>{{ record.to }}</td>
                                         <td>{{ record.sent_at|localdatetime }}</td>
                                         <td>
+                                            <a href="{{ url_for('webadmin.write_ethic_review', project_id=project.id, ethic_id=ethic.id, review_id=record.review_id) }}"
+                                               class="button is-link is-outlined">
+                                                <span>Form</span>
+                                            </a>
                                             <a href="{{ url_for('webadmin.resend_for_ethic_review', project_id=project.id, ethic_id=ethic.id, record_id=record.id) }}"
                                                class="button is-link is-outlined">
                                                 <span class="icon">
