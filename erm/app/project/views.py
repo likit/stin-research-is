@@ -92,6 +92,7 @@ def list_created_projects(user_id):
 
 
 @project.route('/detail/<int:project_id>')
+@login_required
 def display_project(project_id):
     project = ProjectRecord.query.get(project_id)
     return render_template('project/detail.html', project=project)
@@ -588,6 +589,7 @@ def list_ethics(project_id):
 
 
 @project.route('/journals/add', methods=['GET', 'POST'])
+@login_required
 def add_journal():
     form = ProjectJournalForm()
     project_id = request.args.get('project_id')
@@ -606,6 +608,7 @@ def add_journal():
 
 
 @project.route('/projects/<int:project_id>/pubs/<int:pub_id>/authors/add', methods=['GET', 'POST'])
+@login_required
 def add_pub_author(project_id, pub_id):
     form = ProjectPublicationAuthorForm()
     pub = ProjectPublication.query.get(pub_id)
@@ -641,6 +644,7 @@ def add_pub(project_id):
 
 
 @project.route('projects/<int:project_id>/pubs/<int:pub_id>/edit', methods=['GET', 'POST'])
+@login_required
 def edit_pub(project_id, pub_id):
     pub = ProjectPublication.query.get(pub_id)
     form = ProjectPublicationForm(obj=pub)
@@ -657,6 +661,7 @@ def edit_pub(project_id, pub_id):
 
 
 @project.route('projects/<int:project_id>/pubs/<int:pub_id>/authors/edit', methods=['GET', 'POST'])
+@login_required
 def edit_pub_authors(project_id, pub_id):
     pub = ProjectPublication.query.get(pub_id)
     return render_template('webadmin/pub_author_edit.html', pub=pub, project_id=project_id)
@@ -664,6 +669,7 @@ def edit_pub_authors(project_id, pub_id):
 
 
 @project.route('/projects/<int:project_id>/pubs/<int:pub_id>/authors/<int:author_id>/remove')
+@login_required
 def remove_pub_author(project_id, pub_id, author_id):
     author = ProjectPublicationAuthor.query.get(author_id)
     if author:
