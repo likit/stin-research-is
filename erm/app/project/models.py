@@ -423,7 +423,6 @@ class ProjectEthicReviewRecord(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     reviewer_id = db.Column('reviewer_id', db.ForeignKey('project_reviewers.id'))
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
-    comment = db.Column('comment', db.Text(), info={'label': 'Comment'})
     status = db.Column('status', db.String(), default='pending',
                        info={
                            'label': 'การพิจารณา',
