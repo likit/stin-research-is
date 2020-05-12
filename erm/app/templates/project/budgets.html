@@ -57,7 +57,7 @@
                         </span>
                         <span>เพิ่มรายการค่าใช้จ่าย</span>
                     </a>
-                    <a href="{{ url_for('project.display_project', project_id=project_id) }}"
+                    <a href="{{ request.referrer }}"
                        class="button is-light">
                         กลับ
                     </a>
