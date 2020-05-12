@@ -324,7 +324,7 @@ def view_archive(archive_id):
     return render_template('project/archieve_detail.html', project=ar)
 
 
-@project.route('/<int:project_id>/milestone/add', methods=['GET', 'POST'])
+@project.route('/<int:project_id>/milestones/add', methods=['GET', 'POST'])
 @login_required
 def add_milestone(project_id):
     project = ProjectRecord.query.get(project_id)
@@ -342,7 +342,7 @@ def add_milestone(project_id):
     return render_template('project/milestone_add.html', project=project, form=form)
 
 
-@project.route('/<int:project_id>/milestone/<int:milestone_id>/edit', methods=['GET', 'POST'])
+@project.route('/<int:project_id>/milestones/<int:milestone_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_milestone(project_id, milestone_id):
     milestone = ProjectMilestone.query.get(milestone_id)
@@ -358,7 +358,7 @@ def edit_milestone(project_id, milestone_id):
     return render_template('project/milestone_add.html', project=project, form=form)
 
 
-@project.route('/<int:project_id>/milestone/clone')
+@project.route('/<int:project_id>/milestones/clone')
 @login_required
 def clone_milestone(project_id):
     milestone = ProjectMilestone.query.filter_by(project_id=project_id)\
@@ -390,6 +390,15 @@ def clone_milestone(project_id):
                 new_item.created_at = arrow.now(tz='Asia/Bangkok').datetime
                 new_item.edited_at = new_item.created_at
                 new_milestone.budget_items.append(new_item)
+        if milestone.summaries:
+            for s in milestone.summaries:
+                new_item = ProjectSummary()
+                new_item.activity = s.activity
+                new_item.expected_outcome = s.expected_outcome
+                new_item.outcome = s.outcome
+                new_item.created_at = arrow.now(tz='Asia/Bangkok').datetime
+                new_item.edited_at = new_item.created_at
+                new_milestone.summaries.append(new_item)
         db.session.add(new_milestone)
         db.session.commit()
         flash('New milestone added.', 'success')
@@ -398,7 +407,7 @@ def clone_milestone(project_id):
     return redirect(url_for('project.display_project', project_id=project_id))
 
 
-@project.route('/<int:project_id>/milestone/<int:milestone_id>/gantt-activities')
+@project.route('/<int:project_id>/milestones/<int:milestone_id>/gantt-activities')
 @login_required
 def list_gantt_activity(project_id, milestone_id):
     milestone = ProjectMilestone.query.get(milestone_id)
@@ -425,7 +434,7 @@ def list_gantt_activity(project_id, milestone_id):
                            milestone=milestone, gantt_activities=gantt_activities)
 
 
-@project.route('/<int:project_id>/milestone/<int:milestone_id>/gantt-activities/add', methods=['GET', 'POST'])
+@project.route('/<int:project_id>/milestones/<int:milestone_id>/gantt-activities/add', methods=['GET', 'POST'])
 @login_required
 def add_gantt_activity(project_id, milestone_id):
     form = ProjectGanttActivityForm()
@@ -448,7 +457,7 @@ def add_gantt_activity(project_id, milestone_id):
     return render_template('project/gantt_activity_add.html', form=form)
 
 
-@project.route('projects/<int:project_id>/milestone/<int:milestone_id>/gantt-activities/<int:record_id>/edit', methods=['GET', 'POST'])
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/gantt-activities/<int:record_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_gantt_activity(project_id, milestone_id, record_id):
     record = ProjectGanttActivity.query.get(record_id)
@@ -471,7 +480,7 @@ def edit_gantt_activity(project_id, milestone_id, record_id):
                            form=form, record=record)
 
 
-@project.route('projects/<int:project_id>/milestone/<int:milestone_id>/budgets')
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/budgets')
 @login_required
 def list_budget_items(project_id, milestone_id):
     milestone = ProjectMilestone.query.get(milestone_id)
@@ -479,7 +488,7 @@ def list_budget_items(project_id, milestone_id):
                            milestone=milestone, project_id=project_id)
 
 
-@project.route('projects/<int:project_id>/milestone/<int:milestone_id>/budgets/add', methods=['GET', 'POST'])
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/budgets/add', methods=['GET', 'POST'])
 @login_required
 def add_budget_item(project_id, milestone_id):
     form = ProjectBudgetItemForm()
@@ -500,7 +509,7 @@ def add_budget_item(project_id, milestone_id):
     return render_template('project/budget_item_add.html', form=form)
 
 
-@project.route('projects/<int:project_id>/milestone/<int:milestone_id>/budgets/<int:item_id>/edit', methods=['GET', 'POST'])
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/budgets/<int:item_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_budget_item(project_id, milestone_id, item_id):
     item = ProjectBudgetItem.query.get(item_id)
@@ -517,6 +526,58 @@ def edit_budget_item(project_id, milestone_id, item_id):
         else:
             flash(form.errors, 'danger')
     return render_template('project/budget_item_add.html', form=form)
+
+
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/summaries')
+@login_required
+def list_summaries(project_id, milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    return render_template('project/summary_records.html',
+                           milestone=milestone, project_id=project_id)
+
+
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/summaries/add',
+               methods=['GET', 'POST'])
+@login_required
+def add_summary_record(project_id, milestone_id):
+    form = ProjectSummaryForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_record = ProjectSummary()
+            form.populate_obj(new_record)
+            new_record.milestone_id = milestone_id
+            new_record.edited_at = arrow.now(tz='Asia/Bangkok').datetime
+            new_record.created_at = new_record.edited_at
+            db.session.add(new_record)
+            db.session.commit()
+            flash('New summary record has been added.', 'success')
+            return redirect(url_for('project.list_summaries',
+                                    milestone_id=milestone_id,
+                                    project_id=project_id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('project/summary_record_edit.html', form=form)
+
+
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/summaries/<int:record_id>/edit',
+               methods=['GET', 'POST'])
+@login_required
+def edit_summary_record(project_id, milestone_id, record_id):
+    record = ProjectSummary.query.get(record_id)
+    form = ProjectSummaryForm(obj=record)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(record)
+            record.edited_at = arrow.now(tz='Asia/Bangkok').datetime
+            db.session.add(record)
+            db.session.commit()
+            flash('New summary record has been added.', 'success')
+            return redirect(url_for('project.list_summaries',
+                                    milestone_id=milestone_id,
+                                    project_id=project_id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('project/summary_record_edit.html', form=form)
 
 
 @project.route('/admin/ethics', methods=['GET', 'POST'])

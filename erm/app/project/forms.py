@@ -135,3 +135,8 @@ class ProjectBudgetItemForm(ModelForm):
     sub_category = QuerySelectField(ProjectBudgetSubCategory,
                                     query_factory=lambda: ProjectBudgetSubCategory.query.all(),
                                     widget=Select())
+
+
+class ProjectSummaryForm(ModelForm):
+    class Meta:
+        model = ProjectSummary
