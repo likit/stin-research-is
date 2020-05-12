@@ -11,13 +11,7 @@
         <div class="container has-text-centered">
             <div class="columns">
                 <div class="column is-half is-offset-one-quarter">
-                    {% with messages = get_flashed_messages(with_categories=True) %}
-                    {% if messages %}
-                    {% for cat,msg in messages %}
-                    <p class="notification {{ cat }}">{{ msg }}</p>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
+                    {% include "messages.html" %}
                     <div class="box">
                         <h1 class="title">User Sign In</h1>
                         <hr>
@@ -33,7 +27,7 @@
                                     {{ form.password(placeholder='Password', class='input') }}
                                 </div>
                             </div>
-                            <div class="field is-grouped">
+                            <div class="field is-grouped is-grouped-centered">
                                 <div class="control">
                                     <button type="submit" class="button is-primary">Sign In</button>
                                 </div>
