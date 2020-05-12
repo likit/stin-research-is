@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Projects Page{% endblock %}
+{% block title %}Your Projects Page{% endblock %}
 
 {% block page_content %}
 <section class="hero is-info">
@@ -11,12 +11,12 @@
 <section class="section">
     <div class="columns">
         <div class="column has-text-centered is-two-thirds is-offset-2">
-            <h1 class="title">Your Projects</h1>
+            <h1 class="title">โครงการวิจัยของคุณ</h1>
             <a href="{{ url_for('project.add_project') }}" class="button is-outlined is-primary">
                 <span class="icon">
                     <i class="fas fa-plus"></i>
                 </span>
-                <span>New Project</span>
+                <span>สร้างโครงการใหม่</span>
             </a>
             <table class="table">
                 <thead>
@@ -39,8 +39,14 @@
                     <td>
                         {% for member in project.members %}
                         {% if member.role == 'PI' %}
-                        <a href="{{ url_for('researcher.show_profile', user_id=member.user.id) }}" class="button is-light is-small">
-                            {{ member.user.profile.fullname_th }}
+                        <a href="{{ url_for('researcher.show_profile', user_id=member.user.id) }}"
+                           class="button is-light is-small">
+                            <span class="icon">
+                                <i class="fas fa-user-circle"></i>
+                            </span>
+                            <span>
+                                {{ member.user.profile.fullname_th }}
+                            </span>
                         </a>
                         {% endif %}
                         {% endfor %}
@@ -48,7 +54,12 @@
                     <td>
                         <a href="{{ url_for('project.display_project', project_id=project.id) }}"
                            class="button is-small is-primary">
-                            See detail
+                            <span class="icon">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <span>
+                                ดูรายละเอียด
+                            </span>
                         </a>
                     </td>
                 </tr>
