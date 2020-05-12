@@ -43,7 +43,10 @@
                                         <td>
                                             <a href="{{ url_for('webadmin.write_ethic_review', project_id=project.id, ethic_id=ethic.id, review_id=record.review_id) }}"
                                                class="button is-link is-outlined">
-                                                <span>Form</span>
+                                                <span class="icon">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </span>
+                                                <span>Write</span>
                                             </a>
                                             <a href="{{ url_for('webadmin.resend_for_ethic_review', project_id=project.id, ethic_id=ethic.id, record_id=record.id) }}"
                                                class="button is-link is-outlined">
