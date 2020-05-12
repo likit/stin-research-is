@@ -32,6 +32,13 @@
                                 </span>
                                 <span>New Project</span>
                             </a>
+                            <a class="button is-info"
+                               href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">
+                                <span class="icon">
+                                    <i class="fas fa-project-diagram"></i>
+                                </span>
+                                <span>Your Projects</span>
+                            </a>
                         </div>
                     </div>
                 </div>
