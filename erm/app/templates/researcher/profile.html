@@ -9,12 +9,14 @@
 </section>
 <section class="section">
     <div class="columns">
+        <div class="column">
+            {% include "messages.html" %}
+        </div>
+    </div>
+    <div class="columns">
         <div class="column is-three-fifths is-offset-one-fifth">
             <div class="box has-text-centered">
                 <h2 class="title">Profile</h2>
-                {% for cat,msg in get_flashed_messages(with_categories=true) %}
-                <p class="notification is-{{ cat }}">{{ msg }}</p>
-                {% endfor %}
                 {% if current_user.is_authenticated and current_user.id == user.id %}
                 <a href="{{ url_for('researcher.edit_profile', user_id=user.id) }}">
                     <span class="icon">
@@ -124,7 +126,6 @@
         <div class="column is-three-fifths is-offset-one-fifth">
             <div class="box has-text-centered">
                 <h2 class="title">Publication</h2>
-                {% include "messages.html" %}
                 {% if current_user.is_authenticated and current_user.id == user.id %}
                 <a href="{{ url_for('researcher.add_pub') }}">
                 <span class="icon">
