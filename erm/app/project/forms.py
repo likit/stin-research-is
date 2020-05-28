@@ -124,7 +124,7 @@ class ProjectPublicationAuthorForm(ModelForm):
     class Meta:
         model = ProjectPublicationAuthor
     users = QuerySelectField(User,
-                             query_factory=lambda: User.query.filter_by(role=2),
+                             query_factory=lambda: sorted([u for u in User.query.filter_by(role=2)], key=lambda x: x.fullname_thai),
                              get_label=lambda x: x.profile.fullname_th,
                              widget=Select(), validators=[Optional()])
 
