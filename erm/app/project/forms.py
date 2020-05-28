@@ -27,6 +27,11 @@ class ProjectRecordForm(ModelForm):
     class Meta:
         model = ProjectRecord
         exclude = ['approved_at', 'created_at', 'updated_at']
+    parent = QuerySelectField(ParentProjectRecord,
+                                query_factory=lambda: ParentProjectRecord.query.all(),
+                                allow_blank=True,
+                                blank_text='โครงการเดี่ยว',
+                                widget=Select())
 
 
 class ApplicationForm(ModelForm):

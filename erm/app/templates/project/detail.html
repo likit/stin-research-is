@@ -27,6 +27,11 @@
             {% endfor %}
             <div class="box">
             <table class="table is-fullwidth is-striped">
+                {% if project.parent_project %}
+                <tr>
+                    <td class="title is-size-5" width="20%">ชุดโครงการ</td><td>{{ project.parent_project }}</td>
+                </tr>
+                {% endif %}
                 <tr>
                     <td class="title is-size-5" width="20%">ชื่อภาษาอังกฤษ</td><td>{{ project.title_en }}</td>
                 </tr>

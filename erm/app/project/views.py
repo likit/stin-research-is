@@ -1,5 +1,6 @@
 import os
 import arrow
+import wtforms
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -102,12 +103,24 @@ def display_project(project_id):
 @login_required
 def edit_project(project_id):
     project = ProjectRecord.query.get(project_id)
-    form = ProjectRecordForm(obj=project)
+    def edit_project_form_factory(project):
+        class EditProjectRecordForm(ProjectRecordForm):
+            parent = QuerySelectField(
+                query_factory=lambda: ParentProjectRecord.query.all(),
+                widget=wtforms.widgets.Select(),
+                allow_blank=True,
+                blank_text='โครงการเดี่ยว',
+                default=project.parent_project
+            )
+        return EditProjectRecordForm
+    EditProjectRecordForm = edit_project_form_factory(project)
+    form = EditProjectRecordForm(obj=project)
     title = 'Edit Project Record'
     if request.method == 'POST':
         if form.validate_on_submit():
             form.populate_obj(project)
             project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
+            project.parent_project = form.parent.data
             db.session.add(project)
             db.session.commit()
             flash('Data have been updated.', 'success')

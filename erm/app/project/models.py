@@ -39,6 +39,9 @@ class ParentProjectRecord(db.Model):
     title_en = db.Column('title_en', db.String(), info={'label': 'Title English'})
     subtitle_en = db.Column('subtitle_en', db.String(), info={'label': 'Subtitle English'})
 
+    def __str__(self):
+        return self.title_th
+
 
 class ProjectRecord(db.Model):
     __tablename__ = 'projects'
