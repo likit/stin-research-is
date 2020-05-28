@@ -31,6 +31,15 @@ class ProjectFigure(db.Model):
     project = db.relationship('ProjectRecord', backref=db.backref('figures'))
 
 
+class ParentProjectRecord(db.Model):
+    __tablename__ = 'parent_projects'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    title_th = db.Column('title_th', db.String(), info={'label': 'Title Thai'})
+    subtitle_th = db.Column('subtitle_th', db.String(), info={'label': 'Subtitle Thai'})
+    title_en = db.Column('title_en', db.String(), info={'label': 'Title English'})
+    subtitle_en = db.Column('subtitle_en', db.String(), info={'label': 'Subtitle English'})
+
+
 class ProjectRecord(db.Model):
     __tablename__ = 'projects'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -38,6 +47,10 @@ class ProjectRecord(db.Model):
     subtitle_th = db.Column('subtitle_th', db.String(), info={'label': 'Subtitle Thai'})
     title_en = db.Column('title_en', db.String(), info={'label': 'Title English'})
     subtitle_en = db.Column('subtitle_en', db.String(), info={'label': 'Subtitle English'})
+    parent_project_id = db.Column('parent_project_id',
+                                  db.ForeignKey('parent_projects.id'),
+                                  default=None)
+    parent_project = db.relationship(ParentProjectRecord, backref=db.backref('children_projects'))
     objective = db.Column('objective', db.Text(), info={'label': 'Objective'})
     abstract = db.Column('abstract', db.Text(), info={'label': 'Abstract'})
     intro = db.Column('introduction', db.Text(), info={'label': 'Introduction'})
