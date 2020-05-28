@@ -6,7 +6,7 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     email = db.Column('email', db.String(255), unique=True, nullable=False)
-    password_hash = db.Column('password_hash', db.String(255), nullable=False)
+    __password_hash = db.Column('password_hash', db.String(255), nullable=False)
     #TODO: role should not be nullable
     role = db.Column('role', db.Integer, default=2,
                      # info={'label': 'role', 'choices': [(1, 'admin'), (2, 'user')]},
@@ -14,7 +14,7 @@ class User(db.Model):
 
     def __init__(self, email, password):
         self.email = email
-        self.password_hash = generate_password_hash(password)
+        self.__password_hash = generate_password_hash(password)
 
     def __str__(self):
         return self.email
@@ -28,7 +28,11 @@ class User(db.Model):
         raise ValueError('Password attribute is not accessible.')
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.__password_hash, password)
+
+    @password.setter
+    def password(self, new_password):
+        self.__password_hash = generate_password_hash(new_password)
 
     @property
     def is_authenticated(self):

@@ -1,6 +1,6 @@
 from flask import request, render_template, flash, redirect, url_for
 from flask_login import login_required, logout_user, login_user, current_user
-from app.auth.forms import RegisterForm, LoginForm, NewUserForm
+from app.auth.forms import RegisterForm, LoginForm, NewUserForm, PasswordChangeForm
 from app.main.models import User
 from app.researcher.models import Profile
 from app import db, login_manager
@@ -102,3 +102,27 @@ def add_user():
         else:
             flash(form.errors, 'danger')
     return render_template('auth/new_user.html', form=form)
+
+
+@auth.route('/users/edit-password', methods=['GET', 'POST'])
+@login_required
+def edit_password():
+    form = PasswordChangeForm()
+    if form.validate_on_submit():
+        if current_user.check_password(request.form.get('curr_password')):
+            if current_user.check_password(request.form.get('new_password')):
+                flash('A new password is the same as the current password.', 'warning')
+                return render_template('auth/edit_password.html', form=form)
+            else:
+                current_user.password = request.form.get('new_password')
+                db.session.add(current_user)
+                db.session.commit()
+                flash('New password has been set.', 'success')
+                return redirect(url_for('researcher.show_profile', user_id=current_user.id))
+        else:
+            flash('Invalid current password.', 'danger')
+            return render_template('auth/edit_password.html', form=form)
+    else:
+        print(form)
+
+    return render_template('auth/edit_password.html', form=form)

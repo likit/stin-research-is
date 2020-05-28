@@ -38,6 +38,13 @@
                         <td>{{ user.email }}</td>
                     </tr>
                     <tr>
+                        <td class="title is-size-5">Password</td>
+                        <td>
+                            <a href="{{ url_for('auth.edit_password') }}"
+                               class="has-text-danger">Change Password</a>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="title is-size-5">Program</td>
                         <td>{{ user.profile.program or '-' }}</td>
                     </tr>
