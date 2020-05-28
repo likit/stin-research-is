@@ -521,9 +521,9 @@ class ProjectPublicationAuthor(db.Model):
     __tablename__ = 'project_publication_authors'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     pub_id = db.Column('pub_id', db.ForeignKey('project_pub_records.id'))
-    pub = db.relationship('ProjectPublication', backref=db.backref('authors'))
+    pub = db.relationship('ProjectPublication', backref=db.backref('authors', cascade='delete'))
     user_id = db.Column('user_id', db.ForeignKey('users.id'))
-    user = db.relationship(User, backref=db.backref('authoreds'))
+    user = db.relationship(User, backref=db.backref('authoreds', cascade='delete'))
     firstname = db.Column('firstname', db.String())
     lastname = db.Column('lastname', db.String())
     affil = db.Column('affiliation', db.String())
