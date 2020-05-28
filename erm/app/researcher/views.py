@@ -128,9 +128,10 @@ def add_pub():
             author = ProjectPublicationAuthor()
             author.user = current_user
             new_pub.authors.append(author)
+            db.session.add(author)
             db.session.add(new_pub)
             db.session.commit()
-            flash('New publication added.')
+            flash('New publication added.', 'success')
             return redirect(url_for('researcher.show_profile',
                                     user_id=current_user.id))
         else:
@@ -150,7 +151,6 @@ def show_pub(pub_id):
 def edit_pub(pub_id):
     pub = ProjectPublication.query.get(pub_id)
     form = ProjectPublicationForm(obj=pub)
-    session['edit_pub_url'] = request.url
     if request.method == 'POST':
         if form.validate_on_submit():
             form.populate_obj(pub)
@@ -177,6 +177,7 @@ def edit_pub_authors(pub_id):
 def add_pub_author(pub_id):
     pub = ProjectPublication.query.get(pub_id)
     form = ProjectPublicationAuthorForm()
+    dest = request.args.get('next')
     if request.method == 'POST':
         if form.validate_on_submit():
             new_author = ProjectPublicationAuthor()
@@ -186,10 +187,12 @@ def add_pub_author(pub_id):
             db.session.add(new_author)
             db.session.commit()
             flash('New author has been added.', 'success')
-            return redirect(url_for('researcher.edit_pub_authors', pub_id=pub_id))
+            return redirect(url_for('researcher.edit_pub_authors',
+                                    pub_id=pub_id, next=dest))
         else:
             flash(form.errors, 'danger')
-    return render_template('researcher/pub_author_add.html', pub=pub, form=form)
+    return render_template('researcher/pub_author_add.html',
+                           pub=pub, form=form, dest=dest)
 
 
 @researcher.route('/pubs/<int:pub_id>/authors/<int:author_id>/remove', methods=['GET', 'POST'])
@@ -203,3 +206,19 @@ def remove_pub_author(pub_id, author_id):
     else:
         flash('The author with that ID was not found.', 'danger',)
     return redirect(url_for('researcher.edit_pub_authors', pub_id=pub_id))
+
+
+@researcher.route('/pubs/<int:pub_id>/remove', methods=['GET', 'POST'])
+@login_required
+def remove_pub(pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    confirm = request.args.get('confirm', 'no')
+    if confirm == 'yes':
+        if pub:
+            db.session.delete(pub)
+            db.session.commit()
+            flash('The publication has been removed from database.', 'success')
+            return redirect(url_for('researcher.show_profile', user_id=current_user.id))
+        else:
+            flash('The publication does not exist.', 'danger',)
+    return render_template('researcher/pub_remove.html', pub=pub)

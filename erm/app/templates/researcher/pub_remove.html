@@ -1,10 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Publication Remove{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">Remove Publication</h1>
+            {% include 'message.html' %}
+            <div class="box">
+                <h1 class="title has-text-centered has-text-danger">คุณต้องการลบบทความนี้ใช่หรือไม่</h1>
+                <h1 class="subtitle has-text-centered has-text-danger">
+                    <span class="icon has-text-danger">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                    บทความที่ลบแล้วไม่สามารถเรียกกลับคืนได้
+                </h1>
+                <hr>
+                <h1 class="title is-size-4">{{ pub.title }}</h1>
+                <table class="table is-fullwidth">
+                    <tbody>
+                    <tr>
+                        <td>Authors</td>
+                        <td>
+                            <ol>
+                                {% for author in pub.authors %}
+                                {% if author.user_id %}
+                                <li>
+                                    <strong>{{ author.user.profile }}</strong> {{ author.user.profile.affiliation }}
+                                </li>
+                                {% else %}
+                                <li>
+                                    <strong>{{ author.fullname }}</strong> {{ author.affil }}
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                            </ol>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Thai Abstract</td>
+                        <td>{{ pub.th_abstract }}</td>
+                    </tr>
+                    <tr>
+                        <td>English Abstract</td>
+                        <td>{{ pub.en_abstract }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="buttons is-centered">
+                    <a href="{{ url_for('researcher.remove_pub', pub_id=pub.id, confirm='yes') }}"
+                       class="button is-danger">
+                        <span class="icon">
+                           <i class="far fa-trash-alt"></i>
+                        </span>
+                        <span>remove</span>
+                    </a>
+                    <a href="{{ url_for('researcher.show_profile', user_id=current_user.id) }}" class="button
+                        is-light">Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

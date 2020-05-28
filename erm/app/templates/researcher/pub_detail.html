@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Edit Publication Detail{% endblock %}
+{% block title %}Publication Detail{% endblock %}
 {% block page_content %}
 <section class="hero is-info">
     <div class="hero-head">
@@ -65,14 +65,19 @@
                 <div class="buttons is-centered">
                     <a href="{{ url_for('researcher.show_profile', user_id=current_user.id) }}" class="button
                         is-light">Back</a>
+                    <a href="{{ url_for('researcher.remove_pub', pub_id=pub.id) }}"
+                       class="button is-danger">
+                        <span class="icon">
+                           <i class="far fa-trash-alt"></i>
+                        </span>
+                        <span>remove</span>
+                    </a>
                     <a href="{{ url_for('researcher.edit_pub', pub_id=pub.id) }}"
                         class="button is-primary">
                         <span class="icon">
                             <i class="fas fa-pencil-alt"></i>
                         </span>
-                        <span>
-                            edit
-                        </span>
+                        <span>edit</span>
                     </a>
                 </div>
             </div>

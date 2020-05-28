@@ -51,7 +51,7 @@
                 {% if project_id %}
                 <a href="{{ url_for('project.add_pub_author', pub_id=pub.id, project_id=project_id) }}"
                 {% else %}
-                <a href="{{ url_for('researcher.add_pub_author', pub_id=pub.id) }}"
+                <a href="{{ url_for('researcher.add_pub_author', pub_id=pub.id, next=dest) }}"
                 {% endif %}
                    class="button is-primary">
                     <span class="icon">
