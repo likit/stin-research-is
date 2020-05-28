@@ -119,4 +119,40 @@
         </div>
     </div>
 </section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-three-fifths is-offset-one-fifth">
+            <div class="box has-text-centered">
+                <h2 class="title">Publication</h2>
+                {% include "messages.html" %}
+                {% if current_user.is_authenticated and current_user.id == user.id %}
+                <a href="{{ url_for('researcher.add_pub') }}">
+                <span class="icon">
+                    <i class="fas fa-pencil-alt"></i>
+                </span>
+                    <span>New Publication</span>
+                </a>
+                {% endif %}
+                <table class="table is-striped">
+                    <thead>
+                    <th>No.</th>
+                    <th>Title</th>
+                    <th>Journal</th>
+                    <th>Published</th>
+                    </thead>
+                    <tbody>
+                    {% for pub in current_user.publications %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td><a href="{{ url_for('researcher.show_pub', pub_id=pub.id) }}">{{ pub.title }}</a></td>
+                        <td>{{ pub.journal }}</td>
+                        <td>{{ pub.pub_date|localdate }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

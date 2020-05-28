@@ -1,10 +1,16 @@
-from flask import render_template, flash, request, redirect, url_for
-from flask_login import login_required
+from flask import render_template, flash, request, redirect, url_for, session
+from flask_login import login_required, current_user
 from app.main.models import User
 from app.researcher.models import Profile, Education
 from app.researcher.forms import ProfileForm, EducationForm
 from app import db
 from . import researcher_bp as researcher
+from app.project.models import (ProjectPublication,
+                                ProjectPublicationAuthor,
+                                ProjectPublicationJournal)
+from app.project.forms import (ProjectPublicationForm,
+                               ProjectJournalForm,
+                               ProjectPublicationAuthorForm)
 
 
 @researcher.route('/profile/<int:user_id>')
@@ -89,3 +95,111 @@ def remove_education(edid):
     else:
         flash('Record has been removed', 'success')
     return redirect(url_for('researcher.show_profile', user_id=user_id))
+
+
+@researcher.route('/journals/add', methods=['GET', 'POST'])
+@login_required
+def add_journal():
+    dest = request.args.get('next')
+    pub_id = request.args.get('pub_id')
+    form = ProjectJournalForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_journal = ProjectPublicationJournal()
+            form.populate_obj(new_journal)
+            db.session.add(new_journal)
+            db.session.commit()
+            flash('New journal has been added.', 'success')
+            return redirect(url_for(dest, pub_id=pub_id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('researcher/journal_add.html', form=form)
+
+
+@researcher.route('/pubs/add', methods=['GET', 'POST'])
+@login_required
+def add_pub():
+    form = ProjectPublicationForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_pub = ProjectPublication()
+            form.populate_obj(new_pub)
+            new_pub.journal = form.journals.data
+            author = ProjectPublicationAuthor()
+            author.user = current_user
+            new_pub.authors.append(author)
+            db.session.add(new_pub)
+            db.session.commit()
+            flash('New publication added.')
+            return redirect(url_for('researcher.show_profile',
+                                    user_id=current_user.id))
+        else:
+            flash('Error occurred.', 'danger')
+    return render_template('researcher/pub_add.html', form=form)
+
+
+@researcher.route('/pubs/<int:pub_id>')
+@login_required
+def show_pub(pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    return render_template('researcher/pub_detail.html', pub=pub)
+
+
+@researcher.route('/pubs/<int:pub_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_pub(pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    form = ProjectPublicationForm(obj=pub)
+    session['edit_pub_url'] = request.url
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(pub)
+            db.session.add(pub)
+            db.session.commit()
+            flash('Data have been saved.', 'success')
+            return redirect(url_for('researcher.show_profile',
+                                    user_id=current_user.id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('researcher/pub_edit.html', form=form, pub=pub)
+
+
+@researcher.route('/pubs/<int:pub_id>/authors/edit', methods=['GET', 'POST'])
+@login_required
+def edit_pub_authors(pub_id):
+    dest = request.args.get('next')
+    pub = ProjectPublication.query.get(pub_id)
+    return render_template('researcher/pub_author_edit.html', pub=pub, dest=dest)
+
+
+@researcher.route('/pubs/<int:pub_id>/authors/add', methods=['GET', 'POST'])
+@login_required
+def add_pub_author(pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    form = ProjectPublicationAuthorForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_author = ProjectPublicationAuthor()
+            form.populate_obj(new_author)
+            new_author.pub = pub
+            new_author.user = form.users.data
+            db.session.add(new_author)
+            db.session.commit()
+            flash('New author has been added.', 'success')
+            return redirect(url_for('researcher.edit_pub_authors', pub_id=pub_id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('researcher/pub_author_add.html', pub=pub, form=form)
+
+
+@researcher.route('/pubs/<int:pub_id>/authors/<int:author_id>/remove', methods=['GET', 'POST'])
+@login_required
+def remove_pub_author(pub_id, author_id):
+    author = ProjectPublicationAuthor.query.get(author_id)
+    if author:
+        db.session.delete(author)
+        db.session.commit()
+        flash('Author has been deleted from publication', 'success')
+    else:
+        flash('The author with that ID was not found.', 'danger',)
+    return redirect(url_for('researcher.edit_pub_authors', pub_id=pub_id))

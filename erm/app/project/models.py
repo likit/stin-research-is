@@ -1,5 +1,6 @@
 from app import db
 from app.main.models import User
+from datetime import datetime
 
 class ProjectMember(db.Model):
     __tablename__ = 'project_members'
@@ -511,6 +512,10 @@ class ProjectPublication(db.Model):
                 authors.append(a.fullname)
         return ', '.join(authors)
 
+    @property
+    def pub_date(self):
+        return datetime.strptime('{}-{}-1'.format(self.year, self.month), '%Y-%B-%d')
+
 
 class ProjectPublicationAuthor(db.Model):
     __tablename__ = 'project_publication_authors'
@@ -518,11 +523,13 @@ class ProjectPublicationAuthor(db.Model):
     pub_id = db.Column('pub_id', db.ForeignKey('project_pub_records.id'))
     pub = db.relationship('ProjectPublication', backref=db.backref('authors'))
     user_id = db.Column('user_id', db.ForeignKey('users.id'))
-    user = db.relationship(User, backref=db.backref('publisheds'))
+    user = db.relationship(User, backref=db.backref('authoreds'))
     firstname = db.Column('firstname', db.String())
     lastname = db.Column('lastname', db.String())
     affil = db.Column('affiliation', db.String())
     corresponding = db.Column('corresponding', db.Boolean(), default=False)
+
+    #TODO: should add a constructor here for two different use cases.
 
 
     @property

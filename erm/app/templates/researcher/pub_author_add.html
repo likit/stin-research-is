@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Add Author{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">Add New Author</h1>
+            {% include 'message.html' %}
+            <form method="post" class="box">
+                {{ form.csrf_token }}
+                <input name="source" value="1" type="hidden">
+                <div class="field">
+                    <label class="label">Researchers</label>
+                    <div class="control">
+                        <div class="select">
+                            {{ form.users() }}
+                       </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">Add</button>
+                    </div>
+                </div>
+            </form>
+             <form method="post" class="box">
+                {{ form.csrf_token }}
+                <input name="source" value="2" type="hidden">
+                <div class="field">
+                    <label class="label">First Name</label>
+                    <div class="control">
+                        {{ form.firstname(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Last Name</label>
+                    <div class="control">
+                        {{ form.lastname(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Affiliation</label>
+                    <div class="control">
+                        {{ form.affil(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

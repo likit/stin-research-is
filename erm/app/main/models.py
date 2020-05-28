@@ -48,3 +48,8 @@ class User(db.Model):
 
     def get_id(self):
         return str(self.id)
+
+    @property
+    def publications(self):
+        pubs = [authored.pub for authored in self.authoreds]
+        return sorted(pubs, key=lambda x: x.pub_date, reverse=True)

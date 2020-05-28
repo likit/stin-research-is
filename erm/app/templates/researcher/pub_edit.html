@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Publication{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">แก้ไขผลงานวิชาการ</h1>
+            {% include 'message.html' %}
+            <form method="post" class="box">
+                {{ form.csrf_token }}
+                <div class="field">
+                    <label class="label">Journals</label>
+                    <div class="control">
+                        <div class="select">
+                            {{ form.journals() }}
+                        </div>
+                    </div>
+                </div>
+                <span>The journal is not in the list?</span><a class="is-primary" href="{{ url_for('researcher.add_journal', next=request.endpoint, pub_id=pub.id) }}"> Click here </a>to add.
+                <div class="field">
+                    <label class="label">{{ form.title.label }}</label>
+                    <div class="control">
+                        {{ form.title(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Authors</label>
+                </div>
+                <div class="field">
+                    <div class="control is-expanded">
+                        <textarea type="text" class="textarea" readonly>{{ pub.authors_list }}</textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {% if project_id %}
+                        <a class="button is-primary"
+                           href="{{ url_for('project.edit_pub_authors', pub_id=pub.id, project_id=project_id) }}">
+                            Edit Authors
+                        </a>
+                        {% else %}
+                        <a class="button is-primary is-outlined"
+                           href="{{ url_for('researcher.edit_pub_authors', pub_id=pub.id, next=request.endpoint) }}">
+                            <span class="icon">
+                               <i class="fas fa-user-edit"></i>
+                            </span>
+                            <span>edit authors</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.th_abstract.label }}</label>
+                    <div class="control">
+                        {{ form.th_abstract(class="textarea") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.en_abstract.label }}</label>
+                    <div class="control">
+                        {{ form.en_abstract(class="textarea") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.doi.label }}</label>
+                    <div class="control">
+                        {{ form.doi(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.url.label }}</label>
+                    <div class="control">
+                        {{ form.url(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.volume.label }}</label>
+                    <div class="control">
+                        {{ form.volume(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.issue_no.label }}</label>
+                    <div class="control">
+                        {{ form.issue_no(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.year.label }}</label>
+                    <div class="control">
+                        {{ form.year(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.month.label }}</label>
+                    <div class="select">
+                        {{ form.month() }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.page_no.label }}</label>
+                    <div class="control">
+                        {{ form.page_no(class="input") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.category.label }}</label>
+                    <div class="control">
+                        <div class="select">
+                            {{ form.category(class='select') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-grouped is-grouped-centered">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">
+                            <span class="icon">
+                                <i class="far fa-save"></i>
+                            </span>
+                            <span>Save</span>
+                        </button>
+
+                    </div>
+                    <div class="control">
+                        {% if project_id %}
+                        <a href="{{ url_for('researcher.show_profile', user_id=current_user.id) }}" class="button is-light">Back</a>
+                        {% else %}
+                        <a href="{{ url_for('researcher.show_pub', pub_id=pub.id) }}" class="button is-light">
+                        <span class="icon">
+                           <i class="far fa-times-circle"></i>
+                        </span>
+                        <span>Back</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Publication Authors{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">Authors</h1>
+            {% include 'message.html' %}
+            <div class="box">
+                <table class="table is-fullwidth">
+                    <thead>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>Affiliation</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        {% for a in pub.authors %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            {% if a.user_id %}
+                                <td>{{ a.user.profile }}</td>
+                                <td>{{ a.user.profile.affiliation }}</td>
+                            {% else %}
+                                <td>{{ a.fullname }}</td>
+                                <td>{{ a.affil }}</td>
+                            {% endif %}
+                            <td>
+                                {% if project_id %}
+                                <a href="{{ url_for('project.remove_pub_author', pub_id=pub.id, author_id=a.id, project_id=project_id) }}">
+                                {% else %}
+                                <a href="{{ url_for('researcher.remove_pub_author', pub_id=pub.id, author_id=a.id) }}">
+                                {% endif %}
+                                    <span class="icon">
+                                        <i class="fas fa-trash-alt
+                                            has-text-danger"></i>
+                                    </span>
+                                </a>
+                            </td>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="buttons is-centered">
+                {% if project_id %}
+                <a href="{{ url_for('project.add_pub_author', pub_id=pub.id, project_id=project_id) }}"
+                {% else %}
+                <a href="{{ url_for('researcher.add_pub_author', pub_id=pub.id) }}"
+                {% endif %}
+                   class="button is-primary">
+                    <span class="icon">
+                        <i class="fas fa-user-plus"></i>
+                    </span>
+                    <span>Add</span>
+                </a>
+                {% if project_id %}
+                <a href="{{ url_for('project.edit_pub', pub_id=pub.id, project_id=project_id)}}" class="button is-success">
+                    <span>Done</span>
+                </a>
+                {% else %}
+                <a href="{{ url_for(dest, pub_id=pub.id) }}" class="button is-success">
+                    <span>Done</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
