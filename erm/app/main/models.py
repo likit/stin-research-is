@@ -52,4 +52,7 @@ class User(db.Model):
     @property
     def publications(self):
         pubs = [authored.pub for authored in self.authoreds]
-        return sorted(pubs, key=lambda x: x.pub_date, reverse=True)
+        if pubs:
+            return sorted(pubs, key=lambda x: x.pub_date, reverse=True)
+        else:
+            return pubs
