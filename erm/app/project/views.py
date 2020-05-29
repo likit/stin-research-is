@@ -292,12 +292,12 @@ def remove_figure(figure_id):
 @login_required
 def submit_project(project_id):
     project = ProjectRecord.query.get(project_id)
-    if project.status.startswith('concept'):
-        project.status = 'concept submitted'
-    elif project.status.startswith('full'):
+    if project.status == 'draft' or\
+            project.status == 'concept revising':
+        project.status == 'concept submitted'
+    elif project.status == 'concept approved' or\
+            project.status == 'full revising':
         project.status = 'full submitted'
-    else:
-        project.status = 'concept submitted'
 
     project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
     project.submitted_at = arrow.now(tz='Asia/Bangkok').datetime

@@ -1,10 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Update Ethic Record{% endblock %}
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">ปรับสถานะการขออนุมัติจริยธรรมงานวิจัย</h1>
+            {% include 'message.html' %}
+            <form method="post" class="box">
+                {{ form.csrf_token }}
+                <div class="field">
+                    <label class="label">สถานะ</label>
+                    <div class="control">
+                        <div class="select">
+                            {{ form.status() }}
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons is-centered">
+                    <button type="submit" class="button is-success">
+                        <span class="icon">
+                           <i class="far fa-save"></i>
+                        </span>
+                        <span>Save</span>
+                    </button>
+                    <a class="button is-light"
+                       href="{{ url_for('webadmin.ethic_detail', ethic_id=ethic.id) }}">
+                        <span class="icon">
+                           <i class="far fa-times-circle"></i>
+                        </span>
+                        <span>Back</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

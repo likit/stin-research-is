@@ -10,7 +10,7 @@ from wsgi import db
 from app.project.models import *
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
                                 ProjectEthicReviewSendRecordForm,
-                                ProjectEthicReviewRecordForm,
+                                ProjectEthicReviewRecordForm, ProjectEthicRecordForm,
                                 )
 from app.project.forms import *
 from app.main.models import User
@@ -219,6 +219,22 @@ def list_ethics():
 def ethic_detail(ethic_id):
     ethic = ProjectEthicRecord.query.get(ethic_id)
     return render_template('webadmin/ethic_detail.html', ethic=ethic, project=ethic.project)
+
+
+@webadmin.route('/ethics/<int:ethic_id>/update', methods=['GET', 'POST'])
+@superuser
+@login_required
+def update_ethic_status(ethic_id):
+    ethic = ProjectEthicRecord.query.get(ethic_id)
+    form = ProjectEthicRecordForm(obj=ethic)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(ethic)
+            db.session.add(ethic)
+            db.session.commit()
+            flash('The ethic status has been updated.', 'success')
+            return redirect(url_for('webadmin.ethic_detail', ethic_id=ethic.id))
+    return render_template('webadmin/update_ethic.html', ethic=ethic, form=form)
 
 
 @webadmin.route('/project/<int:project_id>/ethic/<int:ethic_id>/reviewers/add')

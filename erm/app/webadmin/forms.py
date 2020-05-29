@@ -1,7 +1,8 @@
 from app.project.models import (ProjectReviewSendRecord,
                                 ProjectReviewRecord,
                                 ProjectEthicReviewRecord,
-                                ProjectEthicReviewSendRecord)
+                                ProjectEthicReviewSendRecord,
+                                ProjectEthicRecord)
 from wsgi import db
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from wtforms.widgets import ListWidget, CheckboxInput
@@ -63,3 +64,8 @@ class ProjectEthicReviewSendRecordForm(BaseModelForm):
 class ProjectEthicReviewRecordForm(BaseModelForm):
     class Meta:
         model = ProjectEthicReviewRecord
+
+
+class ProjectEthicRecordForm(BaseModelForm):
+    class Meta:
+        model = ProjectEthicRecord

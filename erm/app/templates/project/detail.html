@@ -23,17 +23,27 @@
     <div class="columns">
         <div class="column is-four-fifths is-offset-1">
             {% include "messages.html" %}
-            {% if project.status == 'concept approved' and not project.ethics %}
+            {% if project.status == 'concept approved' %}
             <article class="message is-success">
                 <div class="message-header">
-                Action Required
+                    Action Required
                     <span class="icon">
-                    <i class="fas fa-info-circle"></i>
-                </span>
+                        <i class="fas fa-info-circle"></i>
+                    </span>
                 </div>
+                {% if project.ethics and project.get_ethic_status() == 'approved' %}
+                <p class="message-body">
+                    การขออนุมัติจริยธรรมวิจัยของโครงการของท่านได้รับการอนุมัติแล้ว กรุณา submit โครงการฉบับเต็มเพื่อเข้ารับการพิจารณาต่อไป
+                </p>
+                {% elif not project.ethics %}
                 <p class="message-body">
                     โครงการของท่านได้รับการพิจารณาและอนุมัติในระดับแนวคิดแล้ว ท่านสามารถยื่นขอพิจารณาอนุมัติจริยธรรมวิจัยได้ตั้งแต่วันนี้
                 </p>
+                {% else %}
+                <p class="message-body">
+                    โปรดรอผลการอนุมัติจริยธรรมงานวิจัย
+                </p>
+                {% endif %}
             </article>
             {% elif project.status.endswith('revising') %}
             <article class="message is-success">
@@ -84,7 +94,9 @@
                 </tr>
                 {% if current_user.is_authenticated and project.creator == current_user %}
                 <tr>
-                    <td class="title is-size-5" width="20%">สถานะ</td><td>{{ project.status }}</td>
+                    <td class="title is-size-5" width="20%">สถานะ</td><td>
+                    {{ project.status }}
+                </td>
                 </tr>
                 {% if project.status == 'submitted' %}
                 <tr>
@@ -573,16 +585,21 @@
             <div class="has-text-centered">
                 <a href="{{ request.referrer }}" class="button is-light">Back</a>
                 {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
-                <a href="{{ url_for('project.edit_project', project_id=project.id) }}"
-                   class="button is-link"
-                   {% if not project.status.endswith('revising') and project.status != 'draft' %}
-                    disabled
+                <a class="button is-link"
+                    {% if not project.status.endswith('submitted') or project.status == 'draft' %}
+                        href="{{ url_for('project.edit_project', project_id=project.id) }}"
+                    {% else %}
+                        disabled
                     {% endif %}
                 >Edit</a>
-                <a href="{{ url_for('project.submit_project', project_id=project.id) }}"
+                <a
                    class="button is-primary"
-                   {% if project.status != 'draft' and not project.status.endswith('revising') %}
-                    disabled
+                    {% if project.status == 'concept approved' and project.get_ethic_status() == 'approved' %}
+                        href="{{ url_for('project.submit_project', project_id=project.id) }}"
+                    {% elif project.status == 'draft' or project.status.endswith('revising') %}
+                        href="{{ url_for('project.submit_project', project_id=project.id) }}"
+                    {% else %}
+                        disabled
                     {% endif %}
                 >Submit</a>
                 {% endif %}

@@ -219,7 +219,30 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5">Reviewers</td>
+                        <td class="title is-size-5">Ethic Requests</td>
+                        <td>
+                            <table class="table">
+                                <thead>
+                                <th>Submitted at</th>
+                                <th colspan="2">Status</th>
+                                </thead>
+                                {% for e in project.ethics %}
+                                <tr>
+                                    <td>{{ e.submitted_at|localdatetime }}</td>
+                                    <td>{{ e.status }}</td>
+                                    <td>
+                                        <a href="{{ url_for('webadmin.update_ethic_status', ethic_id=e.id) }}"
+                                           class="button is-primary is-outlined">
+                                            Update
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Ethic Reviews</td>
                         <td>
                             <table class="table is-striped is-bordered">
                                 <thead>
@@ -289,15 +312,7 @@
             <div class="has-text-centered">
                 <div class="buttons is-centered">
                     <a href="{{ url_for('webadmin.list_ethics') }}" class="button is-light">
-                        <span class="icon">
-                            <i class="fas fa-chevron-left"></i>
-                        </span>
-                        <span>
-                            Back
-                        </span>
-                    </a>
-                    <a href="{{ url_for('webadmin.update_status', project_id=project.id) }}" class="button is-primary">
-                        <span>Update Status</span>
+                        Back
                     </a>
                 </div>
             </div>
