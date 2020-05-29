@@ -92,8 +92,11 @@ class ProjectRecord(db.Model):
         return set([review.reviewer for review in self.ethic_reviews])
 
     def get_ethic_status(self):
-        recent_request = self.ethics[0]
-        return recent_request.status
+        if self.ethics:
+            recent_request = self.ethics[0]
+            return recent_request.status
+        else:
+            None
 
     def __str__(self):
         return self.title_th[:50]

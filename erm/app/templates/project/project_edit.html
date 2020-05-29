@@ -81,6 +81,7 @@
                 </div>
                 {% if current_user.role == 1 %}
                 <div class="field">
+                    <p class="help is-danger">Only admin can see and update the status</p>
                     <label class="label">{{ form.status.label }}</label>
                     <div class="select">
                         {{ form.status() }}
