@@ -143,8 +143,37 @@ def add_parent_project():
             db.session.add(new_record)
             db.session.commit()
             flash('A new parent project has been created.', 'success')
-            return redirect(url_for('project.list_created_projects', user_id=current_user.id))
+            return redirect(url_for('project.list_parent_projects'))
     return render_template('project/project_parent_add.html', form=form)
+
+
+@project.route('/parents/<int:project_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_parent_project(project_id):
+    record = ParentProjectRecord.query.get(project_id)
+    form = ParentProjectRecordForm(obj=record)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(record)
+            db.session.add(record)
+            db.session.commit()
+            flash('A new parent project has been edited.', 'success')
+            return redirect(url_for('project.list_parent_projects'))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('project/project_parent_add.html', form=form)
+
+@project.route('/parents')
+@login_required
+def list_parent_projects():
+    return render_template('project/parent_projects.html')
+
+
+@project.route('/parents/<int:parent_id>/children')
+@login_required
+def list_children_projects(parent_id):
+    parent = ParentProjectRecord.query.get(parent_id)
+    return render_template('project/child_projects.html', parent=parent)
 
 
 @project.route('/add', methods=['GET', 'POST'])

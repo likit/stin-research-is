@@ -40,7 +40,7 @@
                     <td>{{ project.subtitle_en }}</td>
                     <td>{{ project.created_at|localdatetime }}</td>
                     <td class="buttons">
-                        <a href="{{ url_for('project.display_project', project_id=project.id) }}"
+                        <a href="{{ url_for('project.list_children_projects', parent_id=project.id) }}"
                            class="button is-primary is-rounded is-outlined">
                             <span class="icon">
                                 <i class="far fa-eye"></i>
@@ -63,6 +63,7 @@
                 {% endfor %}
                 </tbody>
             </table>
+            <a class="button is-light" href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">Back</a>
         </div>
     </div>
 </section>
