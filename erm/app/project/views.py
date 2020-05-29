@@ -557,7 +557,7 @@ def remove_gantt_activity(project_id, milestone_id, record_id):
         return redirect(url_for('project.list_gantt_activity',
                                 project_id=project_id, milestone_id=milestone_id))
 
-    return render_template('project/gannt_remove.html', record=record,
+    return render_template('project/gantt_remove.html', record=record,
                            project_id=project_id, milestone_id=milestone_id)
 
 

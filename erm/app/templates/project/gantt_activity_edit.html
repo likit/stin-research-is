@@ -59,10 +59,11 @@
                     </div>
                     <div class="field is-grouped is-grouped-centered">
                         <div class="control">
-                            <a href="" class="button is-danger">
-                                    <span class="icon">
-                                       <i class="far fa-trash-alt"></i>
-                                    </span>
+                            <a href="{{ url_for('project.remove_gantt_activity', record_id=record.id, milestone_id=milestone.id, project_id=project_id) }}"
+                               class="button is-danger">
+                                <span class="icon">
+                                   <i class="far fa-trash-alt"></i>
+                                </span>
                                 <span>Remove</span>
                             </a>
                         </div>
