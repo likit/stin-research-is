@@ -24,14 +24,22 @@
                 </span>
                 <span>สร้างชุดโครงการใหม่</span>
             </a>
+            <a href="{{ url_for('project.list_parent_projects') }}" class="button is-primary is-outlined">
+                <span class="icon">
+                    <i class="far fa-eye"></i>
+                </span>
+                <span>ชุดโครงการทั้งหมด</span>
+            </a>
             {% include "messages.html" %}
+            <hr>
             <table class="table">
                 <thead>
-                <th>No.</th>
-                <th>Thai Title</th>
+                <th>ลำดับ</th>
+                <th>ชื่อโครงการภาษาไทย</th>
                 <th>English Title</th>
-                <th>Created At</th>
-                <th>Status</th>
+                <th>สร้างเมื่อ</th>
+                <th>ภายใต้ชุดโครงการ</th>
+                <th>สถานะ</th>
                 <th>PIs</th>
                 <th></th>
                 </thead>
@@ -42,6 +50,7 @@
                     <td>{{ project.title_th }}</td>
                     <td>{{ project.title_en }}</td>
                     <td>{{ project.created_at|localdatetime }}</td>
+                    <td>{{ project.parent_project or '' }}</td>
                     <td>{{ project.status }}</td>
                     <td>
                         {% for member in project.members %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Parent Projects Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column has-text-centered is-two-thirds is-offset-2">
+            {% include "messages.html" %}
+            <h1 class="title">ชุดโครงการวิจัย</h1>
+            <a href="{{ url_for('project.add_parent_project') }}" class="button is-outlined is-primary">
+                <span class="icon">
+                    <i class="fas fa-folder-plus"></i>
+                </span>
+                <span>สร้างชุดโครงการใหม่</span>
+            </a>
+            <hr>
+            <table class="table">
+                <thead>
+                <th>ลำดับ</th>
+                <th>ชื่อชุดโครงการ</th>
+                <th>ชื่อชุดโครงการย่อย</th>
+                <th>English Title</th>
+                <th>English Subtitle</th>
+                <th>สร้างเมื่อ</th>
+                <th></th>
+                </thead>
+                <tbody>
+                {% for project in current_user.created_parent_projects|sort(attribute='created_at', reverse=True) %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ project.title_th }}</td>
+                    <td>{{ project.subtitle_th }}</td>
+                    <td>{{ project.title_en }}</td>
+                    <td>{{ project.subtitle_en }}</td>
+                    <td>{{ project.created_at|localdatetime }}</td>
+                    <td class="buttons">
+                        <a href="{{ url_for('project.display_project', project_id=project.id) }}"
+                           class="button is-primary is-rounded is-outlined">
+                            <span class="icon">
+                                <i class="far fa-eye"></i>
+                            </span>
+                            <span>
+                                ดูโครงการที่เกี่ยวข้อง
+                            </span>
+                        </a>
+                        <a class="button is-link is-rounded is-outlined"
+                            href="{{ url_for('project.edit_parent_project', project_id=project.id) }}">
+                            <span class="icon">
+                                <i class="fas fa-pencil-alt"></i>
+                            </span>
+                            <span>
+                                แก้ไข
+                            </span>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -47,7 +47,7 @@
                                 </span>
                                 <span>Save</span>
                             </button>
-                            <a href="{{ url_for('project.list_created_projects', user_id=current_user.id)}}"
+                            <a href="{{ request.referrer }}"
                                class="button is-danger">Cancel</a>
                         </div>
                     </div>
