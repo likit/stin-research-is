@@ -19,6 +19,7 @@
                 <th>ลำดับ</th>
                 <th>ชื่อโครงการภาษาไทย</th>
                 <th>English Title</th>
+                <th>แหล่งทุน</th>
                 <th>สร้างเมื่อ</th>
                 <th>สถานะ</th>
                 <th>PIs</th>
@@ -30,6 +31,7 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ project.title_th }}</td>
                     <td>{{ project.title_en }}</td>
+                    <td>{{ project.fund_source or ''}}</td>
                     <td>{{ project.created_at|localdatetime }}</td>
                     <td>{{ project.status }}</td>
                     <td>

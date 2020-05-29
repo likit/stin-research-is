@@ -73,6 +73,12 @@ class ProjectRecordModelView(ModelView):
     }
 
 
+class ProjectFundSourceModelView(ModelView):
+    form_choices = {
+        'from_': [(c, c) for c in ('ภายนอก', 'ภายใน')]
+    }
+
+
 admin.add_view(ProjectRecordModelView(ProjectRecord, db.session, category='Project'))
 admin.add_view(ProjectMemberModelView(ProjectMember, db.session, category='Project'))
 admin.add_view(ModelView(Category, db.session, category='Project'))
@@ -90,3 +96,4 @@ admin.add_view(ModelView(ProjectBudgetCategory, db.session, category='Project'))
 admin.add_view(ModelView(ProjectBudgetSubCategory, db.session, category='Project'))
 admin.add_view(ModelView(ProjectBudgetItem, db.session, category='Project'))
 admin.add_view(ModelView(ParentProjectRecord, db.session, category='Project'))
+admin.add_view(ProjectFundSourceModelView(ProjectFundSource, db.session, category='Project'))

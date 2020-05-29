@@ -32,6 +32,9 @@ class ProjectRecordForm(ModelForm):
                                 allow_blank=True,
                                 blank_text='โครงการเดี่ยว',
                                 widget=Select())
+    fund_source = QuerySelectField(ProjectFundSource,
+                              query_factory=lambda: ProjectFundSource.query.all(),
+                              widget=Select())
 
 
 class ApplicationForm(ModelForm):

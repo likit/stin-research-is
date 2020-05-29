@@ -39,6 +39,7 @@
                 <th>English Title</th>
                 <th>สร้างเมื่อ</th>
                 <th>ภายใต้ชุดโครงการ</th>
+                <th>แหล่งทุน</th>
                 <th>สถานะ</th>
                 <th>PIs</th>
                 <th></th>
@@ -51,6 +52,7 @@
                     <td>{{ project.title_en }}</td>
                     <td>{{ project.created_at|localdatetime }}</td>
                     <td>{{ project.parent_project or '' }}</td>
+                    <td>{{ project.fund_source or ''}}</td>
                     <td>{{ project.status }}</td>
                     <td>
                         {% for member in project.members %}
