@@ -145,3 +145,8 @@ class ProjectBudgetItemForm(ModelForm):
 class ProjectSummaryForm(ModelForm):
     class Meta:
         model = ProjectSummary
+
+
+class ParentProjectRecordForm(ModelForm):
+    class Meta:
+        model = ParentProjectRecord

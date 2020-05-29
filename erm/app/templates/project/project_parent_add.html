@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}New Parent Project Page{% endblock %}
+
+{% block page_content %}
+<section class="hero is-info">
+    <div class="hero-head">
+        {% include "nav.html" %}
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-two-thirds is-offset-2">
+                <h1 class="title has-text-centered">เพิ่มชุดโครงการวิจัยในระบบ</h1>
+                <form method="post" class="box">
+                    {{ form.csrf_token }}
+                    <div class="field">
+                        <label class="label">{{ form.title_th.label }}</label>
+                        <div class="control">
+                            {{ form.title_th(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.subtitle_th.label }}</label>
+                        <div class="control">
+                            {{ form.subtitle_th(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.title_en.label }}</label>
+                        <div class="control">
+                            {{ form.title_en(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.subtitle_en.label }}</label>
+                        <div class="control">
+                            {{ form.subtitle_en(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-success" type="submit">
+                                <span class="icon">
+                                   <i class="far fa-save"></i>
+                                </span>
+                                <span>Save</span>
+                            </button>
+                            <a href="{{ url_for('project.list_created_projects', user_id=current_user.id)}}"
+                               class="button is-danger">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

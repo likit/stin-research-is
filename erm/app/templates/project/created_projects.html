@@ -14,10 +14,17 @@
             <h1 class="title">โครงการวิจัยของคุณ</h1>
             <a href="{{ url_for('project.add_project') }}" class="button is-outlined is-primary">
                 <span class="icon">
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-file-medical"></i>
                 </span>
                 <span>สร้างโครงการใหม่</span>
             </a>
+            <a href="{{ url_for('project.add_parent_project') }}" class="button is-outlined is-primary">
+                <span class="icon">
+                    <i class="fas fa-folder-plus"></i>
+                </span>
+                <span>สร้างชุดโครงการใหม่</span>
+            </a>
+            {% include "messages.html" %}
             <table class="table">
                 <thead>
                 <th>No.</th>

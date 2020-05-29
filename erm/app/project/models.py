@@ -38,6 +38,9 @@ class ParentProjectRecord(db.Model):
     subtitle_th = db.Column('subtitle_th', db.String(), info={'label': 'Subtitle Thai'})
     title_en = db.Column('title_en', db.String(), info={'label': 'Title English'})
     subtitle_en = db.Column('subtitle_en', db.String(), info={'label': 'Subtitle English'})
+    created_at = db.Column('created_at', db.DateTime())
+    creator_id = db.Column('creator_id', db.ForeignKey('users.id'))
+    created_by = db.relationship(User, backref=db.backref('created_parent_projects'))
 
     def __str__(self):
         return self.title_th

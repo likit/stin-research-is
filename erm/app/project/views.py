@@ -130,6 +130,23 @@ def edit_project(project_id):
     return render_template('project/project_edit.html', form=form, title=title)
 
 
+@project.route('/parents/add', methods=['GET', 'POST'])
+@login_required
+def add_parent_project():
+    form = ParentProjectRecordForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_record = ParentProjectRecord()
+            form.populate_obj(new_record)
+            new_record.created_at = arrow.now(tz='Asia/Bangkok').datetime
+            new_record.created_by = current_user
+            db.session.add(new_record)
+            db.session.commit()
+            flash('A new parent project has been created.', 'success')
+            return redirect(url_for('project.list_created_projects', user_id=current_user.id))
+    return render_template('project/project_parent_add.html', form=form)
+
+
 @project.route('/add', methods=['GET', 'POST'])
 @login_required
 def add_project():
