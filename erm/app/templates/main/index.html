@@ -13,13 +13,13 @@
                 </div>
                 {% if current_user.is_authenticated %}
                 <div class="column is-two-fifths">
+                    {% include "messages.html" %}
                     <h1 class="title">STIN Research Management System.</h1>
                     <div class="box has-text-centered">
-                        <h1 class="title is-size-5 has-text-dark">You're now logged in.</h1>
+                        <h1 class="title is-size-5 has-text-dark">You're in! </h1>
                         <h1 class="title is-size-4 has-text-dark">
-                            <strong>{{ current_user.profile }}</strong>
+                            Welcome <strong>{{ current_user.profile }}</strong>
                         </h1>
-                        <h1 class="subtitle is-size-4 has-text-dark">Welcome</h1>
                         <hr>
                         <div class="buttons is-centered">
                             <a class="button is-primary"
