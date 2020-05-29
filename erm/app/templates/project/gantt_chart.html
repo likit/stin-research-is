@@ -64,11 +64,19 @@
                         <td>{{ a.detail }}</td>
                         <td>{{ a.completion }}</td>
                         <td>
-                            <a href="{{ url_for('project.edit_gantt_activity', project_id=project_id, milestone_id=milestone.id, record_id=a.id) }}">
+                            <a href="{{ url_for('project.edit_gantt_activity', project_id=project_id, milestone_id=milestone.id, record_id=a.id) }}"
+                                class="button is-small is-primary is-outlined">
                                 <span class="icon">
                                     <i class="fas fa-pencil-alt"></i>
                                 </span>
                                 <span>แก้ไข</span>
+                            </a>
+                            <a href="{{ url_for('project.remove_gantt_activity', project_id=project_id, milestone_id=milestone.id, record_id=a.id) }}"
+                                class="button is-small is-danger is-outlined">
+                                <span class="icon">
+                                   <i class="far fa-trash-alt"></i>
+                                </span>
+                                <span>ลบ</span>
                             </a>
                         </td>
                     </tr>

@@ -545,6 +545,22 @@ def edit_gantt_activity(project_id, milestone_id, record_id):
                            form=form, record=record)
 
 
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/gantt-activities/<int:record_id>/remove')
+@login_required
+def remove_gantt_activity(project_id, milestone_id, record_id):
+    record = ProjectGanttActivity.query.get(record_id)
+    confirm = request.args.get('confirm', 'no')
+    if record and confirm == 'yes':
+        db.session.delete(record)
+        db.session.commit()
+        flash('The activity has been successfully removed.', 'success')
+        return redirect(url_for('project.list_gantt_activity',
+                                project_id=project_id, milestone_id=milestone_id))
+
+    return render_template('project/gannt_remove.html', record=record,
+                           project_id=project_id, milestone_id=milestone_id)
+
+
 @project.route('projects/<int:project_id>/milestones/<int:milestone_id>/budgets')
 @login_required
 def list_budget_items(project_id, milestone_id):
