@@ -4,6 +4,7 @@ from app.webadmin import webadmin_bp as webadmin
 from flask_login import login_required
 from app import superuser
 from flask import render_template, redirect, url_for, request, flash
+from sqlalchemy import or_
 import pandas as pd
 from wsgi import db
 from app.project.models import *
@@ -19,7 +20,7 @@ from app.main.models import User
 @superuser
 @login_required
 def list_submissions():
-    submissions = ProjectRecord.query.filter_by(status='submitted')
+    submissions = ProjectRecord.query.filter(ProjectRecord.status.endswith('submitted'))
     return render_template('webadmin/submissions.html', submissions=submissions)
 
 
@@ -413,7 +414,8 @@ def add_journal():
 @login_required
 def list_pubs():
     pubs = ProjectPublication.query.all()
-    return render_template('webadmin/pubs.html', pubs=pubs)
+    return render_template('webadmin/pubs.html',
+                           pubs=sorted(pubs, key=lambda x: x.pub_date, reverse=True))
 
 
 @webadmin.route('/pubs/<int:pub_id>')

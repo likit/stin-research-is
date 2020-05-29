@@ -292,7 +292,13 @@ def remove_figure(figure_id):
 @login_required
 def submit_project(project_id):
     project = ProjectRecord.query.get(project_id)
-    project.status = 'submitted'
+    if project.status.startswith('concept'):
+        project.status = 'concept submitted'
+    elif project.status.startswith('full'):
+        project.status = 'full submitted'
+    else:
+        project.status = 'concept submitted'
+
     project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
     project.submitted_at = arrow.now(tz='Asia/Bangkok').datetime
     db.session.add(project)
@@ -314,10 +320,9 @@ def confirm_add_ethic(project_id):
 @login_required
 def add_ethic_request(project_id):
     project = ProjectRecord.query.get(project_id)
-    if project.status != 'full':
-        flash('The project must be reviewed by the center '
-              'before submmiting for an ethic approval', 'warning')
-        return redirect(request.referrer)
+    if project.status != 'concept approved':
+        flash('โครงการต้องผ่านการพิจารณารอบแนวคิดจากคณะกรรมการก่อนส่งเข้าขอพิจารณาจริยธรรมวิจัย', 'warning')
+        return redirect(url_for('project.display_project', project_id=project_id))
 
     ethic = ProjectEthicRecord(project_id=project_id,
                                submitted_at=arrow.now(tz='Asia/Bangkok').datetime,
