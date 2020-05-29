@@ -60,9 +60,16 @@ class ProjectRecord(db.Model):
     method = db.Column('method', db.Text(), info={'label': 'Method'})
     status = db.Column('status', db.String(),
                        info={'label': 'Status',
-                             'choices': [(i, i) for i in ['draft', 'concept', 'full',
-                                                         'submitted', 'revising', 'approved',
-                                                         'rejected', 'finished']]})
+                             'choices': [(i, i) for i in ['draft',
+                                                          'concept submitted',
+                                                          'concept revising',
+                                                          'concept approved',
+                                                          'full submitted',
+                                                          'full revising',
+                                                          'full approved',
+                                                          'rejected',
+                                                          'finished',
+                                                          'terminated']]})
     prospected_journals = db.Column('prospected_journals', db.Text(),
                                     info={'label': 'Prospected Journals'})
     use_applications = db.Column('use_applications', db.Text(),
@@ -501,6 +508,11 @@ class ProjectPublication(db.Model):
     th_abstract = db.Column('th_abstract', db.Text(), info={'label': 'Thai Abstract'})
     en_abstract = db.Column('en_abstract', db.Text(), info={'label': 'English Abstract'})
     issue_no = db.Column('issue_no', db.String(), info={'label': 'Issue No.'})
+    indexed = db.Column('indexed', db.String(), info={'label': 'Indexed Database'})
+    ranking = db.Column('ranking', db.String(),
+                        info={'label': 'Current Journal Ranking',
+                              'choices': [(r, r) for r in ['N/A', 'Q1', 'Q2', 'Q3', 'Q4',
+                                                           'Tier 1', 'Tier 2']]})
     year = db.Column('year', db.Integer(), info={'label': 'Year'})
     month = db.Column('month', db.String(),
                       info={'choices': [(m, m) for m in ['January', 'February',
@@ -530,7 +542,10 @@ class ProjectPublication(db.Model):
 
     @property
     def pub_date(self):
-        return datetime.strptime('{}-{}-1'.format(self.year, self.month), '%Y-%B-%d')
+        if self.year:
+            return datetime.strptime('{}-{}-1'.format(self.year, self.month), '%Y-%B-%d')
+        else:
+            return datetime(2000,1,1)
 
 
 class ProjectPublicationAuthor(db.Model):
