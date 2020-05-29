@@ -23,7 +23,7 @@
                 </thead>
                 <tbody>
                 {% for project in projects|sort(attribute='created_at', reverse=True) %}
-                {% if project.status != 'drafty' %}
+                {% if project.status != 'draft' %}
                 <tr>
                     <td>{{ loop.index }}</td>
                     <td>{{ project.title_th }}</td>
