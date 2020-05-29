@@ -114,14 +114,31 @@
                 </div>
                 <div class="field is-grouped is-grouped-centered">
                     <div class="control">
-                        <button type="submit" class="button is-primary">Save</button>
-                    </div>
-                    <div class="control">
                         {% if project_id %}
                         <a href="{{ url_for('project.display_project', project_id=project_id) }}" class="button is-light">Back</a>
                         {% else %}
                         <a href="{{ url_for('webadmin.list_pubs') }}" class="button is-light">Back</a>
                         {% endif %}
+                    </div>
+                    <div class="control">
+                        {% if project_id %}
+                        <a class="button is-danger" href="{{ url_for('project.remove_pub', project_id=project_id, pub_id=pub.id) }}">
+                        {% else %}
+                        <a class="button is-danger" href="{{ url_for('webadmin.remove_pub', pub_id=pub.id) }}">
+                        {% endif %}
+                            <span class="icon">
+                               <i class="far fa-trash-alt"></i>
+                            </span>
+                            <span>Remove</span>
+                        </a>
+                    </div>
+                    <div class="control">
+                        <button type="submit" class="button is-success">
+                            <span class="icon">
+                               <i class="far fa-save"></i>
+                            </span>
+                            <span>Save</span>
+                        </button>
                     </div>
                 </div>
             </form>

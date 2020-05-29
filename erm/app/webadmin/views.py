@@ -442,6 +442,23 @@ def edit_pub(pub_id):
     return render_template('webadmin/pub_edit.html', form=form, pub=pub)
 
 
+@webadmin.route('projects/pubs/<int:pub_id>/remove', methods=['GET', 'POST'])
+@superuser
+@login_required
+def remove_pub(pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    confirm = request.args.get('confirm', 'no')
+    if confirm == 'yes':
+        if pub:
+            db.session.delete(pub)
+            db.session.commit()
+            flash('Data have been removed.', 'success')
+            return redirect(url_for('webadmin.list_pubs'))
+        else:
+            flash('Publication no longer exists.', 'warning')
+    return render_template('webadmin/pub_remove.html', pub=pub)
+
+
 @webadmin.route('/pubs/<int:pub_id>/authors/edit', methods=['GET', 'POST'])
 @superuser
 @login_required

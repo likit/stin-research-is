@@ -359,6 +359,11 @@
                                             <i class="fas fa-pencil-alt"></i>
                                         </span>
                                     </a>
+                                    <a href="{{ url_for('project.remove_pub', pub_id=p.id, project_id=project.id) }}">
+                                        <span class="icon">
+                                           <i class="far fa-trash-alt"></i>
+                                        </span>
+                                    </a>
                                 </td>
                             </tr>
                             </tbody>
