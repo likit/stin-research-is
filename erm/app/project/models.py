@@ -46,9 +46,23 @@ class ParentProjectRecord(db.Model):
         return self.title_th
 
 
+class ProjectFundSource(db.Model):
+    __tablename__ = 'project_fund_sources'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column('name', db.String(), nullable=False)
+    from_ = db.Column('from', db.String(), info={'label': 'ที่มาของทุน',
+                                                 'choices': [(c, c) for c in
+                                                             ('ภายใน', 'ภายนอก')]})
+    def __str__(self):
+        return self.name
+
+
 class ProjectRecord(db.Model):
     __tablename__ = 'projects'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    fund_source_id = db.Column('fund_source_id',
+                                       db.ForeignKey('project_fund_sources.id'))
+    fund_source = db.relationship(ProjectFundSource, backref=db.backref('projects'))
     title_th = db.Column('title_th', db.String(), info={'label': 'Title Thai'})
     subtitle_th = db.Column('subtitle_th', db.String(), info={'label': 'Subtitle Thai'})
     title_en = db.Column('title_en', db.String(), info={'label': 'Title English'})
