@@ -24,7 +24,7 @@ class Program(db.Model):
     dept = db.relationship(Department, backref=db.backref('programs'))
 
     def __str__(self):
-        return '{} {}'.format(self.name_th, self.dept)
+        return self.name_th
 
 
 class Education(db.Model):
