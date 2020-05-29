@@ -99,8 +99,22 @@
                 </div>
                 <div class="field">
                     <label class="label">{{ form.month.label }}</label>
+                    <p class="help is-primary">หากไม่ทราบ โปรดใส่เดือนมกราคมหรือเดือนที่ใกล้เคียงวันที่เผยแพร่มากที่สุด</p>
                     <div class="select">
                         {{ form.month() }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.ranking.label }}</label>
+                    <div class="select">
+                        {{ form.ranking(class="select") }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.indexed.label }}</label>
+                    <div class="control">
+                        {{ form.indexed(class="input") }}
+                        <p class="help is-primary">เช่น Pubmed, Scopus, TCI</p>
                     </div>
                 </div>
                 <div class="field">
