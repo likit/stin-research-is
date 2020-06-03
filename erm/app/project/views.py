@@ -340,7 +340,7 @@ def submit_project(project_id):
     project = ProjectRecord.query.get(project_id)
     if project.status == 'draft' or\
             project.status == 'concept revising':
-        project.status == 'concept submitted'
+        project.status = 'concept submitted'
     elif project.status == 'concept approved' or\
             project.status == 'full revising':
         project.status = 'full submitted'
