@@ -11,7 +11,7 @@
     <div class="columns">
         <div class="column is-half is-offset-one-quarter">
             <h1 class="title has-text-centered">Edit Profile</h1>
-            <form method="post">
+            <form method="post" enctype=multipart/form-data>
                 {{ form.csrf_token }}
                 <div class="field">
                     <label class="label">{{ form.title_th.label }}</label>
@@ -48,6 +48,12 @@
                     <label class="label">{{ form.lastname_en.label }}</label>
                     <div class="control">
                         {{ form.lastname_en(placeholder='Last Name EN', class='input') }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.photo_upload.label }}</label>
+                    <div class="control">
+                        {{ form.photo_upload() }}
                     </div>
                 </div>
                 <div class="field">

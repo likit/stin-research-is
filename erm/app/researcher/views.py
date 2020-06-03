@@ -1,5 +1,8 @@
+import os
+import requests
 from flask import render_template, flash, request, redirect, url_for, session
 from flask_login import login_required, current_user
+from werkzeug.utils import secure_filename
 from app.main.models import User
 from app.researcher.models import Profile, Education
 from app.researcher.forms import ProfileForm, EducationForm
@@ -11,6 +14,14 @@ from app.project.models import (ProjectPublication,
 from app.project.forms import (ProjectPublicationForm,
                                ProjectJournalForm,
                                ProjectPublicationAuthorForm)
+from pydrive.auth import ServiceAccountCredentials, GoogleAuth
+from pydrive.drive import GoogleDrive
+
+gauth = GoogleAuth()
+keyfile_dict = requests.get(os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')).json()
+scopes = ['https://www.googleapis.com/auth/drive']
+gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile_dict, scopes)
+drive = GoogleDrive(gauth)
 
 
 @researcher.route('/profile/<int:user_id>')
@@ -32,6 +43,18 @@ def edit_profile(user_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             form.populate_obj(user.profile)
+            photo_file = form.photo_upload.data
+            if photo_file:
+                filename = secure_filename(photo_file.filename)
+                photo_file.save(filename)
+                file_drive = drive.CreateFile({'title': filename})
+                file_drive.SetContentFile(filename)
+                file_drive.Upload()
+                permission = file_drive.InsertPermission({'type': 'anyone',
+                                                          'value': 'anyone',
+                                                          'role': 'reader'})
+                user.profile.photo_url = file_drive['id']
+                print(user.profile.photo_url)
             user.profile.program = form.programs.data
             db.session.add(user.profile)
             db.session.commit()

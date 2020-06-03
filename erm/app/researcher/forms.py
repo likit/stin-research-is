@@ -1,6 +1,7 @@
 from app import db
 from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
+from wtforms.fields import FileField
 from wtforms.widgets import Select
 from .models import Profile, Program, Education
 
@@ -26,6 +27,7 @@ class ProfileForm(ModelForm):
     programs = QuerySelectField('Program',
                                 query_factory=lambda: Program.query,
                                 widget=Select())
+    photo_upload = FileField('Photo Upload')
 
 
 class EducationForm(ModelForm):

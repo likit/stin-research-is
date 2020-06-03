@@ -1,5 +1,6 @@
 from app import db
 from app.main.models import User
+from wtforms.fields import FileField
 
 
 class Department(db.Model):
@@ -48,6 +49,7 @@ class Profile(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column('user_id', db.ForeignKey('users.id'))
     user = db.relationship(User, backref=db.backref('profile', uselist=False))
+    photo_url = db.Column('photo_url', db.String(), nullable=True)
     title_th = db.Column('title_th', db.String(), info={'label': 'Thai Title'})
     title_en = db.Column('title_en', db.String(), info={'label': 'English Title'})
     firstname_th = db.Column('firstname_th', db.String(), info={'label': 'Thai First Name'})

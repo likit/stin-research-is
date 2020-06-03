@@ -9,7 +9,7 @@
 </section>
 <section class="section">
     <div class="columns">
-        <div class="column">
+        <div class="column is-three-fifths is-offset-one-fifth">
             {% include "messages.html" %}
         </div>
     </div>
@@ -17,12 +17,18 @@
         <div class="column is-three-fifths is-offset-one-fifth">
             <div class="box has-text-centered">
                 <h2 class="title">Profile</h2>
+                {% if user.profile.photo_url %}
+                <img width="128" height="128" src="https://drive.google.com/uc?id={{ user.profile.photo_url }}">
+                {% else %}
+                <img width="128" height="128" src="{{ url_for('static', filename='images/account.png') }}">
+                {% endif %}
+                <br/>
                 {% if current_user.is_authenticated and current_user.id == user.id %}
                 <a href="{{ url_for('researcher.edit_profile', user_id=user.id) }}">
                     <span class="icon">
                         <i class="fas fa-pencil-alt"></i>
                     </span>
-                <span>edit</span>
+                    <span>edit</span>
                 </a>
                 {% endif %}
                 <hr>
@@ -39,6 +45,7 @@
                         <td class="title is-size-5">E-mail</td>
                         <td>{{ user.email }}</td>
                     </tr>
+                    {% if current_user.is_authenticated and current_user.id == user.id %}
                     <tr>
                         <td class="title is-size-5">Password</td>
                         <td>
@@ -46,6 +53,7 @@
                                class="has-text-danger">Change Password</a>
                         </td>
                     </tr>
+                    {% endif %}
                     <tr>
                         <td class="title is-size-5">Program</td>
                         <td>{{ user.profile.program or '-' }}</td>
