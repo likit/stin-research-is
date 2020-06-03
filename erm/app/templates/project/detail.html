@@ -18,6 +18,10 @@
                 {{ member.user.profile.fullname_th }} ({{ member.role }}),
                 {% endfor %}
             </p>
+            <div class="tags has-addons is-centered">
+              <span class="tag is-medium is-primary">สถานะ</span>
+              <span class="tag is-medium">{{ project.status }}</span>
+            </div>
         </div>
     </div>
     <div class="columns">
@@ -94,9 +98,10 @@
                 </tr>
                 {% if current_user.is_authenticated and project.creator == current_user %}
                 <tr>
-                    <td class="title is-size-5" width="20%">สถานะ</td><td>
-                    {{ project.status }}
-                </td>
+                    <td class="title is-size-5" width="20%">สถานะ</td>
+                    <td>
+                        <span class="tag is-medium is-primary">{{ project.status }}</span>
+                    </td>
                 </tr>
                 {% if project.status == 'submitted' %}
                 <tr>
