@@ -63,20 +63,20 @@ class ProjectRecord(db.Model):
     fund_source_id = db.Column('fund_source_id',
                                        db.ForeignKey('project_fund_sources.id'))
     fund_source = db.relationship(ProjectFundSource, backref=db.backref('projects'))
-    title_th = db.Column('title_th', db.String(), info={'label': 'Title Thai'})
-    subtitle_th = db.Column('subtitle_th', db.String(), info={'label': 'Subtitle Thai'})
-    title_en = db.Column('title_en', db.String(), info={'label': 'Title English'})
-    subtitle_en = db.Column('subtitle_en', db.String(), info={'label': 'Subtitle English'})
+    title_th = db.Column('title_th', db.String(), info={'label': 'ชื่อภาษาไทย'})
+    subtitle_th = db.Column('subtitle_th', db.String(), info={'label': 'ชื่อรองภาษาไทย'})
+    title_en = db.Column('title_en', db.String(), info={'label': 'ชื่อภาษาอังกฤษ'})
+    subtitle_en = db.Column('subtitle_en', db.String(), info={'label': 'ชื่อรองภาษาอังกฤษ'})
     parent_project_id = db.Column('parent_project_id',
                                   db.ForeignKey('parent_projects.id'),
                                   default=None)
     parent_project = db.relationship(ParentProjectRecord, backref=db.backref('children_projects'))
-    objective = db.Column('objective', db.Text(), info={'label': 'Objective'})
-    abstract = db.Column('abstract', db.Text(), info={'label': 'Abstract'})
-    intro = db.Column('introduction', db.Text(), info={'label': 'Introduction'})
-    method = db.Column('method', db.Text(), info={'label': 'Method'})
+    objective = db.Column('objective', db.Text(), info={'label': 'วัตถุประสงค์'})
+    abstract = db.Column('abstract', db.Text(), info={'label': 'บทคัดย่อ'})
+    intro = db.Column('introduction', db.Text(), info={'label': 'บทนำ'})
+    method = db.Column('method', db.Text(), info={'label': 'ระเบียบวิธีวิจัย'})
     status = db.Column('status', db.String(),
-                       info={'label': 'Status',
+                       info={'label': 'สถานะโครงการ',
                              'choices': [(i, i) for i in ['draft',
                                                           'concept submitted',
                                                           'concept revising',
@@ -88,9 +88,9 @@ class ProjectRecord(db.Model):
                                                           'finished',
                                                           'terminated']]})
     prospected_journals = db.Column('prospected_journals', db.Text(),
-                                    info={'label': 'Prospected Journals'})
+                                    info={'label': 'วารสารวิชาการที่คาดหวังจะส่งผลงานเข้าเผยแพร่'})
     use_applications = db.Column('use_applications', db.Text(),
-                                 info={'label': 'Uses or Applications'})
+                                 info={'label': 'การนำผลงานวิจัยไปใช้ประโยชน์'})
     created_at = db.Column('created_at', db.DateTime(timezone=True))
     updated_at = db.Column('updated_at', db.DateTime(timezone=True))
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
@@ -98,7 +98,9 @@ class ProjectRecord(db.Model):
     denied_at = db.Column('denied_at', db.DateTime(timezone=True))
     #TODO: add cascading and nullable=False
     creator_id = db.Column('creator_id', db.ForeignKey('users.id'))
-    creator = db.relationship('User', backref=db.backref('projects'), info={'label': 'Creator'})
+    creator = db.relationship('User', backref=db.backref('projects'), info={'label': 'ผู้บันทึกข้อมูล'})
+    contract_no = db.Column('contract_no', db.String(), nullable=True, info={'label': 'หมายเลขสัญญา'})
+    contract_url = db.Column('contract_url', db.String(), nullable=True)
 
     @property
     def reviewers(self):

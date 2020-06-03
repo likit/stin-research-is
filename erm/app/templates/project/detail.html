@@ -533,6 +533,18 @@
                 </tr>
                 {% endif %}
                 <tr>
+                    <td class="title is-size-5">หมายเลขสัญญา</td>
+                    <td>
+                        {{ project.contract_no }}
+                        <a href="https://drive.google.com/uc?id={{ project.contract_url }}">
+                            <span class="icon">
+                                <i class="far fa-file-alt"></i>
+                            </span>
+                            <span>ไฟล์สัญญา</span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
                     <td class="title is-size-5">การนำงานวิจัยไปใช้ประโยชน์</td>
                     <td>
                         <table class="table is-striped">

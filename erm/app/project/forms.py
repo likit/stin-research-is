@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from wtforms_components import DateTimeField
 from wtforms.widgets import Select, ListWidget, CheckboxInput
-from wtforms.fields import SelectMultipleField, DecimalField
+from wtforms.fields import SelectMultipleField, FileField
 from wtforms.validators import Optional, InputRequired
 from .models import *
 from app.main.models import User
@@ -35,6 +35,7 @@ class ProjectRecordForm(ModelForm):
     fund_source = QuerySelectField(ProjectFundSource,
                               query_factory=lambda: ProjectFundSource.query.all(),
                               widget=Select())
+    contract_upload = FileField('Upload เอกสารสัญญา')
 
 
 class ApplicationForm(ModelForm):

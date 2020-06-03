@@ -11,80 +11,128 @@
     <div class="columns">
         <div class="column is-half is-offset-one-quarter">
             <h1 class="title has-text-centered">{{ title }}</h1>
-            <form method="post">
+            <form method="post" enctype=multipart/form-data>
                 {{ form.csrf_token }}
-                <div class="field">
-                    <label class="label">{{ form.title_th.label }}</label>
-                    <div class="control">
-                        {{ form.title_th(placeholder='Title Thai', class='input') }}
+                <article class="message is-link">
+                    <div class="message-header">
+                        ข้อมูลโครงการเบื้องต้น
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.subtitle_th.label }}</label>
-                    <div class="control">
-                        {{ form.subtitle_th(placeholder='Subtitle Thai', class='input') }}
+                    <div class="message-body">
+                        <div class="field">
+                            <label class="label">{{ form.title_th.label }}</label>
+                            <div class="control">
+                                {{ form.title_th(placeholder='Title Thai', class='input') }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.subtitle_th.label }}</label>
+                            <div class="control">
+                                {{ form.subtitle_th(placeholder='Subtitle Thai', class='input') }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.title_en.label }}</label>
+                            <div class="control">
+                                {{ form.title_en(placeholder='Title English', class='input') }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.subtitle_en.label }}</label>
+                            <div class="control">
+                                {{ form.subtitle_en(placeholder='Subtitle English', class='input') }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">ชุดโครงการ/โครงการเดี่ยว</label>
+                            <div class="select">
+                                {{ form.parent(class="select") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">ประเภททุน</label>
+                            <div class="select">
+                                {{ form.fund_source(class="select") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.abstract.label }}</label>
+                            <div class="control">
+                                {{ form.abstract(placehoder="Abstract", class="textarea") }}
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.title_en.label }}</label>
-                    <div class="control">
-                        {{ form.title_en(placeholder='Title English', class='input') }}
+                </article>
+                <article class="message is-info">
+                    <div class="message-header">
+                        รายละเอียดโครงการ
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.subtitle_en.label }}</label>
-                    <div class="control">
-                        {{ form.subtitle_en(placeholder='Subtitle English', class='input') }}
+                    <div class="message-body">
+                        <div class="field">
+                            <label class="label">{{ form.intro.label }}</label>
+                            <div class="control">
+                                {{ form.intro(placehoder="Introduction", class="textarea") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.objective.label }}</label>
+                            <div class="control">
+                                {{ form.objective(placehoder="Objective", class="textarea") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.method.label }}</label>
+                            <div class="control">
+                                {{ form.method(placehoder="Method", class="textarea") }}
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">ชุดโครงการ/โครงการเดี่ยว</label>
-                    <div class="select">
-                        {{ form.parent(class="select") }}
+                </article>
+                <article class="message is-success">
+                    <div class="message-header">
+                        ผลลัพธ์ที่คาด
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">ประเภททุน</label>
-                    <div class="select">
-                        {{ form.fund_source(class="select") }}
+                    <div class="message-body">
+                        <div class="field">
+                            <label class="label">{{ form.prospected_journals.label }}</label>
+                            <div class="control">
+                                {{ form.prospected_journals(placehoder="Prospected Journals", class="textarea") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.use_applications.label }}</label>
+                            <div class="control">
+                                {{ form.use_applications(placehoder="Uses or Applications", class="textarea") }}
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.abstract.label }}</label>
-                    <div class="control">
-                        {{ form.abstract(placehoder="Abstract", class="textarea") }}
+                </article>
+                <article class="message is-warning">
+                    <div class="message-header">
+                        ข้อมูลสัญญาสามารถเพิ่มเติมได้เมื่อโครงการได้รับการอนุมัติแล้ว
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.intro.label }}</label>
-                    <div class="control">
-                        {{ form.intro(placehoder="Introduction", class="textarea") }}
+                    <div class="message-body">
+                        <div class="field">
+                            <label class="label">{{ form.contract_no.label }}</label>
+                            <div class="control">
+                                {% if project.status != 'approved' %}
+                                {{ form.contract_no(class="input", disabled=True) }}
+                                {% else %}
+                                {{ form.contract_no(class="input") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.contract_upload.label }}</label>
+                            <div class="control">
+                                {% if project.status != 'approved' %}
+                                {{ form.contract_upload(disabled=True) }}
+                                {% else %}
+                                {{ form.contract_upload(disabled=False) }}
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.objective.label }}</label>
-                    <div class="control">
-                        {{ form.objective(placehoder="Objective", class="textarea") }}
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.method.label }}</label>
-                    <div class="control">
-                        {{ form.method(placehoder="Method", class="textarea") }}
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.prospected_journals.label }}</label>
-                    <div class="control">
-                        {{ form.prospected_journals(placehoder="Prospected Journals", class="textarea") }}
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.use_applications.label }}</label>
-                    <div class="control">
-                        {{ form.use_applications(placehoder="Uses or Applications", class="textarea") }}
-                    </div>
-                </div>
+                </article>
                 {% if current_user.role == 1 %}
                 <div class="field">
                     <p class="help is-danger">Only admin can see and update the status</p>
