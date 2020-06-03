@@ -9,6 +9,18 @@
     </div>
 </section>
 <section class="section">
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">Your projects</a></li>
+                    <li><a href="{{ url_for('project.display_project', project_id=project_id) }}">Project detail</a></li>
+                    <li><a href="{{ url_for('project.list_gantt_activity', project_id=project_id, milestone_id=milestone_id) }}">Gantt chart</a></li>
+                    <li class="is-active"><a aria-current="page">Add activity</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
     <div class="container">
         <div class="columns">
             <div class="column is-one-third is-offset-4">
@@ -48,6 +60,10 @@
                     <div class="field is-grouped is-grouped-centered">
                         <div class="control">
                             <button type="submit" class="button is-success">Create</button>
+                        </div>
+                        <div class="control">
+                            <a href="{{ url_for('project.list_gantt_activity', project_id=project_id, milestone_id=milestone_id) }}"
+                               class="button is-light">Cancel</a>
                         </div>
                     </div>
                 </form>

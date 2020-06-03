@@ -8,6 +8,17 @@
     </div>
 </section>
 <section class="section">
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">Your projects</a></li>
+                    <li><a href="{{ url_for('project.display_project', project_id=project_id) }}">Project detail</a></li>
+                    <li class="is-active"><a aria-current="page">Summary</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
     <div class="container">
         <div class="columns">
             <div class="column">
@@ -34,7 +45,8 @@
                         <td>{{ rec.outcome }}</td>
                         <td>{{ rec.edited_at|localdatetime }} น.</td>
                         <td>
-                            <a href="{{ url_for('project.edit_summary_record', project_id=project_id, milestone_id=milestone.id, record_id=rec.id) }}">
+                            <a href="{{ url_for('project.edit_summary_record', project_id=project_id, milestone_id=milestone.id, record_id=rec.id) }}"
+                                class="button is-small is-outlined is-primary">
                                 <span class="icon">
                                     <i class="fas fa-pencil-alt"></i>
                                 </span>
@@ -53,24 +65,13 @@
                         </span>
                         <span>เพิ่มรายการผลการดำเนินกิจกรรม</span>
                     </a>
-                    <a href="{{ request.referrer }}"
+                    <a href="{{ url_for('project.display_project', project_id=project_id) }}"
                        class="button is-light">
-                        กลับ
+                        Back
                     </a>
                 </div>
             </div>
         </div>
-        <div class="columns">
-            <div class="column">
-                <hr>
-                <h1 class="title has-text-centered">Gantt Chart</h1>
-                <div id="chart_div"></div>
-            </div>
-        </div>
     </div>
 </section>
-{% endblock %}
-{% block scripts %}
-{{ super() }}
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 {% endblock %}

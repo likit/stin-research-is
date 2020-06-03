@@ -530,7 +530,8 @@ def add_gantt_activity(project_id, milestone_id):
                                     project_id=project_id, milestone_id=milestone_id))
         else:
             flash(form.errors, 'danger')
-    return render_template('project/gantt_activity_add.html', form=form)
+    return render_template('project/gantt_activity_add.html', form=form,
+                           project_id=project_id, milestone_id=milestone_id)
 
 
 @project.route('projects/<int:project_id>/milestones/<int:milestone_id>/gantt-activities/<int:record_id>/edit', methods=['GET', 'POST'])
@@ -598,7 +599,8 @@ def add_budget_item(project_id, milestone_id):
                                     project_id=project_id, milestone_id=milestone_id))
         else:
             flash(form.errors, 'danger')
-    return render_template('project/budget_item_add.html', form=form)
+    return render_template('project/budget_item_add.html', form=form,
+                           project_id=project_id, milestone_id=milestone_id)
 
 
 @project.route('projects/<int:project_id>/milestones/<int:milestone_id>/budgets/<int:item_id>/edit', methods=['GET', 'POST'])
@@ -617,7 +619,7 @@ def edit_budget_item(project_id, milestone_id, item_id):
                                     project_id=project_id, milestone_id=milestone_id))
         else:
             flash(form.errors, 'danger')
-    return render_template('project/budget_item_add.html', form=form)
+    return render_template('project/budget_item_add.html', form=form, project_id=project_id, milestone_id=milestone_id)
 
 
 @project.route('projects/<int:project_id>/milestones/<int:milestone_id>/summaries')
@@ -648,7 +650,8 @@ def add_summary_record(project_id, milestone_id):
                                     project_id=project_id))
         else:
             flash(form.errors, 'danger')
-    return render_template('project/summary_record_edit.html', form=form)
+    return render_template('project/summary_record_edit.html', form=form,
+                           project_id=project_id, milestone_id=milestone_id)
 
 
 @project.route('projects/<int:project_id>/milestones/<int:milestone_id>/summaries/<int:record_id>/edit',
@@ -669,7 +672,8 @@ def edit_summary_record(project_id, milestone_id, record_id):
                                     project_id=project_id))
         else:
             flash(form.errors, 'danger')
-    return render_template('project/summary_record_edit.html', form=form)
+    return render_template('project/summary_record_edit.html', form=form,
+                           project_id=project_id, milestone_id=milestone_id)
 
 
 @project.route('/admin/ethics', methods=['GET', 'POST'])

@@ -8,6 +8,17 @@
     </div>
 </section>
 <section class="section">
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">Your projects</a></li>
+                    <li><a href="{{ url_for('project.display_project', project_id=project_id) }}">Project detail</a></li>
+                    <li class="is-active"><a aria-current="page">Gantt Chart</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
     <div class="container">
         <div class="columns">
             <div class="column">
@@ -99,6 +110,11 @@
                 <hr>
                 <h1 class="title has-text-centered">Gantt Chart</h1>
                 <div id="chart_div"></div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column has-text-centered">
+                <a href="{{ url_for('project.display_project', project_id=project_id) }}" class="button is-light">Back</a>
             </div>
         </div>
     </div>
