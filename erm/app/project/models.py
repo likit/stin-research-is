@@ -101,6 +101,7 @@ class ProjectRecord(db.Model):
     creator = db.relationship('User', backref=db.backref('projects'), info={'label': 'ผู้บันทึกข้อมูล'})
     contract_no = db.Column('contract_no', db.String(), nullable=True, info={'label': 'หมายเลขสัญญา'})
     contract_url = db.Column('contract_url', db.String(), nullable=True)
+    mentor = db.Column('mentor', db.String(), nullable=True, info={'label': 'ที่ปรึกษา'})
 
     @property
     def reviewers(self):

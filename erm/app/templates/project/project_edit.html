@@ -55,6 +55,13 @@
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label">{{ form.mentor.label }}</label>
+                            <div class="control">
+                                {{ form.mentor(class="input") }}
+                                <p class="help is-info">สำหรับทุนนักวิจัยรุ่นใหม่</p>
+                            </div>
+                        </div>
+                        <div class="field">
                             <label class="label">{{ form.abstract.label }}</label>
                             <div class="control">
                                 {{ form.abstract(placehoder="Abstract", class="textarea") }}
@@ -106,6 +113,7 @@
                         </div>
                     </div>
                 </article>
+                {% if project %}
                 <article class="message is-warning">
                     <div class="message-header">
                         ข้อมูลสัญญาสามารถเพิ่มเติมได้เมื่อโครงการได้รับการอนุมัติแล้ว
@@ -133,6 +141,7 @@
                         </div>
                     </div>
                 </article>
+                {% endif %}
                 {% if current_user.role == 1 %}
                 <div class="field">
                     <p class="help is-danger">Only admin can see and update the status</p>
