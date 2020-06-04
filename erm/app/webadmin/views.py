@@ -44,6 +44,16 @@ def list_reviewers(project_id, ethic_id):
                            ethic_id=ethic_id)
 
 
+@webadmin.route('/submissions/<int:project_id>/reviewers/add')
+@superuser
+@login_required
+def list_project_reviewers(project_id):
+    project = ProjectRecord.query.get(project_id)
+    groups = ProjectReviewerGroup.query.all()
+    return render_template('webadmin/reviewers_add.html',
+                           project=project, groups=groups)
+
+
 @webadmin.route('/submissions/<int:project_id>/reviewers/add/<int:reviewer_id>')
 @superuser
 @login_required
