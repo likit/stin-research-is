@@ -215,6 +215,10 @@ class ProjectEthicRecord(db.Model):
                                                           ]]})
     project = db.relationship('ProjectRecord', backref=db.backref('ethics'))
 
+    @property
+    def reviewers(self):
+        return set([r.reviewer for r in self.reviews])
+
 
 class ProjectMilestone(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -472,7 +476,7 @@ class ProjectEthicReviewRecord(db.Model):
     __tablename__ = 'project_ethic_review_records'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     reviewer_id = db.Column('reviewer_id', db.ForeignKey('project_reviewers.id'))
-    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    ethic_id = db.Column('ethic_id', db.ForeignKey('project_ethics.id'))
     status = db.Column('status', db.String(), default='pending',
                        info={
                            'label': 'การพิจารณา',
@@ -491,7 +495,7 @@ class ProjectEthicReviewRecord(db.Model):
     note = db.Column('note', db.Text(), info={'label': 'ข้อสังเกต'})
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     reviewer = db.relationship('ProjectReviewer', backref=db.backref('ethic_records'))
-    project = db.relationship('ProjectRecord', backref=db.backref('ethic_reviews'))
+    ethic = db.relationship('ProjectEthicRecord', backref=db.backref('reviews'))
 
 
 class ProjectEthicReviewSendRecord(db.Model):

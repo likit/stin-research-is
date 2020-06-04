@@ -41,7 +41,7 @@
                         <th>Affiliation</th>
                         <th>Email</th>
                         <th>
-                            <a href="{{ url_for('webadmin.remove_all_reviewers', project_id=project.id) }}"
+                            <a href="{{ url_for('webadmin.remove_all_reviewers', ethic_id=ethic_id, project_id=project.id) }}"
                                class="button is-danger is-small">
                                 <span class="icon">
                                     <i class="fas fa-minus"></i>
@@ -82,7 +82,7 @@
                         <th>Affiliation</th>
                         <th>Email</th>
                         <th>
-                            <a href="{{ url_for('webadmin.add_all_reviewers', group_id=group.id, project_id=project.id) }}"
+                            <a href="{{ url_for('webadmin.add_all_reviewers', ethic_id=ethic_id, group_id=group.id, project_id=project.id) }}"
                                class="button is-primary is-small">
                                 <span class="icon">
                                     <i class="fas fa-plus"></i>
@@ -101,7 +101,7 @@
                             <td>{{ r.email }}</td>
                             <td>
                                 <div class="buttons has-addons">
-                                    <a href="{{ url_for('webadmin.add_reviewer', project_id=project.id, reviewer_id=r.id) }}"
+                                    <a href="{{ url_for('webadmin.add_reviewer', ethic_id=ethic_id, project_id=project.id, reviewer_id=r.id) }}"
                                        class="button is-outlined is-primary is-small">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>

@@ -253,13 +253,13 @@
                                 <th colspan="2">Email</th>
                                 </thead>
                                 <tbody>
-                                {% for r in project.ethic_reviewers %}
+                                {% for r in ethic.reviews %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
-                                    <td>{{ r.academic_title }}</td>
-                                    <td>{{ r.fullname }}</td>
-                                    <td>{{ r.affiliation }}</td>
-                                    <td>{{ r.email }}</td>
+                                    <td>{{ r.reviewer.academic_title }}</td>
+                                    <td>{{ r.reviewer.fullname }}</td>
+                                    <td>{{ r.reviewer.affiliation }}</td>
+                                    <td>{{ r.reviewer.email }}</td>
                                     <td>
                                         <a href="{{ url_for('webadmin.remove_reviewer', project_id=project.id, reviewer_id=r.id) }}">
                                         <span class="icon">

@@ -32,15 +32,16 @@ def submission_detail(project_id):
     return render_template('webadmin/submission_detail.html', project=project)
 
 
-@webadmin.route('/submissions/<int:project_id>/reviewers/add')
+@webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviewers/add')
 @superuser
 @login_required
-def list_reviewers(project_id):
+def list_reviewers(project_id, ethic_id):
     project = ProjectRecord.query.get(project_id)
     groups = ProjectReviewerGroup.query.all()
     return render_template('webadmin/reviewers_add.html',
                            project=project,
-                           groups=groups)
+                           groups=groups,
+                           ethic_id=ethic_id)
 
 
 @webadmin.route('/submissions/<int:project_id>/reviewers/add/<int:reviewer_id>')
@@ -237,7 +238,7 @@ def update_ethic_status(ethic_id):
     return render_template('webadmin/update_ethic.html', ethic=ethic, form=form)
 
 
-@webadmin.route('/project/<int:project_id>/ethic/<int:ethic_id>/reviewers/add')
+@webadmin.route('/<int:project_id>/ethic/<int:ethic_id>/reviewers/add')
 @superuser
 @login_required
 def list_ethic_reviewers(project_id, ethic_id):
@@ -247,15 +248,15 @@ def list_ethic_reviewers(project_id, ethic_id):
     return render_template('webadmin/ethic_reviewers_add.html', project=project, groups=groups, ethic=ethic)
 
 
-@webadmin.route('/ethics/<int:project_id>/reviewers/add/<int:reviewer_id>')
+@webadmin.route('/ethics/<int:ethic_id>/reviewers/add/<int:reviewer_id>')
 @superuser
 @login_required
-def add_ethic_reviewer(project_id, reviewer_id):
+def add_ethic_reviewer(ethic_id, reviewer_id):
     review = ProjectEthicReviewRecord.query.filter_by(reviewer_id=reviewer_id,
-                                                      project_id=project_id).first()
+                                                      ethic_id=ethic_id).first()
     if not review:
         review = ProjectEthicReviewRecord(
-            project_id=project_id,
+            ethic_id=ethic_id,
             reviewer_id=reviewer_id
         )
         db.session.add(review)
@@ -264,39 +265,42 @@ def add_ethic_reviewer(project_id, reviewer_id):
     return redirect(request.referrer)
 
 
-@webadmin.route('/ethics/<int:project_id>/reviewers/add/all/<int:group_id>')
+@webadmin.route('/ethics/<int:ethic_id>/reviewers/add/all/<int:group_id>')
 @superuser
 @login_required
-def add_all_ethic_reviewers(project_id, group_id):
+def add_all_ethic_reviewers(ethic_id, group_id):
     reviewer_group = ProjectReviewerGroup.query.get(group_id)
-    project = ProjectRecord.query.get(project_id)
+    ethic = ProjectEthicRecord.query.get(ethic_id)
     for reviewer in reviewer_group.reviewers:
-        if reviewer not in project.ethic_reviewers:
-            review = ProjectEthicReviewRecord(reviewer=reviewer, project=project)
+        if reviewer not in ethic.reviewers:
+            review = ProjectEthicReviewRecord(reviewer=reviewer, ethic=ethic)
             db.session.add(review)
     db.session.commit()
     flash('All reviewers have been added to the ethic review board.', 'success')
     return redirect(request.referrer)
 
 
-@webadmin.route('/ethics/<int:project_id>/reviewers/remove/<int:reviewer_id>')
+@webadmin.route('/ethics/<int:ethic_id>/reviewers/remove/<int:reviewer_id>')
 @superuser
 @login_required
-def remove_ethic_reviewer(project_id, reviewer_id):
+def remove_ethic_reviewer(ethic_id, reviewer_id):
     review = ProjectEthicReviewRecord.query.filter_by(reviewer_id=reviewer_id,
-                                                      project_id=project_id).first()
-    db.session.delete(review)
-    db.session.commit()
-    flash('Reviewer has been removed to the project review.', 'success')
+                                                      ethic_id=ethic_id).first()
+    if review:
+        db.session.delete(review)
+        db.session.commit()
+        flash('Reviewer has been removed to the project review.', 'success')
+    else:
+        flash('Reviewer not found in the project review.', 'warning')
     return redirect(request.referrer)
 
 
-@webadmin.route('/ethics/<int:project_id>/reviewers/remove/all')
+@webadmin.route('/ethics/<int:ethic_id>/reviewers/remove/all')
 @superuser
 @login_required
-def remove_all_ethic_reviewers(project_id):
-    project = ProjectRecord.query.get(project_id)
-    for review in project.ethic_reviews:
+def remove_all_ethic_reviewers(ethic_id):
+    ethic = ProjectEthicRecord.query.get(ethic_id)
+    for review in ethic.reviews:
         db.session.delete(review)
         db.session.commit()
     flash('All reviewers have been removed to the project review.', 'success')
