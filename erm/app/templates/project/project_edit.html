@@ -114,7 +114,7 @@
                         <div class="field">
                             <label class="label">{{ form.contract_no.label }}</label>
                             <div class="control">
-                                {% if project.status != 'approved' %}
+                                {% if project.status != 'full approved' %}
                                 {{ form.contract_no(class="input", disabled=True) }}
                                 {% else %}
                                 {{ form.contract_no(class="input") }}
@@ -124,7 +124,7 @@
                         <div class="field">
                             <label class="label">{{ form.contract_upload.label }}</label>
                             <div class="control">
-                                {% if project.status != 'approved' %}
+                                {% if project.status != 'full approved' %}
                                 {{ form.contract_upload(disabled=True) }}
                                 {% else %}
                                 {{ form.contract_upload(disabled=False) }}
