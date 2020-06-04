@@ -50,6 +50,8 @@ class ProjectMemberForm(ModelForm):
     users = QuerySelectField('User',
                              query_factory=lambda: User.query.filter_by(role=2),
                              get_label='fullname_thai',
+                             allow_blank=True,
+                             blank_text='กรุณาเลือกนักวิจัย',
                              widget=Select())
 
 

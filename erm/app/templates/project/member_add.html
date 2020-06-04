@@ -13,29 +13,73 @@
             <h1 class="title has-text-centered">New Project Member Record</h1>
             <form method="post">
                 {{ form.csrf_token }}
-                <div class="field">
-                    <label class="label">{{ form.role.label }}</label>
-                    <div class="control">
-                        <div class="select">
-                            {{ form.role() }}
-                            </select>
+                <article class="message is-info">
+                    <div class="message-header">บุคลากรภายใน</div>
+                    <div class="message-body">
+                        <div class="field">
+                            <label class="label">Researcher List</label>
+                            <div class="select">
+                                {{ form.users() }}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">Researcher List</label>
-                    <div class="select">
-                        {{ form.users() }}
+                </article>
+                <article class="message is-warning">
+                    <div class="message-header">บุคลากรภายนอก</div>
+                    <div class="message-body">
+                        <div class="field">
+                            <label class="label">{{ form.title.label }}</label>
+                            <div class="control">
+                                {{ form.title(class="input") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.firstname.label }}</label>
+                            <div class="control">
+                                {{ form.firstname(class="input") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.lastname.label }}</label>
+                            <div class="control">
+                                {{ form.lastname(class="input") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.affil.label }}</label>
+                            <div class="control">
+                                {{ form.affil(class="input") }}
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="field is-grouped">
-                    <div class="control">
-                        <button type="submit" class="button is-success">Save</button>
+                </article>
+                <article class="message is-primary">
+                    <div class="message-header">หน้าที่</div>
+                    <div class="message-body">
+                        <div class="field">
+                            <label class="label">{{ form.role.label }}</label>
+                            <div class="control">
+                                <div class="select">
+                                    {{ form.role() }}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field is-grouped is-grouped-centered">
+                            <div class="control">
+                                <button type="submit" class="button is-success">
+                                    <span class="icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </span>
+                                    <span>Add</span>
+                                </button>
+                            </div>
+                            <div class="control">
+                                <a class="button is-light" href="{{ request.referrer }}">Cancel</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="control">
-                        <a class="button is-light" href="{{ request.referrer }}">Cancel</a>
-                    </div>
-                </div>
+                </article>
             </form>
         </div>
     </div>

@@ -26,9 +26,14 @@
                 <h2 class="subtitle is-size-4">{{ project.title_th }}</h2>
                 <p>
                     {% for member in project.members %}
-                    {{ member.user.profile.fullname_th }} ({{ member.role }}),
+                    {% if member.user %}
+                        {{ member.user.profile.fullname_th }} ({{ member.role }}),
+                    {% else %}
+                        {{ member.fullname }} ({{ member.role }}),
+                    {% endif %}
                     {% endfor %}
                 </p>
+                <br>
                 <div class="tags has-addons is-centered">
                     <span class="tag is-medium is-primary">สถานะ</span>
                     <span class="tag is-medium">{{ project.status }}</span>
@@ -157,11 +162,11 @@
                             <tbody>
                             {% for member in project.members %}
                             <tr>
-                                <td>{{ member.user.profile }}</td>
+                                <td>{{ member.user.profile or member.fullname }}</td>
                                 <td>{{ member.role }}</td>
                                 <td>{{ member.user.email }}</td>
                                 <td>
-                                    {% if project.status != 'approved' %}
+                                    {% if current_user == project.creator and project.editable %}
                                     <a href="{{ url_for('project.remove_member', project_id=project.id, member_id=member.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-trash-alt"></i>
@@ -173,14 +178,17 @@
                             {% endfor %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
-                                    <a href="{{ url_for('project.add_member', project_id=project.id) }}"
-                                       {% if current_user != project.creator or not current_user.is_authenticated or project.status != 'draft' %}
+                                    <a
+                                       {% if current_user == project.creator and project.editable %}
+                                       href="{{ url_for('project.add_member', project_id=project.id) }}"
+                                       {% else %}
                                        disabled
                                        {% endif %}
                                        class="is-link is-small is-outlined is-rounded button">
-                                            <span class="icon">
-                                                <i class="fas fa-plus"></i>
-                                            </span><span>เพิ่มรายชื่อนักวิจัย</span>
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>เพิ่มรายชื่อนักวิจัย</span>
                                     </a>
                                 </td>
                             </tr>
@@ -206,7 +214,7 @@
                                     <td>{{ fig.desc }}</td>
                                     <td><img src="https://drive.google.com/uc?id={{ fig.url }}"></td>
                                     <td>
-                                        {% if current_user == project.creator and current_user.is_authenticated %}
+                                        {% if current_user == project.creator and project.editable %}
                                         <a href="{{ url_for('project.edit_figure', figure_id=fig.id) }}">
                                             <span class="icon">
                                                 <i class="fas fa-pencil-alt"></i>
@@ -224,8 +232,9 @@
                             <tr>
                                 <td colspan="5" class="has-text-centered">
                                     <a class="is-link is-outlined is-small is-rounded button"
+                                       {% if current_user == project.creator and project.editable %}
                                        href="{{ url_for('project.add_figure', project_id=project.id) }}"
-                                       {% if current_user != project.creator or project.status != "draft" %}
+                                       {% else %}
                                        disabled
                                        {% endif %}
                                         >

@@ -215,8 +215,10 @@ def add_member(project_id):
     form = ProjectMemberForm()
     if form.validate_on_submit():
         new_member = ProjectMember(project_id=project_id)
-        form.populate_obj(new_member)
-        new_member.user = form.users.data
+        if form.users.data is None:
+            form.populate_obj(new_member)
+        else:
+            new_member.user = form.users.data
         db.session.add(new_member)
         db.session.commit()
         flash('New member has been added.', 'success')

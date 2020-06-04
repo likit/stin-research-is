@@ -14,9 +14,17 @@ class ProjectMember(db.Model):
                          'label': 'Role'
                      })
     project = db.relationship('ProjectRecord', backref=db.backref('members'))
+    title = db.Column('title', db.String(), info={'label': 'คำนำหน้า'})
+    firstname = db.Column('firstname', db.String(), info={'label': 'ชื่อ'})
+    lastname = db.Column('lastname', db.String(), info={'label': 'นามสกุล'})
+    affil = db.Column('affiliation', db.String(), info={'label': 'สังกัด'})
 
     def __str__(self):
         return self.role
+
+    @property
+    def fullname(self):
+        return '{}{} {}'.format(self.title, self.firstname, self.lastname)
 
 
 class ProjectFigure(db.Model):
@@ -117,6 +125,15 @@ class ProjectRecord(db.Model):
             return recent_request.status
         else:
             None
+
+    @property
+    def editable(self):
+        if self.status == 'draft' or self.status == 'concept approved':
+            return True
+        elif self.status.endswith('submitted'):
+            return False
+        else:
+            return False
 
     def __str__(self):
         return self.title_th[:50]
