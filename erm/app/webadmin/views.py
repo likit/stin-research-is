@@ -313,18 +313,20 @@ def remove_all_ethic_reviewers(ethic_id):
 @login_required
 def send_for_ethic_reviews(project_id, ethic_id):
     project = ProjectRecord.query.get(project_id)
+    ethic = ProjectEthicRecord.query.get(ethic_id)
     form = ProjectEthicReviewSendRecordForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            for review in project.ethic_reviews:
+            for review in ethic.reviews:
                 new_send = ProjectEthicReviewSendRecord()
                 form.populate_obj(new_send)
                 new_send.review_id = review.id
+                #TODO: add code to really send an email
                 new_send.to = review.reviewer.email
                 new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
                 db.session.add(new_send)
             db.session.commit()
-            flash('The project has been sent for a review.')
+            flash('The project has been sent for a review.', 'success')
             return redirect(url_for('webadmin.ethic_detail', project_id=project.id, ethic_id=ethic_id))
     return render_template('webadmin/send_reviews.html', form=form, project=project)
 
@@ -388,7 +390,9 @@ def write_ethic_review(project_id, ethic_id, review_id):
 @login_required
 def view_ethic_reviews(project_id, ethic_id):
     project = ProjectRecord.query.get(project_id)
-    return render_template('webadmin/ethic_reviews.html', project=project, ethic_id=ethic_id)
+    ethic = ProjectEthicRecord.query.get(ethic_id)
+    return render_template('webadmin/ethic_reviews.html',
+                           project=project, ethic=ethic)
 
 
 @webadmin.route('/pubs/add', methods=['GET', 'POST'])

@@ -872,3 +872,10 @@ def add_pub_reward(project_id, pub_id):
             flash(form.errors, 'danger')
     return render_template('project/reward_add.html',
                            pub=pub, project_id=project_id, form=form)
+
+
+@project.route('/<int:project_id>/ethics/<int:ethic_id>')
+@login_required
+def view_ethic_record(project_id, ethic_id):
+    ethic = ProjectEthicRecord.query.get(ethic_id)
+    return render_template('project/ethic_review.html', ethic=ethic, project_id=project_id)

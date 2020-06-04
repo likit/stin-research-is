@@ -18,8 +18,8 @@
                     <thead>
                     <col width="40%">
                     <col width="60%">
-                        <th></th>
-                        <th>ผลการประเมิน</th>
+                    <th></th>
+                    <th>ผลการประเมิน</th>
                     </thead>
                     <tr>
                         <td class="title is-size-5">ผู้ประเมิน</td>
@@ -49,9 +49,9 @@
                     <tr>
                         <td class="title is-size-5">Submitted</td>
                         {% if review.submitted_at %}
-                        <td>{{ review.submitted_at|localdatetime }}</td>
+                        <td><span class="tag is-success is-medium">{{ review.submitted_at|localdatetime }}</span></td>
                         {% else %}
-                        <td></td>
+                        <td><span class="tag is-warning is-medium">Waiting</span></td>
                         {% endif %}
                         <td></td>
                     </tr>
@@ -67,14 +67,11 @@
     <div class="columns">
         <div class="column is-one-third is-offset-4 has-text-centered">
             <div class="buttons is-centered">
-                <a href="{{ url_for('webadmin.ethic_detail', ethic_id=ethic.id) }}" class="button is-light">
+                <a href="{{ url_for('project.display_project', project_id=project_id) }}" class="button is-light">
                         <span class="icon">
                             <i class="fas fa-chevron-left"></i>
                         </span>
                     <span>Back</span>
-                </a>
-                <a href="{{ url_for('webadmin.update_status', project_id=project.id) }}" class="button is-primary">
-                    <span>Update Status</span>
                 </a>
             </div>
         </div>

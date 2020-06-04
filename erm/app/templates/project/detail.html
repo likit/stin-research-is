@@ -121,10 +121,10 @@
                 </tr>
                 {% endif %}
                 <tr>
-                    <td class="title is-size-5" width="20%">วารสารที่คาดว่าจะเผยแพร่</td><td>{{ project.prospected_journals }}</td>
+                    <td class="title is-size-5" width="20%">วารสารที่คาดว่าจะเผยแพร่</td><td>{{ project.prospected_journals or '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">การนำไปใช้ประโยชน์</td><td>{{ project.use_applications }}</td>
+                    <td class="title is-size-5" width="20%">การนำไปใช้ประโยชน์</td><td>{{ project.use_applications or '-' }}</td>
                 </tr>
                 {% endif %}
                 <tr>
@@ -243,17 +243,25 @@
                         <table class="table is-striped">
                             <thead>
                             <th>ส่งเมื่อ</th>
-                            <th>สถานะ</th>
+                            <th colspan="2">สถานะ</th>
                             </thead>
                             <tbody>
                             {% for e in project.ethics %}
                             <tr>
                                 <td>{{ e.submitted_at|localdatetime }}</td>
                                 <td>{{ e.status }}</td>
+                                <td>
+                                    <a href="{{ url_for('project.view_ethic_record', project_id=project.id, ethic_id=e.id) }}">
+                                        <span class="icon">
+                                            <i class="far fa-eye"></i>
+                                        </span>
+                                        <span>view</span>
+                                    </a>
+                                </td>
                             </tr>
                             {% endfor %}
                             <tr>
-                                <td colspan="2" class="has-text-centered">
+                                <td colspan="3" class="has-text-centered">
                                     <a href="{{ url_for('project.confirm_add_ethic', project_id=project.id) }}"
                                        {% if project.status != "concept approved" %}
                                        disabled
@@ -547,13 +555,15 @@
                 <tr>
                     <td class="title is-size-5">หมายเลขสัญญา</td>
                     <td>
-                        {{ project.contract_no }}
+                        {{ project.contract_no or '-' }}
+                        {% if project.contract_url %}
                         <a href="https://drive.google.com/uc?id={{ project.contract_url }}">
                             <span class="icon">
                                 <i class="far fa-file-alt"></i>
                             </span>
                             <span>ไฟล์สัญญา</span>
                         </a>
+                        {% endif %}
                     </td>
                 </tr>
                 <tr>
