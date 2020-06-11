@@ -76,3 +76,21 @@ class Profile(db.Model):
     @property
     def affiliation(self):
         return '{} {}'.format(self.program, self.program.department)
+
+
+class IntlConferenceSupport(db.Model):
+    __tablename__ = 'researcher_intl_conference_supports'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    qualification = db.Column('qualification', db.String())
+    article_title = db.Column('article_title', db.String(), info={'label': 'ชื่อผลงานวิจัย'})
+    organizer = db.Column('organizer', db.String(), info={'label': 'หน่วยงานผู้จัดประชุม'})
+    venue = db.Column('venue', db.String(), info={'label': 'สถานที่จัดประชุม'})
+    conference_date = db.Column('conference_date', db.Date(), info={'label': 'วันที่จัดประชุม'})
+    presentation_date = db.Column('presentation_date', db.Date(), info={'label': 'วันที่นำเสนอผลงาน'})
+    presentation_type = db.Column('presentation_type', db.String(), info={'label': 'ประเภทการนำเสนอ'})
+    amount = db.Column('amount', db.Numeric(), default=0.0, info={'label': 'จำนวนเงินที่ขอสนับสนุน'})
+    researcher_id = db.Column('researcher_id', db.ForeignKey('users.id'))
+    researcher = db.relationship(User, backref=db.backref('intl_conference_supports'))
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    edited_at = db.Column('edited_at', db.DateTime(timezone=True))
+    approved_at = db.Column('approved_at', db.DateTime(timezone=True))

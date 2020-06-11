@@ -113,7 +113,7 @@
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
-                                        <span>New Education</span>
+                                        <span>เพิ่มประวัติการศึกษา</span>
                                     </a>
                                 </td>
                                 <td></td>
@@ -137,10 +137,10 @@
                 <span class="icon">
                     <i class="fas fa-pencil-alt"></i>
                 </span>
-                    <span>New Publication</span>
+                    <span>เพิ่มผลงานวิจัยใหม่</span>
                 </a>
                 {% endif %}
-                <table class="table is-striped">
+                <table class="table is-striped is-expanded">
                     <thead>
                     <th>No.</th>
                     <th>Title</th>
@@ -154,6 +154,56 @@
                         <td><a href="{{ url_for('researcher.show_pub', pub_id=pub.id) }}">{{ pub.title }}</a></td>
                         <td>{{ pub.journal }}</td>
                         <td>{{ pub.pub_date|localdate }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-three-fifths is-offset-one-fifth">
+            <div class="box has-text-centered">
+                <h2 class="title">International Conference Supports</h2>
+                {% if current_user.is_authenticated and current_user.id == user.id %}
+                <a href="{{ url_for('researcher.add_intl_conference_support') }}">
+                <span class="icon">
+                    <i class="fas fa-pencil-alt"></i>
+                </span>
+                    <span>ยื่นขออนุมัติเงินสนับสนุน</span>
+                </a>
+                {% endif %}
+                <table class="table is-striped is-expanded">
+                    <thead>
+                    <th>No.</th>
+                    <th>ยื่นวันที่</th>
+                    <th>จำนวนเงิน</th>
+                    <th>สถานที่ประชุม</th>
+                    <th>สถานะ</th>
+                    <th>อนุมัติวันที่</th>
+                    </thead>
+                    <tbody>
+                    {% for support in current_user.intl_conference_supports %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ support.submitted_at|localdatetime }}</td>
+                        <td>{{ support.amount }}</td>
+                        <td>{{ support.venue }}</td>
+                        <td>
+                            {% if support.approved_at %}
+                            <span class="icon">
+                                <i class="far fa-check-circle has-text-success"></i>
+                            </span>
+                            <span>อนุมัติ</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if support.approved_at %}
+                            {{ support.approved_at|localdatetime }}
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                     </tbody>

@@ -1,11 +1,12 @@
 import os
 import requests
+import arrow
 from flask import render_template, flash, request, redirect, url_for, session
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from app.main.models import User
-from app.researcher.models import Profile, Education
-from app.researcher.forms import ProfileForm, EducationForm
+from app.researcher.models import Profile, Education, IntlConferenceSupport
+from app.researcher.forms import ProfileForm, EducationForm, IntlConferenceSupportForm
 from app import db
 from . import researcher_bp as researcher
 from app.project.models import (ProjectPublication,
@@ -245,3 +246,21 @@ def remove_pub(pub_id):
         else:
             flash('The publication does not exist.', 'danger',)
     return render_template('researcher/pub_remove.html', pub=pub)
+
+
+@researcher.route('/intl-support/add', methods=['GET', 'POST'])
+@login_required
+def add_intl_conference_support():
+    form = IntlConferenceSupportForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_support = IntlConferenceSupport()
+            form.populate_obj(new_support)
+            new_support.qualification = '|'.join(form.qualification_select.data)
+            new_support.researcher = current_user
+            new_support.submitted_at = arrow.now(tz='Asia/Bangkok').datetime,
+            db.session.add(new_support)
+            db.session.commit()
+            flash('New request for international conference support has been added.')
+            return redirect(url_for('researcher.show_profile', user_id=current_user.id))
+    return render_template('researcher/intl_conference_support_add.html', form=form)

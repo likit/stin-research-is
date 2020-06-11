@@ -1,12 +1,17 @@
 from app import db
 from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
-from wtforms.fields import FileField
-from wtforms.widgets import Select
-from .models import Profile, Program, Education
+from wtforms.widgets import Select, ListWidget, CheckboxInput
+from wtforms.fields import SelectMultipleField
+from .models import *
 
 
 BaseModelForm = model_form_factory(FlaskForm)
+
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = ListWidget(prefix_label=False)
+    option_widget = CheckboxInput()
 
 
 class ModelForm(BaseModelForm):
@@ -34,3 +39,14 @@ class EducationForm(ModelForm):
     class Meta:
         model = Education
 
+
+class IntlConferenceSupportForm(ModelForm):
+    class Meta:
+        model = IntlConferenceSupport
+    qualifications = [(c, c) for c in
+                      ('บุคลากรสถาบันฯและไม่อยู่ระหว่างลาศึกษา/ไปปฏิบัติงานเพื่อเพิ่มพูนความรู้',
+                       'ปฎิบัติงานในสถาบันมาแล้วไม่น้อยกว่า 1 ปีและไม่อยู่ในระหว่างการลาศึกษาเต็มเวลา',
+                       'ยังไม่เคยขอรับความสนับสนุน / เคยขอรับการสนับสนุนและตีพิมพ์เผยแพร่งานตามประกาศแล้ว',
+                       'เป็นผู้เขียนชื่อแรกและหรือผู้รับผิดชอบหลัก')]
+    qualification_select = MultiCheckboxField('คุณสมบัติของผู้ขอรับการสนับสนุนตามประกาศฯ',
+                                              choices=qualifications)
