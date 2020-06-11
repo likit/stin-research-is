@@ -59,6 +59,12 @@
               <a class="navbar-item" href="{{ url_for('webadmin.list_pub_rewards') }}">
                   Pub Rewards/Fee Supports
               </a>
+              <a class="navbar-item" href="{{ url_for('webadmin.list_intl_conference_supports') }}">
+                International Conference Supports
+              </a>
+              <a class="navbar-item" href="{{ url_for('webadmin.list_proposal_development_supports') }}">
+                Proposal Development Supports
+              </a>
               <a class="navbar-item" href="{{ url_for('webadmin.dashboard') }}">
                   Dashboard
               </a>
@@ -66,7 +72,7 @@
           </div>
           {% endif %}
           <a class="navbar-item" href="{{ url_for('auth.logout') }}">
-              <button class="button is-small is-outlined is-info is-inverted">
+              <button class="button is-small is-danger is-rounded is-inverted">
                 <strong>Sign Out</strong>
                 <span class="icon">
                   <i class="fas fa-power-off"></i>
