@@ -7,6 +7,8 @@ from flask import render_template, redirect, url_for, request, flash
 from sqlalchemy import or_
 import pandas as pd
 from wsgi import db
+from app.researcher.forms import IntlConferenceSupportForm
+from app.researcher.models import IntlConferenceSupport
 from app.project.models import *
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
                                 ProjectEthicReviewSendRecordForm,
@@ -690,3 +692,30 @@ def dashboard():
                            project_per_month_count_data=per_month_count_data_list,
                            reward_sum_data=reward_sum_data,
                            pub_month_data=pub_month_data_list)
+
+
+@webadmin.route('/intl-conference/supports')
+@superuser
+@login_required
+def list_intl_conference_supports():
+    return render_template('webadmin/intl_conference_support_list.html')
+
+
+@webadmin.route('/intl-conference/supports/<int:request_id>', methods=['GET', 'POST'])
+@superuser
+@login_required
+def edit_intl_conference_support(request_id):
+    req = IntlConferenceSupport.query.get(request_id)
+    if req:
+        qualification = req.qualification.split('|')
+        form = IntlConferenceSupportForm(obj=req)
+        if request.method == 'POST' and form.validate_on_submit():
+            form.populate_obj(req)
+            req.qualification = '|'.join(form.qualification_select.data)
+            req.submitted_at = arrow.now(tz='Asia/Bangkok').datetime,
+            db.session.add(req)
+            db.session.commit()
+            flash('The request has been updated.', 'success')
+            return redirect(url_for('webadmin.list_intl_conference_supports'))
+    return render_template('webadmin/intl_conference_support_edit.html',
+                           form=form, qualification=qualification)
