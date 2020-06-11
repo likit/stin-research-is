@@ -11,7 +11,7 @@
                 {% include "messages.html" %}
                 <div>
                     <h1 class="title has-text-centered">Ethic Approval Submissions</h1>
-                    <table class="table is-fullwidth is-striped">
+                    <table class="table is-fullwidth is-narrow is-striped" id="ethicTable">
                         <thead>
                         <th>No.</th>
                         <th>Title TH</th>
@@ -26,11 +26,12 @@
                             <td>{{ et.status }}</td>
                             <td>{{ et.submitted_at|localdatetime }}</td>
                             <td>
-                                <a href="{{ url_for('webadmin.ethic_detail', ethic_id=et.id) }}" class="button is-primary">
+                                <a href="{{ url_for('webadmin.ethic_detail', ethic_id=et.id) }}"
+                                   class="button is-small is-primary">
                                 <span class="icon">
-                                    <i class="far fa-eye"></i>
+                                    <i class="fas fa-info-circle"></i>
                                 </span>
-                                    <span>view</span>
+                                    <span>รายละเอียด</span>
                                 </a>
                             </td>
                         </tr>
@@ -41,4 +42,12 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('#ethicTable').DataTable();
+    })
+</script>
 {% endblock %}

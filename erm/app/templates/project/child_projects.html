@@ -6,11 +6,12 @@
 {% include "nav.html" %}
 <section class="section">
     <div class="columns">
-        <div class="column has-text-centered is-two-thirds is-offset-2">
+        <div class="column has-text-centered">
+            <div class="container">
             {% include "messages.html" %}
             <h1 class="title">โครงการภายใต้ชุดโครงการ{{ parent }}</h1>
             <hr>
-            <table class="table">
+            <table class="table is-narrow is-striped">
                 <thead>
                 <th>ลำดับ</th>
                 <th>ชื่อโครงการภาษาไทย</th>
@@ -61,6 +62,7 @@
                 </tbody>
             </table>
             <a class="button is-light" href="{{ url_for('project.list_parent_projects') }}">Back</a>
+            </div>
         </div>
     </div>
 </section>

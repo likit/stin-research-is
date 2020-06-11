@@ -9,7 +9,7 @@
             <div class="column">
                 {% include "message.html" %}
                 <h1 class="title has-text-centered">Publication Reward and Fee Support Requests</h1>
-                <table class="table is-fullwidth">
+                <table class="table is-fullwidth" id="rewardTable">
                     <thead>
                     <th>No.</th>
                     <th>Title</th>
@@ -51,4 +51,12 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('#rewardTable').DataTable();
+    })
+</script>
 {% endblock %}

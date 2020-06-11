@@ -6,7 +6,8 @@
 {% include "nav.html" %}
 <section class="section">
     <div class="columns">
-        <div class="column has-text-centered is-two-thirds is-offset-2">
+        <div class="column has-text-centered">
+            <div class="container">
             <h1 class="title">โครงการวิจัยของคุณ</h1>
             <a href="{{ url_for('project.add_project') }}" class="button is-outlined is-primary">
                 <span class="icon">
@@ -28,7 +29,7 @@
             </a>
             {% include "messages.html" %}
             <hr>
-            <table class="table">
+            <table class="table is-striped is-narrow" id="projectTable">
                 <thead>
                 <th>ลำดับ</th>
                 <th>ชื่อโครงการภาษาไทย</th>
@@ -80,7 +81,16 @@
                 {% endfor %}
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('#projectTable').DataTable();
+    })
+</script>
 {% endblock %}

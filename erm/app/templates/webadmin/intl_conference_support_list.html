@@ -9,7 +9,7 @@
             <div class="column">
                 {% include "message.html" %}
                 <h1 class="title has-text-centered">International Conference Support Requests</h1>
-                <table class="table is-fullwidth">
+                <table class="table is-striped is-narrow is-fullwidth" id="intlTable">
                     <thead>
                     <th>No.</th>
                     <th>ผู้ยื่น</th>
@@ -57,4 +57,12 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('#intlTable').DataTable();
+    })
+</script>
 {% endblock %}

@@ -6,9 +6,10 @@
 {% include "nav.html" %}
 <section class="section">
     <div class="columns">
-        <div class="column is-two-thirds is-offset-2">
+        <div class="column">
+            <div class="container">
             <h1 class="title has-text-centered">โครงการวิจัยทั้งหมด</h1>
-            <table class="table">
+            <table class="table is-narrow is-striped" id="projectTable">
                 <thead>
                 <th>No.</th>
                 <th>Thai Title</th>
@@ -55,7 +56,16 @@
                 {% endfor %}
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('#projectTable').DataTable();
+    })
+</script>
 {% endblock %}

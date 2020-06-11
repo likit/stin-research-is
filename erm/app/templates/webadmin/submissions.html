@@ -9,7 +9,7 @@
         <div class="columns">
             <div class="column is-two-thirds is-offset-2">
                 <h1 class="title">Project Detail</h1>
-                <table class="table is-striped is-fullwidth">
+                <table class="table is-striped is-narrow is-fullwidth" id="subTable">
                     <thead>
                     <th>ID</th>
                     <th>Title</th>
@@ -24,11 +24,11 @@
                         <td>{{ project.submitted_at|localdatetime }}</td>
                         <td>
                             <a href="{{ url_for('webadmin.submission_detail', project_id=project.id) }}"
-                               class="button is-primary">
+                               class="button is-small is-primary">
                                 <span class="icon">
-                                    <i class="far fa-eye"></i>
+                                    <i class="fas fa-info-circle"></i>
                                 </span>
-                                <span>view</span>
+                                <span>รายละเอียด</span>
                             </a>
                         </td>
                     </tr>
@@ -39,4 +39,12 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('#subTable').DataTable();
+    })
+</script>
 {% endblock %}

@@ -9,7 +9,7 @@
             <div class="column">
                 {% include "message.html" %}
                 <h1 class="title has-text-centered">Proposal Development Support Requests</h1>
-                <table class="table is-fullwidth">
+                <table class="table is-narrow is-striped is-fullwidth" id="propTable">
                     <thead>
                     <th>No.</th>
                     <th>ผู้ยื่น</th>
@@ -38,7 +38,6 @@
                             {% else %}
                             {% endif %}
                         </td>
-                        <td></td>
                         <td>
                             <a href="{{ url_for('webadmin.edit_proposal_development_support', request_id=req.id) }}">
                                 <span class="icon">
@@ -54,4 +53,12 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('#propTable').DataTable();
+    })
+</script>
 {% endblock %}
