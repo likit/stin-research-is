@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}International Conference Support Requests {% endblock %}
+{% block title %}Proposal Development Support Requests {% endblock %}
 {% block page_content %}
 {% include "nav.html" %}
 <section class="section">
@@ -8,26 +8,22 @@
         <div class="columns">
             <div class="column">
                 {% include "message.html" %}
-                <h1 class="title has-text-centered">International Conference Support Requests</h1>
+                <h1 class="title has-text-centered">Proposal Development Support Requests</h1>
                 <table class="table is-fullwidth">
                     <thead>
                     <th>No.</th>
                     <th>ผู้ยื่น</th>
                     <th>ยื่นเมื่อ</th>
-                    <th>สถานที่จัดประชุม</th>
-                    <th>ค่าใช้จ่าย</th>
                     <th>แก้ไขเมื่อ</th>
                     <th>สถานะ</th>
                     <th></th>
                     </thead>
                     <tbody>
-                    {% for req in current_user.intl_conference_supports|sort(attribute='submitted_at', reverse=True) %}
+                    {% for req in supports|sort(attribute='submitted_at', reverse=True) %}
                     <tr>
                         <td>{{ loop.index }}</td>
                         <td>{{ current_user.profile.fullname_th }}</td>
                         <td>{{ req.submitted_at|localdatetime }}</td>
-                        <td>{{ req.venue }}</td>
-                        <td>{{ req.amount }}</td>
                         <td>
                             {% if req.edited_at %}
                             {{ req.edited_at|localdatetime }}
@@ -42,8 +38,9 @@
                             {% else %}
                             {% endif %}
                         </td>
+                        <td></td>
                         <td>
-                            <a href="{{ url_for('webadmin.edit_intl_conference_support', request_id=req.id) }}">
+                            <a href="{{ url_for('webadmin.edit_proposal_development_support', request_id=req.id) }}">
                                 <span class="icon">
                                     <i class="fas fa-pencil-alt"></i>
                                 </span>

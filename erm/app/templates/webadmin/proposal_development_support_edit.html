@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Edit International Conference Support{% endblock %}
+{% block title %}Edit Proposal Development Support{% endblock %}
 {% block page_content %}
 <section class="hero is-info">
     <div class="hero-head">
@@ -10,7 +10,7 @@
 <section class="section">
     <div class="columns">
         <div class="column is-half is-offset-one-quarter">
-            <h1 class="title has-text-centered">แบบบันทึกข้อมูลการสนับสนุนค่าใช้จ่ายในการนำเสนอผลงานวิชาการในการประชุมระดับนานาชาติ</h1>
+            <h1 class="title has-text-centered">แบบบันทึกข้อมูลการสนับสนุนโครงการให้คำปรึกษาเพื่อพัฒนาข้อเสนอโครงการวิจัยหรือแผนวิจัยและสถิติวิจัย</h1>
             <form method="post" class="box" enctype=multipart/form-data>
                 {{ form.csrf_token }}
                 <div class="field">
@@ -29,39 +29,37 @@
                     {% endfor %}
                 </div>
                 <div class="field">
-                    <label class="label">{{ form.article_title.label }}</label>
-                    <div class="control">
-                        {{ form.article_title(class="input") }}
+                    <label class="label">{{ form.support.label }}</label>
+                    <div class="select">
+                        {{ form.support() }}
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">{{ form.organizer.label }}</label>
+                    <label class="label">{{ form.docs_select.label }}</label>
+                    {% for opt in form.docs_select %}
                     <div class="control">
-                        {{ form.organizer(class="input") }}
+                        <label class="checkbox">
+                            {% if opt.label.text in docs %}
+                            {{ opt(checked=True) }}
+                            {% else %}
+                            {{ opt() }}
+                            {% endif %}
+                            {{ opt.label.text }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.other_docs.label }}</label>
+                    <div class="control">
+                        {{ form.other_docs(class="input") }}
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">{{ form.venue.label }}</label>
+                    <label class="label">{{ form.contract_upload.label }}</label>
+                    <p class="help">Current file: <a href="https://drive.google.com/uc?id={{ contract_url }}">https://drive.google.com/uc?id={{ contract_url }}</a></p>
                     <div class="control">
-                        {{ form.venue(class="input") }}
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.conference_date.label }}</label>
-                    <div class="control">
-                        {{ form.conference_date(class="input") }}
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.presentation_date.label }}</label>
-                    <div class="control">
-                        {{ form.presentation_date(class="input") }}
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">{{ form.presentation_type.label }}</label>
-                    <div class="control">
-                        {{ form.presentation_type(class="input") }}
+                        {{ form.contract_upload() }}
                     </div>
                 </div>
                 <div class="field is-grouped is-grouped-centered">
@@ -74,8 +72,8 @@
                         </button>
                     </div>
                     <div class="control">
-                        <a href="{{ url_for('webadmin.approve_intl_conference_support', request_id=request_id) }}"
-                           class="button is-primary">
+                        <a class="button is-primary"
+                            href="{{ url_for('webadmin.approve_proposal_development_support', request_id=request_id) }}">
                             <span class="icon">
                                 <i class="far fa-check-circle"></i>
                             </span>

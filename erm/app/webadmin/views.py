@@ -1,9 +1,12 @@
+import os
 import arrow
+import requests
 from collections import defaultdict
 from app.webadmin import webadmin_bp as webadmin
 from flask_login import login_required
 from app import superuser
 from flask import render_template, redirect, url_for, request, flash
+from werkzeug.utils import secure_filename
 from sqlalchemy import or_
 import pandas as pd
 from wsgi import db
@@ -16,6 +19,14 @@ from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecord
                                 )
 from app.project.forms import *
 from app.main.models import User
+from pydrive.auth import ServiceAccountCredentials, GoogleAuth
+from pydrive.drive import GoogleDrive
+
+gauth = GoogleAuth()
+keyfile_dict = requests.get(os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')).json()
+scopes = ['https://www.googleapis.com/auth/drive']
+gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile_dict, scopes)
+drive = GoogleDrive(gauth)
 
 
 @webadmin.route('/submissions')
@@ -712,10 +723,81 @@ def edit_intl_conference_support(request_id):
         if request.method == 'POST' and form.validate_on_submit():
             form.populate_obj(req)
             req.qualification = '|'.join(form.qualification_select.data)
-            req.submitted_at = arrow.now(tz='Asia/Bangkok').datetime,
+            req.edited_at = arrow.now(tz='Asia/Bangkok').datetime,
             db.session.add(req)
             db.session.commit()
             flash('The request has been updated.', 'success')
             return redirect(url_for('webadmin.list_intl_conference_supports'))
     return render_template('webadmin/intl_conference_support_edit.html',
-                           form=form, qualification=qualification)
+                           form=form, qualification=qualification, request_id=req.id)
+
+
+@webadmin.route('/proposal-development/supports')
+@superuser
+@login_required
+def list_proposal_development_supports():
+    supports = ProjectProposalDevelopmentSupport.query.all()
+    return render_template('webadmin/proposal_development_support_list.html', supports=supports)
+
+
+@webadmin.route('/proposal-development/supports/<int:request_id>',
+                methods=['GET', 'POST'])
+@superuser
+@login_required
+def edit_proposal_development_support(request_id):
+    req = ProjectProposalDevelopmentSupport.query.get(request_id)
+    if req:
+        qualification = req.qualification.split('|')
+        docs = req.docs.split('|')
+        form = ProjectProposalDevelopmentSupportForm(obj=req)
+        qualification = req.qualification.split('|')
+        if request.method == 'POST' and form.validate_on_submit():
+            form.populate_obj(req)
+            req.qualification = '|'.join(form.qualification_select.data)
+            req.docs = '|'.join(form.docs_select.data)
+            req.edited_at = arrow.now(tz='Asia/Bangkok').datetime,
+            if form.contract_upload.data:
+                upfile = form.contract_upload.data
+                filename = secure_filename(upfile.filename)
+                upfile.save(filename)
+                file_drive = drive.CreateFile({'title': filename})
+                file_drive.SetContentFile(filename)
+                file_drive.Upload()
+                permission = file_drive.InsertPermission({'type': 'anyone',
+                                                          'value': 'anyone',
+                                                          'role': 'reader'})
+                req.contract_file_url = file_drive['id']
+            db.session.add(req)
+            db.session.commit()
+            flash('The request has been updated.', 'success')
+            return redirect(url_for('webadmin.list_proposal_development_supports'))
+    return render_template('webadmin/proposal_development_support_edit.html',
+                           form=form, qualification=qualification, docs=docs,
+                           contract_url=req.contract_file_url,
+                           request_id=req.id)
+
+
+@webadmin.route('/proposal-development/supports/<int:request_id>/approve')
+@superuser
+@login_required
+def approve_proposal_development_support(request_id):
+    req = ProjectProposalDevelopmentSupport.query.get(request_id)
+    if req:
+        req.approved_at = arrow.now(tz='Asia/Bangkok').datetime,
+        db.session.add(req)
+        db.session.commit()
+        flash('The request has been approved.', 'success')
+        return redirect(url_for('webadmin.list_proposal_development_supports'))
+
+
+@webadmin.route('/intl-conference/supports/<int:request_id>/approve')
+@superuser
+@login_required
+def approve_intl_conference_support(request_id):
+    req = IntlConferenceSupport.query.get(request_id)
+    if req:
+        req.approved_at = arrow.now(tz='Asia/Bangkok').datetime,
+        db.session.add(req)
+        db.session.commit()
+        flash('The request has been approved.', 'success')
+        return render_template('webadmin/intl_conference_support_list.html')
