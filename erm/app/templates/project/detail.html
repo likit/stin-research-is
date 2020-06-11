@@ -565,6 +565,53 @@
                 </tr>
                 {% endif %}
                 <tr>
+                    <td class="title is-size-5">เงินสนับสนุนโครงการให้คำปรึกษาเพื่อพัฒนาข้อเสนอโครงการวิจัยหรือแผนงานวิจัยและสถิติวิจัย</td>
+                    <td>
+                        <table class="table is-striped is-narrow">
+                            <thead>
+                            <th>ยื่นเมื่อ</th>
+                            <th>รายการ</th>
+                            <th>สถานะ</th>
+                            <th>อนุมัติเมื่อ</th>
+                            </thead>
+                            <tbody>
+                            {% for pd in project.proposal_development_supports %}
+                            <tr>
+                                <td>{{ pd.submitted_at|localdatetime }}</td>
+                                <td>{{ pd.support }}</td>
+                                <td>
+                                    {% if pd.approved_at %}
+                                    <span class="icon">
+                                        <i class="far fa-check-circle has-text-success"></i>
+                                    </span>
+                                    <span>อนุมัติ</span>
+                                    {% else %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if pd.approved_at %}
+                                    {{ pd.approved_at|localdatetime }}
+                                    {% else %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="4" class="has-text-centered">
+                                    <a href="{{ url_for('project.add_proposal_development_support', project_id=project.id) }}"
+                                       class="button is-rounded is-outlined is-link is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>เพิ่มรายการ</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
                     <td class="title is-size-5">หมายเลขสัญญา</td>
                     <td>
                         {{ project.contract_no or '-' }}

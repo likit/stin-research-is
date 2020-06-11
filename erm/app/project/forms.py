@@ -156,3 +156,22 @@ class ProjectSummaryForm(ModelForm):
 class ParentProjectRecordForm(ModelForm):
     class Meta:
         model = ParentProjectRecord
+
+
+class ProjectProposalDevelopmentSupportForm(ModelForm):
+    class Meta:
+        model = ProjectProposalDevelopmentSupport
+
+    qualifications = [(c, c) for c in
+                      ('บุคลากรสถาบันฯและไม่อยู่ระหว่างลาศึกษา/ไปปฏิบัติงานเพื่อเพิ่มพูนความรู้',
+                       'เป็นหัวหน้าโครงการวิจัย / ผู้อำนวยการแผนงานวิจัย โดยระบุชื่อหน่วยงานของสถาบันอย่างชัดเจน')]
+    qualification_select = MultiCheckboxField('คุณสมบัติของผู้ขอรับการสนับสนุนตามประกาศฯ',
+                                              choices=qualifications)
+    docs_select = MultiCheckboxField('หลักฐานประกอบการขอรับเงินสนับสนุน',
+                                     choices=[(i, i) for i in
+                                              ('หลักฐานการชำระเงินโดยต้องระบุชื่อผู้รับการสนับสนุนเช่น ใบเสร็จรับเงิน หรือหลักฐานการโอนเงิน (ฉบับจริง) หากเป็นสำเนาต้องรับรองสำเนาถุกต้องและลงชื่อกำกับ',
+                                               'ใบสำคัญรับเงินจากผู้ทรงคุณวุฒิพร้อมระบุลักษณะการตรวจ (ให้คำปรึกษาเพื่อพัฒนาโครงการวิจัยหรือแผนงานวิจัยและสถิติวิจัย) ต้องระบุชื่อโครงการวิจัยหรือแผนงานวิจัยพร้อมลงนามกำกับ',
+                                               'สำเนาหนังสือรับรองจริยธรรมวิจัยในคน',
+                                               'สำเนาโครงการวิจัยหรือแผนงานวิจัยที่ผ่านการพิจารณาจากคณะกรรมการจริยธรรมการวิจัยในคน',
+                                               )])
+    contract_upload = FileField('Upload เอกสารสัญญา')

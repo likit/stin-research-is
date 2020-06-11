@@ -2,6 +2,7 @@ from app import db
 from app.main.models import User
 from datetime import datetime
 
+
 class ProjectMember(db.Model):
     __tablename__ = 'project_members'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -681,3 +682,30 @@ class ProjectPublishedReward(db.Model):
     status = db.Column('status', db.Unicode(), default='กำลังดำเนินการ',
                        info={'label': 'สถานะ',
                              'choices': [(c, c) for c in ('อนุมัติ', 'ไม่อนุมัติ', 'กำลังดำเนินการ', 'ยกเลิก')]})
+
+
+class ProjectProposalDevelopmentSupport(db.Model):
+    __tablename__ = 'project_proposal_development_supports'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    qualification = db.Column('qualification', db.String())
+    support = db.Column('support', db.String(),
+                        info={'label': 'ขอรับเงินสนับสนุนโครงการให้คำปรึกษาเพื่อพัฒนาข้อเสนอโครงการวิจัยหรือแผนงานวิจัยและสถิติการวิจัย',
+                              'choices': [(c,c) for c in (
+                                  'แหล่งทุนภายนอกไม่เกิน 30,000 บาท ขอรับเงินสนับสนุนได้ไม่เกิน 1,000 บาท',
+                                  'แหล่งทุนภายนอกไม่เกิน 30,000-100,000 บาท ขอรับเงินสนับสนุนได้ไม่เกิน 2,000 บาท',
+                                  'แหล่งทุนภายนอกไม่เกิน 100,000-300,000 บาท ขอรับเงินสนับสนุนได้ไม่เกิน 3,000 บาท',
+                                  'แหล่งทุนภายนอกไม่เกิน 300,000-500,000 บาท ขอรับเงินสนับสนุนได้ไม่เกิน 4,000 บาท',
+                                  'แหล่งทุนภายนอกมากกว่า 500,000 บาทขึ้นไป ขอรับเงินสนับสนุนได้ไม่เกิน 5,000 บาท',
+                                  'แหล่งทุนภายในไม่เกิน 30,000 บาท ขอรับเงินสนับสนุนได้ไม่เกิน 1,000 บาท',
+                                  'แหล่งทุนภายในไม่เกิน 30,000-100,000 บาท ขอรับเงินสนับสนุนได้ไม่เกิน 2,000 บาท',
+                                  'แหล่งทุนภายในมากกว่า 100,000 บาทขึ้นไป ขอรับเงินสนับสนุนได้ไม่เกิน 3,000 บาท',
+                              )]})
+    docs = db.Column('docs', db.Text())
+    other_docs = db.Column('other_docs', db.String(),
+                           info={'label': 'เอกสารอื่นๆ (ถ้ามี)'})
+    project = db.relationship('ProjectRecord', backref=db.backref('proposal_development_supports'))
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    edited_at = db.Column('edited_at', db.DateTime(timezone=True))
+    approved_at = db.Column('approved_at', db.DateTime(timezone=True))
+    contract_file_url = db.Column('contract_file_url', db.String())

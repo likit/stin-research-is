@@ -881,3 +881,34 @@ def add_pub_reward(project_id, pub_id):
 def view_ethic_record(project_id, ethic_id):
     ethic = ProjectEthicRecord.query.get(ethic_id)
     return render_template('project/ethic_review.html', ethic=ethic, project_id=project_id)
+
+
+@project.route('/<int:project_id>/supports/proposal/add', methods=['GET', 'POST'])
+@login_required
+def add_proposal_development_support(project_id):
+    form = ProjectProposalDevelopmentSupportForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_support = ProjectProposalDevelopmentSupport()
+            form.populate_obj(new_support)
+            new_support.qualification = '|'.join(form.qualification_select.data)
+            new_support.docs = '|'.join(form.docs_select.data)
+            new_support.project_id = project_id
+            new_support.submitted_at = arrow.now(tz='Asia/Bangkok').datetime,
+            if form.contract_upload.data:
+                upfile = form.contract_upload.data
+                filename = secure_filename(upfile.filename)
+                upfile.save(filename)
+                file_drive = drive.CreateFile({'title': filename})
+                file_drive.SetContentFile(filename)
+                file_drive.Upload()
+                permission = file_drive.InsertPermission({'type': 'anyone',
+                                                          'value': 'anyone',
+                                                          'role': 'reader'})
+                new_support.contract_file_url = file_drive['id']
+            db.session.add(new_support)
+            db.session.commit()
+            flash('New proposal development support request added.')
+            return redirect(url_for('project.display_project', project_id=project_id))
+    return render_template('project/proposal_development_support_add.html',
+                           project_id=project_id, form=form)
