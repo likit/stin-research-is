@@ -2,15 +2,11 @@
 
 {% block title %}Profile Page{% endblock %}
 {% block page_content %}
-<section class="hero is-info">
-    <div class="hero-head">
-        {% include "nav.html" %}
-    </div>
-</section>
+{% include "nav.html" %}
 <section class="section">
+    <h1 class="title has-text-centered">Edit Profile</h1>
     <div class="columns">
-        <div class="column is-half is-offset-one-quarter">
-            <h1 class="title has-text-centered">Edit Profile</h1>
+        <div class="column is-half is-offset-one-quarter box">
             <form method="post" enctype=multipart/form-data>
                 {{ form.csrf_token }}
                 <div class="field">
@@ -65,9 +61,14 @@
                     </div>
                   </div>
                 </div>
-                <div class="field is-grouped">
+                <div class="field is-grouped is-grouped-centered">
                     <div class="control">
-                        <button type="submit" class="button is-success">Save</button>
+                        <button type="submit" class="button is-success">
+                            <span class="icon">
+                               <i class="far fa-save"></i>
+                            </span>
+                            <span>Save</span>
+                        </button>
                     </div>
                     <div class="control">
                         <a class="button is-light" href="{{ request.referrer }}">Cancel</a>
