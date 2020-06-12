@@ -1,9 +1,12 @@
 import os
 import arrow
 import wtforms
-from flask import render_template, request, redirect, url_for, flash
+from io import BytesIO
+from flask import render_template, request, redirect, url_for, flash, Response
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
+
+from docx import Document
 
 from app import db
 from . import project_bp as project
@@ -912,3 +915,51 @@ def add_proposal_development_support(project_id):
             return redirect(url_for('project.display_project', project_id=project_id))
     return render_template('project/proposal_development_support_add.html',
                            project_id=project_id, form=form)
+
+
+
+@project.route('/<int:project_id>/export')
+@login_required
+def export_docx(project_id):
+    def generate():
+        project = ProjectRecord.query.get(project_id)
+        doc = Document()
+        members = []
+        for member in project.members:
+            members.append('{} ({})'.format(member.user.profile.fullname_th, member.role))
+        doc.add_heading('รายละเอียดโครงการวิจัย', 0)
+        doc.add_heading('ชื่อภาษาไทย', level=1)
+        doc.add_heading(project.title_th, level=1)
+        doc.add_heading(project.subtitle_th, level=2)
+        doc.add_heading('ชื่อภาษาอังกฤษ', level=1)
+        doc.add_heading(project.title_en, level=3)
+        doc.add_heading(project.subtitle_en, level=4)
+        doc.add_heading('แหล่งทุน', level=1)
+        doc.add_paragraph(project.fund_source.name)
+        doc.add_heading('ที่ปรึกษาโครงการ', level=1)
+        doc.add_paragraph(project.mentor)
+        doc.add_heading('คณะผู้วิจัย', level=1)
+        doc.add_paragraph(', '.join(members))
+        doc.add_heading('บทคัดย่อ', level=1)
+        doc.add_paragraph(project.abstract)
+        doc.add_heading('บทนำ', level=1)
+        doc.add_paragraph(project.intro)
+        doc.add_heading('วัตถุประสงค์', level=1)
+        doc.add_paragraph(project.objective)
+        doc.add_heading('ระเบียบวิธีวิจัย', level=1)
+        doc.add_paragraph(project.method)
+        doc.add_heading('วารสารที่คาดว่าจะเผยแพร่', level=1)
+        doc.add_paragraph(project.prospected_journals)
+        doc.add_heading('การนำไปใช้ประโยชน์', level=1)
+        doc.add_paragraph(project.use_applications)
+        doc.add_heading('แก้ไขล่าสุดเมื่อวันที่', level=1)
+        doc.add_paragraph(project.updated_at.strftime('วันที่ %d-%m-%Y เวลา %H:%M นาฬิกา'))
+        doc.add_heading('ผู้ส่งโครงการ', level=1)
+        doc.add_paragraph('{} {}'.format(current_user.profile.title_th, current_user.profile.fullname_th))
+        doc.add_heading('สถานะโครงการ', level=1)
+        doc.add_paragraph(project.status)
+        out_stream = BytesIO()
+        doc.save(out_stream)
+        return out_stream.getvalue()
+    return Response(generate(),
+                    mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')

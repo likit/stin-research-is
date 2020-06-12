@@ -674,6 +674,18 @@
                     </td>
                 </tr>
                 {% endif %}
+                <tr>
+                    <td>สร้างไฟล์</td>
+                    <td>
+                        <a class="button is-primary"
+                           href="{{ url_for('project.export_docx', project_id=project.id) }}">
+                            <span class="icon">
+                                <i class="far fa-file-word"></i>
+                            </span>
+                            <span>Export DOCX</span>
+                        </a>
+                    </td>
+                </tr>
             </table>
             </div>
             <div class="has-text-centered">
