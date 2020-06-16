@@ -1,14 +1,37 @@
 from app import create_app
 from pytz import timezone
-from flask_admin.contrib.sqla import ModelView
+from flask import render_template
 from app import admin, db
 from app.main.models import User
 from app.researcher.models import Profile, Program, Department, Education
 from app.project.models import *
 from flask_admin.contrib.sqla import ModelView
+from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 
 app = create_app()
+
+
+@app.errorhandler(NotFound)
+def handle_not_found_error(e):
+    error_message = u'ขออภัย ไม่พบหน้าเพจที่ท่านเรียก'
+    return render_template('main/error_page.html',
+                           error_obj=e, error_message=error_message)
+
+
+@app.errorhandler(InternalServerError)
+def handle_internal_server_error(e):
+    error_message = u'ขออภัยระบบขัดข้องบางประการโปรดติดต่อศูนย์วิจัยเพื่อตรวจสอบและแก้ไข'
+    return render_template('main/error_page.html',
+                           error_obj=e, error_message=error_message)
+
+
+@app.errorhandler(BadRequest)
+def handle_bad_request_error(e):
+    error_message = u'ขออภัยระบบขัดข้องเนื่องจากข้อมูลผิดพลาดโปรดตรวจสอบข้อมูลอีกครั้ง'
+    return render_template('main/error_page.html',
+                           error_obj=e, error_message=error_message)
+
 
 @app.template_filter("localdatetime")
 def local_datetime(dt):

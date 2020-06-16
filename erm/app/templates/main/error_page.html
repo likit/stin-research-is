@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block page_content %}
+{% include "nav.html" %}
+<section class="hero is-fullheight-with-navbar">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <img src="{{ url_for('static', filename='images/sloth.png') }}" width="300">
+            <h1 class="title">{{ error_message }}</h1>
+            <p class="has-text-warning">{{ error_obj }}</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
