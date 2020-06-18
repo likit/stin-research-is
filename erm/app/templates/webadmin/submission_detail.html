@@ -11,7 +11,7 @@
             <h2 class="subtitle is-size-4">{{ project.title_th }}</h2>
             <p>
                 {% for member in project.members %}
-                {{ member.user.profile.fullname_th }} ({{ member.role }}),
+                {{ member.user.fullname_thai or member.fullname }} ({{ member.role }}),
                 {% endfor %}
             </p>
             <div class="tags has-addons is-centered">
@@ -100,7 +100,7 @@
                                 <tbody>
                                 {% for member in project.members %}
                                 <tr>
-                                    <td>{{ member.user.profile }}</td>
+                                    <td>{{ member.user.fullname_thai or member.fullname }}</td>
                                     <td>{{ member.role }}</td>
                                     <td>{{ member.user.email }}</td>
                                 </tr>
