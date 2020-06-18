@@ -17,8 +17,9 @@
                         <div class="field">
                             <label class="label">{{ form.title_th.label }}</label>
                             <div class="control">
-                                {{ form.title_th(placeholder='Title Thai', class='input') }}
+                                {{ form.title_th(required=True, placeholder='Title Thai', class='input is-danger') }}
                             </div>
+                            <p class="help is-danger">ต้องกรอก</p>
                         </div>
                         <div class="field">
                             <label class="label">{{ form.subtitle_th.label }}</label>
