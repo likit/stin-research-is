@@ -222,6 +222,7 @@ def add_member(project_id):
             form.populate_obj(new_member)
         else:
             new_member.user = form.users.data
+            new_member.role = form.role.data
         db.session.add(new_member)
         db.session.commit()
         flash('New member has been added.', 'success')

@@ -54,16 +54,19 @@
                     <td>
                         {% for member in project.members %}
                         {% if member.role == 'PI' %}
-                        <a href="{{ url_for('researcher.show_profile', user_id=member.user.id) }}"
-                           class="button is-light is-small">
-                            <span class="icon">
-                                <i class="fas fa-user-circle"></i>
-                            </span>
-                            <span>
-                                {{ member.user.profile.fullname_th }}
-                            </span>
-                        </a>
+                        <div class="tags">
+                            {% if member.user %}
+                                <a href="{{ url_for('researcher.show_profile', user_id=member.user.id) }}"
+                                   class="tag is-link is-small is-rounded">
+                                    {{ member.user.profile.fullname_th }}
+                                </a>
+                            {% else %}
+                                <span class="tag is-light is-small is-rounded">
+                                    {{ member.fullname }}
+                                </span>
+                            {% endif %}
                         {% endif %}
+                        </div>
                         {% endfor %}
                     </td>
                     <td>
