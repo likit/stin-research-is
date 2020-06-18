@@ -51,13 +51,22 @@ def make_project_archive(project):
     )
     members = []
     for member in project.members:
-        mem = {
-            'role': member.role,
-            'fullname_th': member.user.profile.fullname_th,
-            'fullname_en': member.user.profile.fullname_en,
-            'title_th': member.user.profile.title_th,
-            'title_en': member.user.profile.title_en,
-        }
+        if member.user.profile:
+            mem = {
+                'role': member.role,
+                'fullname_th': member.user.profile.fullname_th,
+                'fullname_en': member.user.profile.fullname_en,
+                'title_th': member.user.profile.title_th,
+                'title_en': member.user.profile.title_en,
+            }
+        else:
+            mem = {
+                'role': member.role,
+                'fullname_th': member.lastname,
+                'fullname_en': member.firstname,
+                'title_th': member.title,
+                'title_en': '',
+            }
         members.append(mem)
     figures = []
     for figure in project.figures:
