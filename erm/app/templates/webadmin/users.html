@@ -16,6 +16,7 @@
                     <th>Email</th>
                     <th>Role</th>
                     <th>Affiliation</th>
+                    <th>Active</th>
                     <th></th>
                 </thead>
                 <tbody>
@@ -26,6 +27,15 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.role }}</td>
                         <td>{{ user.profile.program }}</td>
+                        <td>
+                            <span class="icon">
+                            {% if user.is_active %}
+                                <i class="far has-text-success fa-check-circle"></i>
+                            {% else %}
+                                <i class="far has-text-danger fa-times-circle"></i>
+                            {% endif %}
+                            </span>
+                        </td>
                         <td>
                             <a href="">
                                 <span class="icon">

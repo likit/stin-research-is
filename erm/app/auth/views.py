@@ -25,9 +25,11 @@ def register():
                 return redirect(request.referrer)
             else:
                 new_user = User(email, password)
+                new_profile = Profile()
+                new_profile.user = new_user
                 db.session.add(new_user)
                 db.session.commit()
-                flash('Your email has been registered successfully.', 'is-success')
+                flash('Your email has been registered successfully. Please wait for your account to be verified and activated.', 'is-success')
                 return redirect(request.referrer)
         else:
             for field, msg in form.errors.items():
@@ -53,7 +55,12 @@ def login():
             if user:
                 if user.check_password(password):
                     login_user(user)
-                    flash('You have been signed in.', 'success')
+                    if current_user.is_authenticated:
+                        flash('You have been signed in.', 'success')
+                    else:
+                        flash('You have not been activated.'
+                              ' Please wait for the admin to verify your account.',
+                              'warning')
                     return redirect(url_for('main.index'))
                 else:
                     flash('Password is incorrect. Please try again.', 'danger')

@@ -7,6 +7,7 @@ class User(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     email = db.Column('email', db.String(255), unique=True, nullable=False)
     __password_hash = db.Column('password_hash', db.String(255), nullable=False)
+    is_activated = db.Column('is_activated', db.Boolean(), default=False)
     #TODO: role should not be nullable
     role = db.Column('role', db.Integer, default=2,
                      # info={'label': 'role', 'choices': [(1, 'admin'), (2, 'user')]},
@@ -21,7 +22,13 @@ class User(db.Model):
 
     @property
     def fullname_thai(self):
-        return self.profile.fullname_th
+        if self.profile:
+            if self.profile.firstname_th and self.profile.lastname_th:
+                return self.profile.fullname_th
+            else:
+                return self.email
+        else:
+            return self.email
 
     @property
     def password(self):
@@ -40,7 +47,7 @@ class User(db.Model):
 
     @property
     def is_active(self):
-        return True
+        return self.is_activated
 
     @property
     def is_anonymous(self):
