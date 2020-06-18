@@ -11,7 +11,7 @@ class ProjectMember(db.Model):
     user = db.relationship(User)
     role = db.Column('role', db.String(),
                      info={
-                         'choices': [(i, i) for i in ['PI', 'co-PI', 'Coordinator', 'Researcher']],
+                         'choices': [(i, i) for i in ['PI', 'co-PI', 'Coordinator', 'Researcher', 'Research Assistant']],
                          'label': 'Role'
                      })
     project = db.relationship('ProjectRecord', backref=db.backref('members'))
