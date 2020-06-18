@@ -21,6 +21,7 @@
         <div class="columns">
             <div class="column is-one-third is-offset-4">
                 <h1 class="title has-text-centered">Add Gantt Chart Activity</h1>
+                {% include "messages.html" %}
                 <form class="box" method="post" enctype=multipart/form-data>
                     {{ form.csrf_token }}
                     <div class="field">
@@ -67,4 +68,25 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('input[name="start_date"]').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        });
+        $('input[name="end_date"]').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        });
+    });
+</script>
 {% endblock %}
