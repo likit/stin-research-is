@@ -51,7 +51,7 @@ def make_project_archive(project):
     )
     members = []
     for member in project.members:
-        if member.user.profile:
+        if member.user:
             mem = {
                 'role': member.role,
                 'fullname_th': member.user.profile.fullname_th,
