@@ -228,8 +228,6 @@ def write_review(project_id, review_id):
 
 
 @webadmin.route('/submissions/confirm', methods=['GET', 'POST'])
-@superuser
-@login_required
 def confirm_review():
     return render_template('webadmin/review_confirm.html')
 
