@@ -675,7 +675,16 @@
                 </tr>
                 {% endif %}
                 <tr>
-                    <td>สร้างไฟล์</td>
+                    <td class="title is-size-5">Project Reviews</td>
+                    <td>
+                        <a class="button is-primary is-outlined"
+                            href="{{ url_for('project.view_reviews', project_id=project.id) }}">
+                            <span>view ({{ project.reviews|length }})</span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">สร้างไฟล์</td>
                     <td>
                         <a class="button is-primary"
                            href="{{ url_for('project.export_docx', project_id=project.id) }}">
@@ -689,9 +698,10 @@
             </table>
             </div>
             <div class="has-text-centered">
-                <a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}" class="button is-light">Back</a>
+                <a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}"
+                   class="button is-light is-medium">Back</a>
                 {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
-                <a class="button is-link"
+                <a class="button is-link is-medium"
                     {% if not project.status.endswith('submitted') or project.status == 'draft' %}
                         href="{{ url_for('project.edit_project', project_id=project.id) }}"
                     {% else %}
@@ -699,7 +709,7 @@
                     {% endif %}
                 >Edit</a>
                 <a
-                   class="button is-primary"
+                   class="button is-primary is-medium"
                     {% if project.status == 'concept approved' and project.get_ethic_status() == 'approved' %}
                         href="{{ url_for('project.submit_project', project_id=project.id) }}"
                     {% elif project.status == 'draft' or project.status.endswith('revising') %}

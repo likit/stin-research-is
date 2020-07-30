@@ -1,0 +1,15 @@
+{% extends "webadmin/reviews.html" %}
+
+{% block navigation %}
+<div class="columns">
+    <div class="column has-text-centered">
+        <a href="{{ url_for('project.display_project', project_id=project.id) }}"
+           class="button is-light is-medium">
+            <span class="icon">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <span>Back</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

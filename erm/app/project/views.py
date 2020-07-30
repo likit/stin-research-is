@@ -973,3 +973,10 @@ def export_docx(project_id):
         return out_stream.getvalue()
     return Response(generate(),
                     mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+
+
+@project.route('/<int:project_id>/reviews')
+@login_required
+def view_reviews(project_id):
+    project = ProjectRecord.query.get(project_id)
+    return render_template('project/reviews.html', project=project)

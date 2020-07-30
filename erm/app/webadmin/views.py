@@ -237,6 +237,7 @@ def confirm_review():
 @login_required
 def update_status(project_id):
     project = ProjectRecord.query.get(project_id)
+    prev_status = project.status
     form = ProjectRecordForm(obj=project)
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -244,6 +245,12 @@ def update_status(project_id):
             project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
             db.session.add(project)
             db.session.commit()
+            message = 'เรียนผู้รับผิดชอบโครงการ "{}"\n\nสถานะโครงการได้รับการปรับจาก {} เป็น {} เมื่อ {}\n\n\n\n-ศูนย์วิจัยและนวัตกรรม'\
+                .format(project.title_th, prev_status, project.status, project.updated_at.strftime('%d/%m/%Y %-H:%M'))
+            try:
+                send_mail(project.creator.email, title='แจ้งการปรับสถานะโครงการ', message=message)
+            except:
+                flash('Failed to send an email to the project corresponder.', 'danger')
             flash('Status of the project has been changed.', 'success')
             return redirect(url_for('webadmin.submission_detail', project_id=project.id))
 
