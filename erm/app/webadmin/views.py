@@ -2,14 +2,13 @@ import os
 import arrow
 import requests
 from collections import defaultdict
+
 from app.webadmin import webadmin_bp as webadmin
 from flask_login import login_required
 from app import superuser
 from flask import render_template, redirect, url_for, request, flash
 from werkzeug.utils import secure_filename
-from sqlalchemy import or_
-import pandas as pd
-from wsgi import db
+from app import mail
 from app.researcher.forms import IntlConferenceSupportForm
 from app.researcher.models import IntlConferenceSupport
 from app.project.models import *
@@ -21,12 +20,21 @@ from app.project.forms import *
 from app.main.models import User
 from pydrive.auth import ServiceAccountCredentials, GoogleAuth
 from pydrive.drive import GoogleDrive
+from flask_mail import Message
+from itsdangerous import TimedJSONWebSignatureSerializer
+
+import pandas as pd
 
 gauth = GoogleAuth()
 keyfile_dict = requests.get(os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')).json()
 scopes = ['https://www.googleapis.com/auth/drive']
 gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile_dict, scopes)
 drive = GoogleDrive(gauth)
+
+
+def send_mail(recp, title, message):
+    message = Message(subject=title, body=message, recipients=[recp])
+    mail.send(message)
 
 
 @webadmin.route('/submissions')
@@ -140,14 +148,23 @@ def send_for_reviews(project_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             for review in project.reviews:
-                new_send = ProjectReviewSendRecord()
-                form.populate_obj(new_send)
-                new_send.review_id = review.id
-                new_send.to = review.reviewer.email
-                new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
-                db.session.add(new_send)
+                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=3600)
+                token = serializer.dumps({'review_id': review.id})
+                url = url_for('webadmin.write_review', project_id=project.id, review_id=review.id, token=token, _external=True)
+                message = '{}\n{}\n{}\n{}'.format(form.message.data, url, form.deadline.data, form.footer.data)
+                try:
+                    send_mail(review.reviewer.email, title=form.title.data, message=message)
+                except:
+                    flash('Failed to send an email to {}'.format(review.reviewer.email), 'danger')
+                else:
+                    new_send = ProjectReviewSendRecord()
+                    form.populate_obj(new_send)
+                    new_send.review_id = review.id
+                    new_send.to = review.reviewer.email
+                    new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
+                    db.session.add(new_send)
             db.session.commit()
-            flash('The project has been sent for a review.')
+            flash('The project has been sent for all reviewers.', 'success')
             return redirect(url_for('webadmin.submission_detail', project_id=project.id))
     return render_template('webadmin/send_reviews.html', form=form, project=project)
 
@@ -182,9 +199,15 @@ def resend_for_review(project_id, record_id):
 
 
 @webadmin.route('/submissions/<int:project_id>/reviews/write/<int:review_id>', methods=['GET', 'POST'])
-@superuser
-@login_required
 def write_review(project_id, review_id):
+    token = request.args.get('token')
+    serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'))
+    try:
+        token_data = serializer.loads(token)
+    except:
+        return 'Bad JSON Web token. You need a valid token to access this page.'
+    if token_data.get('review_id') != review_id:
+        return 'Invalid JSON Web Token or the token has expired. Please contact the sender for a valid token to access this page.'
     project = ProjectRecord.query.get(project_id)
     review = ProjectReviewRecord.query.get(review_id)
     if review.submitted_at:
@@ -344,7 +367,7 @@ def send_for_ethic_reviews(project_id, ethic_id):
                 new_send = ProjectEthicReviewSendRecord()
                 form.populate_obj(new_send)
                 new_send.review_id = review.id
-                #TODO: add code to really send an email
+                # TODO: add code to really send an email
                 new_send.to = review.reviewer.email
                 new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
                 db.session.add(new_send)
@@ -363,7 +386,8 @@ def view_send_ethic_records(project_id, ethic_id):
     return render_template('webadmin/send_ethic_records.html', project=project, ethic=ethic)
 
 
-@webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviews/sends/<int:record_id>', methods=['GET', 'POST'])
+@webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviews/sends/<int:record_id>',
+                methods=['GET', 'POST'])
 @superuser
 @login_required
 def resend_for_ethic_review(project_id, record_id, ethic_id):
@@ -384,7 +408,8 @@ def resend_for_ethic_review(project_id, record_id, ethic_id):
     return render_template('webadmin/send_reviews.html', project=project, form=form, to=send_record.to)
 
 
-@webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviews/<int:review_id>/add', methods=['GET', 'POST'])
+@webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviews/<int:review_id>/add',
+                methods=['GET', 'POST'])
 @superuser
 @login_required
 def write_ethic_review(project_id, ethic_id, review_id):
@@ -547,7 +572,7 @@ def remove_pub_author(pub_id, author_id):
         db.session.commit()
         flash('Author has been deleted from publication', 'success')
     else:
-        flash('The author with that ID was not found.', 'danger',)
+        flash('The author with that ID was not found.', 'danger', )
     return redirect(url_for('webadmin.edit_pub_authors', pub_id=pub_id))
 
 
@@ -665,7 +690,7 @@ def dashboard():
     per_month_count_data = {}
     for k in months:
         month_data = [0] * len(all_status)
-        label = '{}/{}'.format(k[0].month,k[0].year)
+        label = '{}/{}'.format(k[0].month, k[0].year)
         per_month_count_data[label] = month_data
 
     for k in months:
@@ -676,7 +701,7 @@ def dashboard():
 
     labels = ['Month'] + all_status
     per_month_count_data_list = [labels]
-    for k,v in per_month_count_data.items():
+    for k, v in per_month_count_data.items():
         v.insert(0, k)
         per_month_count_data_list.append(v)
 
@@ -688,8 +713,8 @@ def dashboard():
         label = '{}/{}'.format(mnt.month, mnt.year)
         reward_sum_data.append([label, total])
     month_names = dict(list(zip(['January', 'February', 'March', 'April', 'May',
-                      'June', 'July', 'August', 'September',
-                      'October', 'November', 'December'], range(1,13))))
+                                 'June', 'July', 'August', 'September',
+                                 'October', 'November', 'December'], range(1, 13))))
 
     pub_df = pd.read_sql_query('select * from project_pub_records', con=db.engine)
     pub_month_data = pub_df.groupby(['year', 'month']).count().id.reset_index()
