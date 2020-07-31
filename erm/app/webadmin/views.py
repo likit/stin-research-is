@@ -17,7 +17,7 @@ from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecord
                                 ProjectEthicReviewRecordForm, ProjectEthicRecordForm,
                                 )
 from app.project.forms import *
-from app.main.models import User
+from app.main.models import User, MailInfo
 from pydrive.auth import ServiceAccountCredentials, GoogleAuth
 from pydrive.drive import GoogleDrive
 from flask_mail import Message
@@ -33,7 +33,9 @@ drive = GoogleDrive(gauth)
 
 
 def send_mail(recp, title, message):
-    message = Message(subject=title, body=message, recipients=[recp])
+    mail_info = MailInfo.query.first()
+    signature = '\n\n-----------------------\n' + mail_info.signature
+    message = Message(subject=title, body=message + signature, recipients=[recp])
     mail.send(message)
 
 
@@ -151,7 +153,8 @@ def send_for_reviews(project_id):
                 serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=3600)
                 token = serializer.dumps({'review_id': review.id})
                 url = url_for('webadmin.write_review', project_id=project.id, review_id=review.id, token=token, _external=True)
-                message = '{}\n{}\n{}\n{}'.format(form.message.data, url, form.deadline.data, form.footer.data)
+                message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
+                    .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
                 try:
                     send_mail(review.reviewer.email, title=form.title.data, message=message)
                 except:
@@ -193,7 +196,19 @@ def resend_for_review(project_id, record_id):
             new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
             db.session.add(new_send)
             db.session.commit()
-            flash('The request has been resent.', 'success')
+            serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=3600)
+            token = serializer.dumps({'review_id': send_record.review.id})
+            url = url_for('webadmin.write_review',
+                          project_id=project.id, review_id=send_record.review.id,
+                          token=token, _external=True)
+            message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}'\
+                .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
+            try:
+                send_mail(new_send.to, title=form.title.data, message=message)
+            except:
+                flash('Failed to send an email to {}'.format(new_send.to), 'danger')
+            else:
+                flash('The request has been resent.', 'success')
             return redirect(url_for('webadmin.view_send_records', project_id=project.id))
     return render_template('webadmin/send_reviews.html', project=project, form=form, to=send_record.to)
 
@@ -245,7 +260,7 @@ def update_status(project_id):
             project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
             db.session.add(project)
             db.session.commit()
-            message = 'เรียนผู้รับผิดชอบโครงการ "{}"\n\nสถานะโครงการได้รับการปรับจาก {} เป็น {} เมื่อ {}\n\n\n\n-ศูนย์วิจัยและนวัตกรรม'\
+            message = 'เรียนผู้รับผิดชอบโครงการ "{}"\n\nสถานะโครงการได้รับการปรับจาก {} เป็น {} เมื่อ {} นาฬิกา'\
                 .format(project.title_th, prev_status, project.status, project.updated_at.strftime('%d/%m/%Y %-H:%M'))
             try:
                 send_mail(project.creator.email, title='แจ้งการปรับสถานะโครงการ', message=message)
@@ -369,13 +384,22 @@ def send_for_ethic_reviews(project_id, ethic_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             for review in ethic.reviews:
-                new_send = ProjectEthicReviewSendRecord()
-                form.populate_obj(new_send)
-                new_send.review_id = review.id
-                # TODO: add code to really send an email
-                new_send.to = review.reviewer.email
-                new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
-                db.session.add(new_send)
+                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=3600)
+                token = serializer.dumps({'review_id': review.id})
+                url = url_for('webadmin.write_ethic_review', project_id=project.id, review_id=review.id, token=token, _external=True)
+                message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
+                    .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
+                try:
+                    send_mail(review.reviewer.email, title=form.title.data, message=message)
+                except:
+                    flash('Failed to send an email to {}'.format(review.reviewer.email), 'danger')
+                else:
+                    new_send = ProjectEthicReviewSendRecord()
+                    form.populate_obj(new_send)
+                    new_send.review_id = review.id
+                    new_send.to = review.reviewer.email
+                    new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
+                    db.session.add(new_send)
             db.session.commit()
             flash('The project has been sent for a review.', 'success')
             return redirect(url_for('webadmin.ethic_detail', project_id=project.id, ethic_id=ethic_id))
@@ -402,30 +426,47 @@ def resend_for_ethic_review(project_id, record_id, ethic_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             new_send = ProjectEthicReviewSendRecord()
+            new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
             form.populate_obj(new_send)
             new_send.to = send_record.to
             new_send.review_id = send_record.review.id
-            new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
             db.session.add(new_send)
             db.session.commit()
-            flash('The request has been resent.', 'success')
-            return redirect(url_for('webadmin.view_send_ethic_records', project_id=project.id, ethic_id=ethic_id))
-    return render_template('webadmin/send_reviews.html', project=project, form=form, to=send_record.to)
+            serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'),
+                                                         expires_in=3600)
+            token = serializer.dumps({'review_id': send_record.review.id})
+            url = url_for('webadmin.write_ethic_review',
+                              project_id=project.id, review_id=send_record.review.id,
+                              ethic_id=ethic_id, token=token, _external=True)
+            message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
+                .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
+            try:
+                send_mail(new_send.to, title=form.title.data, message=message)
+            except:
+                flash('Failed to send an email to {}'.format(send_record.review.reviewer.email), 'danger')
+            flash('The request has been resent to {}.'.format(new_send.to), 'success')
+            return redirect(url_for('webadmin.view_send_ethic_records',
+                                    project_id=project.id, ethic_id=ethic_id))
+    return render_template('webadmin/send_reviews.html',
+                           project=project, form=form, to=send_record.to)
 
 
 @webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviews/<int:review_id>/add',
                 methods=['GET', 'POST'])
-@superuser
-@login_required
 def write_ethic_review(project_id, ethic_id, review_id):
     project = ProjectRecord.query.get(project_id)
     review = ProjectEthicReviewRecord.query.get(review_id)
+    token = request.args.get('token')
+    serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'))
+    try:
+        token_data = serializer.loads(token)
+    except:
+        return 'Bad JSON Web token. You need a valid token to access this page.'
+    if token_data.get('review_id') != review_id:
+        return 'Invalid JSON Web Token or the token has expired. Please contact the sender for a valid token to access this page.'
     if review.submitted_at:
-        return 'Thanks for reviewing.'
-        '''
-        return redirect(url_for('webadmin.confirm_review',
-                                project_id=project.id, ethic_id=ethic.id))
-        '''
+        return redirect(url_for('webadmin.confirm_review'))
+
     form = ProjectEthicReviewRecordForm()
     if request.method == 'POST':
         if form.validate_on_submit():
