@@ -59,22 +59,24 @@
                     </tbody>
                 </table>
                 <div class="buttons is-centered">
-                    <a href="{{ url_for('researcher.show_profile', user_id=current_user.id) }}" class="button
-                        is-light">Back</a>
+                    <a href="{{ url_for('researcher.show_profile', user_id=current_user.id) }}"
+                       class="button is-medium is-light">Back</a>
+                    {% if current_user.is_authenticated and current_user==user %}
                     <a href="{{ url_for('researcher.remove_pub', pub_id=pub.id) }}"
-                       class="button is-danger">
+                       class="button is-danger is-medium">
                         <span class="icon">
                            <i class="far fa-trash-alt"></i>
                         </span>
                         <span>remove</span>
                     </a>
                     <a href="{{ url_for('researcher.edit_pub', pub_id=pub.id) }}"
-                        class="button is-primary">
+                        class="button is-primary is-medium">
                         <span class="icon">
                             <i class="fas fa-pencil-alt"></i>
                         </span>
                         <span>edit</span>
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
