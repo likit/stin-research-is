@@ -22,11 +22,12 @@
                 {% endif %}
                 <br/>
                 {% if current_user.is_authenticated and current_user.id == user.id %}
-                <a href="{{ url_for('researcher.edit_profile', user_id=user.id) }}">
+                <a href="{{ url_for('researcher.edit_profile', user_id=user.id) }}"
+                    class="button is-rounded is-success">
                     <span class="icon">
                         <i class="fas fa-pencil-alt"></i>
                     </span>
-                    <span>edit</span>
+                    <span>แก้ไขประวัติ</span>
                 </a>
                 {% endif %}
                 <hr>
@@ -62,24 +63,31 @@
                         <table class="table is-fullwidth is-striped is-narrow">
                             {% for ed in user.profile.educations|sort(attribute='year', reverse=True) %}
                             <tr>
-                                <td>Level</td>
-                                <td>{{ ed.degree|title }}</td>
+                                <td class="title is-size-6">Level</td>
+                                <td class="title is-size-6">{{ ed.degree|title }}</td>
                                 <td>
                                     {% if current_user.is_authenticated and current_user.id==user.id %}
-                                    <a href="{{ url_for('researcher.edit_education', edid=ed.id) }}">
+                                    <a href="{{ url_for('researcher.edit_education', edid=ed.id) }}"
+                                        class="button is-small is-primary is-outlined">
                                         <span class="icon">
                                             <i class="fas fa-pencil-alt"></i>
                                         </span>
-                                        <span>edit</span>
+                                        <span>แก้ไข</span>
                                     </a>
-                                    <a href="{{ url_for('researcher.remove_education', edid=ed.id) }}">
+                                    <a href="{{ url_for('researcher.remove_education', edid=ed.id) }}"
+                                       class="button is-small is-outlined is-danger">
                                         <span class="icon">
                                             <i class="fas fa-trash-alt"></i>
                                         </span>
-                                        <span>remove</span>
+                                        <span>ลบทิ้ง</span>
                                     </a>
                                     {% endif %}
                                 </td>
+                            </tr>
+                            <tr>
+                                <td>Title</td>
+                                <td>{{ ed.degree_title|title }}</td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>Year</td>
@@ -109,7 +117,8 @@
                             <tr>
                                 <td></td>
                                 <td>
-                                    <a href="{{ url_for('researcher.add_education', profile_id=user.profile.id) }}">
+                                    <a href="{{ url_for('researcher.add_education', profile_id=user.profile.id) }}"
+                                        class="button is-rounded is-success is-small">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -133,14 +142,15 @@
             <div class="box has-text-centered">
                 <h2 class="title">Publication</h2>
                 {% if current_user.is_authenticated and current_user.id == user.id %}
-                <a href="{{ url_for('researcher.add_pub') }}">
+                <a href="{{ url_for('researcher.add_pub') }}"
+                    class="button is-success is-rounded">
                 <span class="icon">
-                    <i class="fas fa-pencil-alt"></i>
+                    <i class="fas fa-plus"></i>
                 </span>
                     <span>เพิ่มผลงานวิจัยใหม่</span>
                 </a>
                 {% endif %}
-                <table class="table is-striped is-expanded">
+                <table class="table is-striped is-fullwidth">
                     <thead>
                     <th>No.</th>
                     <th>Title</th>
@@ -148,7 +158,7 @@
                     <th>Published</th>
                     </thead>
                     <tbody>
-                    {% for pub in current_user.publications %}
+                    {% for pub in user.publications %}
                     <tr>
                         <td>{{ loop.index }}</td>
                         <td><a href="{{ url_for('researcher.show_pub', pub_id=pub.id) }}">{{ pub.title }}</a></td>
@@ -168,14 +178,15 @@
             <div class="box has-text-centered">
                 <h2 class="title">International Conference Supports</h2>
                 {% if current_user.is_authenticated and current_user.id == user.id %}
-                <a href="{{ url_for('researcher.add_intl_conference_support') }}">
+                <a href="{{ url_for('researcher.add_intl_conference_support') }}"
+                    class="button is-rounded is-success">
                 <span class="icon">
-                    <i class="fas fa-pencil-alt"></i>
+                    <i class="fas fa-plus"></i>
                 </span>
                     <span>ยื่นขออนุมัติเงินสนับสนุน</span>
                 </a>
                 {% endif %}
-                <table class="table is-striped is-expanded">
+                <table class="table is-striped is-fullwidth">
                     <thead>
                     <th>No.</th>
                     <th>ยื่นวันที่</th>
@@ -185,7 +196,7 @@
                     <th>อนุมัติวันที่</th>
                     </thead>
                     <tbody>
-                    {% for support in current_user.intl_conference_supports %}
+                    {% for support in user.intl_conference_supports %}
                     <tr>
                         <td>{{ loop.index }}</td>
                         <td>{{ support.submitted_at|localdatetime }}</td>
