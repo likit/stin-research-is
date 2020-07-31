@@ -48,6 +48,16 @@
             </span>
             <span>preeyanonlk@gmail.com.</span>
         </p>
+        {% if config['DEBUG'] %}
+            <article class="message is-warning">
+                <div class="message-header">
+                    DEBUG MODE Only
+                </div>
+                <div class="message-body">
+                    <strong>Template file:</strong> {{ self._TemplateReference__context.name }}
+                </div>
+            </article>
+        {% endif %}
     </div>
 </footer>
 </body>
