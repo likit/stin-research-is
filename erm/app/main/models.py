@@ -63,3 +63,9 @@ class User(db.Model):
             return sorted(pubs, key=lambda x: x.pub_date, reverse=True)
         else:
             return pubs
+
+
+class MailInfo(db.Model):
+    __tablename__ = 'mail_info'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    signature = db.Column('signature', db.Text())
