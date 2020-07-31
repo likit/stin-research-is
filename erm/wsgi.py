@@ -2,7 +2,7 @@ from app import create_app
 from pytz import timezone
 from flask import render_template
 from app import admin, db
-from app.main.models import User
+from app.main.models import User, MailInfo
 from app.researcher.models import Profile, Program, Department, Education
 from app.project.models import *
 from flask_admin.contrib.sqla import ModelView
@@ -47,7 +47,8 @@ def local_datetime(dt):
     return dt.strftime(datetime_format)
 
 
-admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(User, db.session, category='Main'))
+admin.add_view(ModelView(MailInfo, db.session, category='Main'))
 admin.add_view(ModelView(Profile, db.session, category='Researcher'))
 admin.add_view(ModelView(Program, db.session, category='Researcher'))
 admin.add_view(ModelView(Department, db.session, category='Researcher'))
