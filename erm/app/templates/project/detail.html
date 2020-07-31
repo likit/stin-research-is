@@ -259,11 +259,12 @@
                                 <td>{{ e.submitted_at|localdatetime }}</td>
                                 <td>{{ e.status }}</td>
                                 <td>
-                                    <a href="{{ url_for('project.view_ethic_record', project_id=project.id, ethic_id=e.id) }}">
+                                    <a href="{{ url_for('project.view_ethic_record', project_id=project.id, ethic_id=e.id) }}"
+                                        class="button is-outlined is-primary is-small">
                                         <span class="icon">
                                             <i class="far fa-eye"></i>
                                         </span>
-                                        <span>view</span>
+                                        <span>reviews</span>
                                     </a>
                                 </td>
                             </tr>
