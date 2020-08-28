@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Project Summarized Review Page{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="columns">
+        <div class="column has-text-centered is-two-thirds is-offset-2">
+            <h1 class="title">Project Reviews</h1>
+            {% include "messages.html" %}
+            <div class="box">
+                <table class="table is-fullwidth">
+                    <col width="40">
+                    <col width="50">
+                    <col width="10">
+                    <thead>
+                    <th></th>
+                    <th>ผลการประเมิน</th>
+                    <th>ข้อเสนอแนะ</th>
+                    </thead>
+                    <tr>
+                        <td class="title is-size-5">ความสอดคล้องกับยุทธศาาตร์ฯ</p></td>
+                        <td>{{ review.alignment|replace('|', ', ') }}, {{ review.alignment_other }}</td>
+                        <td>
+                            {{ review.alignment_comment }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">ความสำคัญและที่มาของปัญหาการวิจัย</td>
+                        <td>{{ review.importance}}</td>
+                        <td>
+                            {{ review.importance_comment }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">แนวคิดพื้นฐาน/กรอบทฤษฎีที่ใช้ในการวิจัย</td>
+                        <td>{{ review.idea}}</td>
+                        <td>
+                            {{ review.idea_comment }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">ระเบียบวิธีวิจัย</td>
+                        <td colspan="2">
+                            <table class="table is-striped">
+                                <thead>
+                                <th></th>
+                                <th>ผลการประเมิน</th>
+                                <th>ข้อแนะนำ</th>
+                                </thead>
+                                <tr>
+                                    <td><strong>การเลือกกลุ่มตัวอย่าง</strong></td>
+                                    <td>{{ review.sampling }}</td>
+                                    <td>{{ review.sampling_comment }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>การระบุตัวแปรชนิดต่างๆ</strong></td>
+                                    <td>{{ review.variable }}</td>
+                                    <td>{{ review.variable_comment }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>เครื่องมือการวิจัยฯ</strong></td>
+                                    <td>{{ review.tool }}</td>
+                                    <td>{{ review.tool_comment }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>การเก็บรวบรวมข้อมูล</strong></td>
+                                    <td>{{ review.data_collection }}</td>
+                                    <td>{{ review.data_collection_comment }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>วิธีการวิเคราะห์ข้อมูล</strong></td>
+                                    <td>{{ review.data_analyze }}</td>
+                                    <td>{{ review.data_analyze_comment }}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">แผนการดำเนินการวิจัย</td>
+                        <td>{{ review.plan}}</td>
+                        <td>
+                            {{ review.plan_comment }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">ผลผลิตจากการวิจัย</td>
+                        <td>{{ review.outcome}}</td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">รายการผลผลิตจากการวิจัย</td>
+                        <td>{{ review.outcome_detail|replace('|', ', ') }}, {{ review.outcome_detail_other }}</td>
+                        <td>
+                            {{ review.outcome_comment }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">ประโยชน์ที่คาดว่าจะได้รับ</td>
+                        <td>{{ review.benefit}}</td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">รายการประโยชน์ที่คาดว่าจะได้รับ</td>
+                        <td>{{ review.benefit_detail|replace('|', ', ') }}, {{ review.benefit_detail_other }}</td>
+                        <td>
+                            {{ review.benefit_comment }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">สรุป</td>
+                        <td>{{ review.comment or '' }}</td>
+                        <td>
+                            {% if review.comment %}
+                            <span class="icon">
+                                <i class="fas fa-check has-text-success"></i>
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">เผยแพร่เมื่อ</td>
+                        {% if review.released_at %}
+                        <td>{{ review.released_at|localdatetime }}</td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">Decision</td>
+                        <td><strong class="has-text-info">{{ review.status|title }}</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% block navigation %}
+    <div class="columns">
+        <div class="column is-one-third is-offset-4 has-text-centered">
+            <div class="buttons is-centered">
+                <a href="{{ url_for('project.display_project', project_id=project.id) }}" class="button is-light">
+                        <span class="icon">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    <span>Back</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</section>
+{% endblock %}
