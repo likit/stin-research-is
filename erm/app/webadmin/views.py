@@ -133,12 +133,48 @@ def remove_all_reviewers(project_id):
     return redirect(request.referrer)
 
 
-@webadmin.route('/submissions/<int:project_id>/reviews')
+@webadmin.route('/submissions/<int:project_id>/reviews', methods=['GET', 'POST'])
 @superuser
 @login_required
 def view_reviews(project_id):
     project = ProjectRecord.query.get(project_id)
-    return render_template('webadmin/reviews.html', project=project)
+    review = ProjectReviewRecord.query.filter_by(project_id=project.id,
+                                                 summarized=True).first()
+    if review:
+        form = ProjectReviewRecordForm(obj=review)
+        form.alignment_select.data = review.alignment.split('|')
+        form.outcome_detail_select.data = review.outcome_detail.split('|')
+        form.benefit_detail_select.data = review.benefit_detail.split('|')
+        released = request.args.get('released', 'no')
+        if (released == 'yes') and (review.released_at is None):
+            review.released_at = arrow.now(tz='Asia/Bangkok').datetime
+            db.session.add(review)
+            db.session.commit()
+            flash('The review has been released.', 'success')
+    else:
+        form = ProjectReviewRecordForm()
+
+    if request.method == 'POST':
+        print(form.alignment_select.data)
+        print(form.outcome_detail_select.data)
+        print(form.benefit_detail_select.data)
+        if form.validate_on_submit():
+            if review is None:
+                review = ProjectReviewRecord()
+            form.populate_obj(review)
+            review.summarized = True
+            review.project = project
+            review.alignment = '|'.join(form.alignment_select.data)
+            review.outcome_detail = '|'.join(form.outcome_detail_select.data)
+            review.benefit_detail = '|'.join(form.benefit_detail_select.data)
+            review.submitted_at = arrow.now(tz='Asia/Bangkok').datetime
+            db.session.add(review)
+            db.session.commit()
+            flash('Review has been saved.', 'success')
+        else:
+            # flash('โปรดกรอกข้อมูลที่จำเป็นให้ครบ', 'danger')
+            flash(form.errors, 'danger')
+    return render_template('webadmin/reviews.html', project=project, form=form, review=review)
 
 
 @webadmin.route('/submissions/<int:project_id>/reviews/send', methods=['GET', 'POST'])

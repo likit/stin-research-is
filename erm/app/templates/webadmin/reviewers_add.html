@@ -19,7 +19,11 @@
                 </h1>
                 <p>
                     {% for member in project.members %}
+                    {% if member.user %}
                     {{ member.user.profile.fullname_th }} ({{ member.role }}),
+                    {% else %}
+                    {{ member.fullname }} ({{ member.role }}),
+                    {% endif %}
                     {% endfor %}
                 </p>
             </div>

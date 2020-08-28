@@ -8,6 +8,7 @@
     <div class="columns">
         <div class="column has-text-centered is-two-thirds is-offset-2">
             <h1 class="title">Project Reviews</h1>
+            {% include "messages.html" %}
             {% for review in project.reviews %}
             <div class="box">
                 <table class="table is-fullwidth">
@@ -25,7 +26,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5">ความสอดคล้องกับยุทธศาาตร์ฯ</td>
+                        <td class="title is-size-5">ความสอดคล้องกับยุทธศาาตร์ฯ</p></td>
                         <td>{{ review.alignment|replace('|', ', ') }}, {{ review.alignment_other }}</td>
                         <td>
                             {{ review.alignment_comment }}
@@ -161,5 +162,273 @@
         </div>
     </div>
     {% endblock %}
+</section>
+<section class="section">
+    <div class="container">
+        <div class="column is-two-thirds is-offset-2">
+            <h1 class="title">สรุปผลการพิจารณาโครงการ</h1>
+            <div class="box">
+                <h1 class="title has-text-centered">Write Review</h1>
+                <hr>
+                <form method="post">
+                    {{ form.csrf_token }}
+                    <div class="field">
+                        <p class="help has-text-danger">Required</p>
+                        <label class="label">{{ form.alignment_select.label }}</label>
+                        <div class="control">
+                            {{ form.alignment_select }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.alignment_other.label }}</label>
+                        <div class="control">
+                            {{ form.alignment_other(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.alignment_comment.label }}</label>
+                        <div class="control">
+                            {{ form.alignment_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.importance.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.importance() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.importance_comment.label }}</label>
+                        <div class="control">
+                            {{ form.importance_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.objective.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.objective() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.objective_comment.label }}</label>
+                        <div class="control">
+                            {{ form.objective_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.idea.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.idea() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.idea_comment.label }}</label>
+                        <div class="control">
+                            {{ form.idea_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.objective.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.objective() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.objective_comment.label }}</label>
+                        <div class="control">
+                            {{ form.objective_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.sampling.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.sampling() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.sampling_comment.label }}</label>
+                        <div class="control">
+                            {{ form.sampling_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.variable.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.variable() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.variable_comment.label }}</label>
+                        <div class="control">
+                            {{ form.variable_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.tool.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.tool() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.tool_comment.label }}</label>
+                        <div class="control">
+                            {{ form.tool_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.data_collection.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.data_collection() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.data_collection_comment.label }}</label>
+                        <div class="control">
+                            {{ form.data_collection_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.data_analyze.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.data_analyze() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.data_analyze_comment.label }}</label>
+                        <div class="control">
+                            {{ form.data_analyze_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.plan.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.plan() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.plan_comment.label }}</label>
+                        <div class="control">
+                            {{ form.plan_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.outcome.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.outcome() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <p class="help has-text-danger">Required</p>
+                        <label class="label">{{ form.outcome_detail_select.label }}</label>
+                        <div class="control">
+                            {{ form.outcome_detail_select() }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.outcome_comment.label }}</label>
+                        <div class="control">
+                            {{ form.outcome_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.benefit.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.benefit() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <p class="help has-text-danger">Required</p>
+                        <label class="label">{{ form.benefit_detail_select.label }}</label>
+                        <div class="control">
+                            {{ form.benefit_detail_select() }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.benefit_comment.label }}</label>
+                        <div class="control">
+                            {{ form.benefit_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.budget.label }}</label>
+                        <div class="control">
+                            <div class="select">
+                                {{ form.budget() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.budget_comment.label }}</label>
+                        <div class="control">
+                            {{ form.budget_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.comment.label }}</label>
+                        <div class="control">
+                            {{ form.comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.status.label }}</label>
+                        <div class="select">
+                            {{ form.status() }}
+                        </div>
+                    </div>
+                    <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                            <button type="submit" class="button is-success">Submit</button>
+                        </div>
+                        {% if review %}
+                        {% if not review.released_at %}
+                        <div class="control">
+                            <a href="{{ url_for('webadmin.view_reviews', released='yes', project_id=project.id) }}"
+                               class="button is-link">Release</a>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock %}

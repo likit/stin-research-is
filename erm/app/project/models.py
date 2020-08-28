@@ -114,7 +114,12 @@ class ProjectRecord(db.Model):
 
     @property
     def reviewers(self):
-        return set([review.reviewer for review in self.reviews])
+        return set([review.reviewer for review in self.reviews if review.reviewer is not None])
+
+    @property
+    def summarized_review_ready(self):
+        review = [r for r in self.reviews if r.summarized]
+        return len(review) > 0
 
     @property
     def ethic_reviewers(self):
@@ -476,6 +481,8 @@ class ProjectReviewRecord(db.Model):
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     reviewer = db.relationship('ProjectReviewer', backref=db.backref('records'))
     project = db.relationship('ProjectRecord', backref=db.backref('reviews'))
+    summarized = db.Column('summarized', db.Boolean(), default=False)
+    released_at = db.Column('released_at', db.DateTime(timezone=True))
 
 
 class ProjectReviewSendRecord(db.Model):

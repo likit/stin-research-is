@@ -115,6 +115,7 @@ def display_project(project_id):
 @login_required
 def edit_project(project_id):
     project = ProjectRecord.query.get(project_id)
+
     def edit_project_form_factory(project):
         class EditProjectRecordForm(ProjectRecordForm):
             parent = QuerySelectField(
@@ -124,7 +125,9 @@ def edit_project(project_id):
                 blank_text='โครงการเดี่ยว',
                 default=project.parent_project
             )
+
         return EditProjectRecordForm
+
     EditProjectRecordForm = edit_project_form_factory(project)
     form = EditProjectRecordForm(obj=project)
     title = 'Edit Project Record'
@@ -186,6 +189,7 @@ def edit_parent_project(project_id):
             flash(form.errors, 'danger')
     return render_template('project/project_parent_add.html', form=form)
 
+
 @project.route('/parents')
 @login_required
 def list_parent_projects():
@@ -220,6 +224,7 @@ def add_project():
             flash('Error occurred.', 'danger')
         return redirect(url_for('project.display_project', project_id=new_proj.id))
     return render_template('project/project_edit.html', form=form, title=title)
+
 
 @project.route('/<int:project_id>/member/add', methods=['GET', 'POST'])
 @login_required
@@ -364,10 +369,10 @@ def remove_figure(figure_id):
 @login_required
 def submit_project(project_id):
     project = ProjectRecord.query.get(project_id)
-    if project.status == 'draft' or\
+    if project.status == 'draft' or \
             project.status == 'concept revising':
         project.status = 'concept submitted'
-    elif project.status == 'concept approved' or\
+    elif project.status == 'concept approved' or \
             project.status == 'full revising':
         project.status = 'full submitted'
 
@@ -452,8 +457,8 @@ def edit_milestone(project_id, milestone_id):
 @project.route('/<int:project_id>/milestones/clone')
 @login_required
 def clone_milestone(project_id):
-    milestone = ProjectMilestone.query.filter_by(project_id=project_id)\
-                    .order_by(ProjectMilestone.created_at.desc()).first()
+    milestone = ProjectMilestone.query.filter_by(project_id=project_id) \
+        .order_by(ProjectMilestone.created_at.desc()).first()
     if milestone:
         new_milestone = ProjectMilestone()
         new_milestone.project_id = milestone.project_id
@@ -503,13 +508,13 @@ def clone_milestone(project_id):
 def list_gantt_activity(project_id, milestone_id):
     milestone = ProjectMilestone.query.get(milestone_id)
     activities = dict([(1, '1. พัฒนาโครงร่างการวิจัยและเครื่องมือการวิจัย'),
-                        (2, '2. เสนอโครงร่างการวิจัยเพื่อขอรับการพิจารณาจริยธรรมฯ'),
-                        (3, '3. เสนอขอรับทุนอุดหนุนการวิจัย'),
-                        (4, '4. ผู้ทรงคุณวุฒิตรวจสอบและแก้ไข'),
-                        (5, '5. ติดต่อประสานงานเพื่อขอเก็บข้อมูล'),
-                        (6, '6. ดำเนินการเก็บรวบรวมข้อมูล'),
-                        (7, '7. วิเคราะห์ผลการวิจัยและอภิปรายผล'),
-                        (8, '8. จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย')]
+                       (2, '2. เสนอโครงร่างการวิจัยเพื่อขอรับการพิจารณาจริยธรรมฯ'),
+                       (3, '3. เสนอขอรับทุนอุดหนุนการวิจัย'),
+                       (4, '4. ผู้ทรงคุณวุฒิตรวจสอบและแก้ไข'),
+                       (5, '5. ติดต่อประสานงานเพื่อขอเก็บข้อมูล'),
+                       (6, '6. ดำเนินการเก็บรวบรวมข้อมูล'),
+                       (7, '7. วิเคราะห์ผลการวิจัยและอภิปรายผล'),
+                       (8, '8. จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย')]
                       )
     gantt_activities = []
     for a in sorted(milestone.gantt_activities, key=lambda x: x.task_id):
@@ -549,7 +554,8 @@ def add_gantt_activity(project_id, milestone_id):
                            project_id=project_id, milestone_id=milestone_id)
 
 
-@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/gantt-activities/<int:record_id>/edit', methods=['GET', 'POST'])
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/gantt-activities/<int:record_id>/edit',
+               methods=['GET', 'POST'])
 @login_required
 def edit_gantt_activity(project_id, milestone_id, record_id):
     record = ProjectGanttActivity.query.get(record_id)
@@ -618,7 +624,8 @@ def add_budget_item(project_id, milestone_id):
                            project_id=project_id, milestone_id=milestone_id)
 
 
-@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/budgets/<int:item_id>/edit', methods=['GET', 'POST'])
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/budgets/<int:item_id>/edit',
+               methods=['GET', 'POST'])
 @login_required
 def edit_budget_item(project_id, milestone_id, item_id):
     item = ProjectBudgetItem.query.get(item_id)
@@ -793,7 +800,6 @@ def edit_pub_authors(project_id, pub_id):
     return render_template('webadmin/pub_author_edit.html', pub=pub, project_id=project_id)
 
 
-
 @project.route('/projects/<int:project_id>/pubs/<int:pub_id>/authors/<int:author_id>/remove')
 @login_required
 def remove_pub_author(project_id, pub_id, author_id):
@@ -803,7 +809,7 @@ def remove_pub_author(project_id, pub_id, author_id):
         db.session.commit()
         flash('Author has been deleted from publication', 'success')
     else:
-        flash('The author with that ID was not found.', 'danger',)
+        flash('The author with that ID was not found.', 'danger', )
     return redirect(url_for('project.edit_pub_authors', project_id=project_id, pub_id=pub_id))
 
 
@@ -927,7 +933,6 @@ def add_proposal_development_support(project_id):
                            project_id=project_id, form=form)
 
 
-
 @project.route('/<int:project_id>/export')
 @login_required
 def export_docx(project_id):
@@ -971,6 +976,7 @@ def export_docx(project_id):
         out_stream = BytesIO()
         doc.save(out_stream)
         return out_stream.getvalue()
+
     return Response(generate(),
                     mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
 
@@ -979,4 +985,6 @@ def export_docx(project_id):
 @login_required
 def view_reviews(project_id):
     project = ProjectRecord.query.get(project_id)
-    return render_template('project/reviews.html', project=project)
+    review = ProjectReviewRecord.query.filter_by(
+        project_id=project.id, summarized=True).first()
+    return render_template('project/summarized_review.html', project=project, review=review)

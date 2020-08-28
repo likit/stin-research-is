@@ -678,10 +678,12 @@
                 <tr>
                     <td class="title is-size-5">Project Reviews</td>
                     <td>
+                        {% if project.summarized_review_ready %}
                         <a class="button is-primary is-outlined"
                             href="{{ url_for('project.view_reviews', project_id=project.id) }}">
-                            <span>view ({{ project.reviews|length }})</span>
+                            <span>See review</span>
                         </a>
+                        {% endif %}
                     </td>
                 </tr>
                 <tr>
