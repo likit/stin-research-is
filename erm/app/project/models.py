@@ -382,6 +382,7 @@ class ProjectReviewRecord(db.Model):
     reviewer_id = db.Column('reviewer_id', db.ForeignKey('project_reviewers.id'))
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     comment = db.Column('comment', db.Text(), info={'label': 'สรุปความคิดเห็นและข้อเสนอแนะอื่นๆ'})
+    title_comment = db.Column('title_comment', db.Text(), info={'label': 'ความเห็นเกี่ยวกับชื่อโครงการ'})
     status = db.Column('status', db.String(), default='pending',
                        info={
                            'label': 'Decision',

@@ -33,6 +33,12 @@
                         </td>
                     </tr>
                     <tr>
+                        <td class="title is-size-5">ความเห็นเกี่ยวกับชื่อโครงการวิจัย</td>
+                        <td colspan="2">
+                            {{ review.title_comment }}
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="title is-size-5">ความสำคัญและที่มาของปัญหาการวิจัย</td>
                         <td>{{ review.importance}}</td>
                         <td>
@@ -189,6 +195,13 @@
                         <label class="label">{{ form.alignment_comment.label }}</label>
                         <div class="control">
                             {{ form.alignment_comment(class="textarea") }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">{{ form.title_comment.label }}</label>
+                        <div class="control">
+                            {{ form.title_comment(class="textarea") }}
                         </div>
                     </div>
                     <hr>

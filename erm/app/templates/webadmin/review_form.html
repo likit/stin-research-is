@@ -15,13 +15,20 @@
                     <h1 class="title has-text-centered">Project Detail</h1>
                     <table class="table is-fullwidth is-striped">
                         <tr>
-                            <td class="title is-size-5" width="20%">English Title</td><td>{{ project.title_en }}</td>
+                            <td class="title is-size-5" width="20%">Thai Title</td>
+                            <td><h1 class="title is-size-4">{{ project.title_th }}</h1></td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">Thai Subtitle</td><td>{{ project.subtitle_th }}</td>
+                            <td class="title is-size-5" width="20%">Thai Subtitle</td>
+                            <td>{{ project.subtitle_th }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">English Subtitle</td><td>{{ project.subtitle_en }}</td>
+                            <td class="title is-size-5" width="20%">English Title</td>
+                            <td>{{ project.title_en }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">English Subtitle</td>
+                            <td>{{ project.subtitle_en }}</td>
                         </tr>
                         <tr>
                             <td class="title is-size-5" width="20%">Abstract</td>
@@ -198,6 +205,13 @@
                             <label class="label">{{ form.alignment_comment.label }}</label>
                             <div class="control">
                                 {{ form.alignment_comment(class="textarea") }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="field">
+                            <label class="label">{{ form.title_comment.label }}</label>
+                            <div class="control">
+                                {{ form.title_comment(class="textarea") }}
                             </div>
                         </div>
                         <hr>
