@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block title %}{{ title }} Page{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+{% endblock %}
+
 {% block page_content %}
 {% include "nav.html" %}
 <section class="section">
     <div class="columns">
-        <div class="column is-half is-offset-one-quarter">
+        <div class="column is-two-thirds is-offset-2">
             <h1 class="title has-text-centered">{{ title }}</h1>
             <form method="post" enctype=multipart/form-data>
                 {{ form.csrf_token }}
@@ -55,13 +61,15 @@
                             <label class="label">{{ form.mentor.label }}</label>
                             <div class="control">
                                 {{ form.mentor(class="input") }}
-                                <p class="help is-info">สำหรับทุนนักวิจัยรุ่นใหม่</p>
+                                <p class="help is-danger">สำหรับทุนนักวิจัยรุ่นใหม่</p>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">{{ form.abstract.label }}</label>
                             <div class="control">
-                                {{ form.abstract(placehoder="Abstract", class="textarea") }}
+                                <div class="content">
+                                    {{ form.abstract(placeholder="Abstract", class="textarea", id="abstract-editor") }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -74,19 +82,25 @@
                         <div class="field">
                             <label class="label">{{ form.intro.label }}</label>
                             <div class="control">
-                                {{ form.intro(placehoder="Introduction", class="textarea") }}
+                                <div class="content">
+                                    {{ form.intro(placeholder="Introduction", class="textarea", id="intro-editor") }}
+                                </div>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">{{ form.objective.label }}</label>
                             <div class="control">
-                                {{ form.objective(placehoder="Objective", class="textarea") }}
+                                <div class="content">
+                                    {{ form.objective(placeholder="Objective", class="textarea", id="objective-editor") }}
+                                </div>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">{{ form.method.label }}</label>
                             <div class="control">
-                                {{ form.method(placehoder="Method", class="textarea") }}
+                                <div class="content">
+                                    {{ form.method(placeholder="Method", class="textarea", id="method-editor") }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -170,4 +184,27 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#abstract-editor').summernote({
+            height: 400
+        })
+        $('#intro-editor').summernote({
+            height: 400
+        })
+        $('#objective-editor').summernote({
+            height: 400
+        })
+        $('#method-editor').summernote({
+            height: 400
+        })
+    })
+</script>
 {% endblock %}

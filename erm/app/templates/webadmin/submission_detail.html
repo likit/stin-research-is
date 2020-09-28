@@ -37,16 +37,20 @@
                         <td class="title is-size-5" width="20%">English Subtitle</td><td>{{ project.subtitle_en }}</td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5" width="20%">Abstract</td><td>{{ project.abstract }}</td>
+                        <td class="title is-size-5" width="20%">Abstract</td>
+                        <td class="content">{{ project.abstract|safe }}</td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5" width="20%">Introduction</td><td>{{ project.intro }}</td>
+                        <td class="title is-size-5" width="20%">Introduction</td>
+                        <td class="content">{{ project.intro|safe }}</td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5" width="20%">Objective</td><td>{{ project.objective }}</td>
+                        <td class="title is-size-5" width="20%">Objective</td>
+                        <td class="content">{{ project.objective|safe }}</td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5" width="20%">Method</td><td>{{ project.method }}</td>
+                        <td class="title is-size-5" width="20%">Method</td>
+                        <td class="content">{{ project.method|safe }}</td>
                     </tr>
                     <tr>
                         <td class="title is-size-5" width="20%">Created at</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
