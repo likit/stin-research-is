@@ -615,9 +615,9 @@
                 <tr>
                     <td class="title is-size-5">หมายเลขสัญญา</td>
                     <td>
-                        {{ project.contract_no or '-' }}
                         {% if project.contract_url %}
-                        <a href="https://drive.google.com/uc?id={{ project.contract_url }}">
+                        <a href="https://drive.google.com/uc?id={{ project.contract_url }}"
+                            target="_blank">
                             <span class="icon">
                                 <i class="far fa-file-alt"></i>
                             </span>
@@ -700,6 +700,20 @@
                             </span>
                             <span>Export DOCX</span>
                         </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">รายงานฉบับสมบูรณ์</td>
+                    <td>
+                        {% if project.final_report_url %}
+                        <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
+                            target="_blank">
+                            <span class="icon">
+                                <i class="far fa-file-alt"></i>
+                            </span>
+                            <span>ไฟล์รายงาน</span>
+                        </a>
+                        {% endif %}
                     </td>
                 </tr>
             </table>

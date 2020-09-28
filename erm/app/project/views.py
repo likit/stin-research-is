@@ -136,6 +136,7 @@ def edit_project(project_id):
             form.populate_obj(project)
             project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
             project.parent_project = form.parent.data
+
             if form.contract_upload.data:
                 upfile = form.contract_upload.data
                 filename = secure_filename(upfile.filename)
@@ -147,6 +148,18 @@ def edit_project(project_id):
                                                           'value': 'anyone',
                                                           'role': 'reader'})
                 project.contract_url = file_drive['id']
+
+            if form.final_report_upload.data:
+                upfile = form.final_report_upload.data
+                filename = secure_filename(upfile.filename)
+                upfile.save(filename)
+                file_drive = drive.CreateFile({'title': filename})
+                file_drive.SetContentFile(filename)
+                file_drive.Upload()
+                permission = file_drive.InsertPermission({'type': 'anyone',
+                                                          'value': 'anyone',
+                                                          'role': 'reader'})
+                project.final_report_url = file_drive['id']
             db.session.add(project)
             db.session.commit()
             flash('Data have been updated.', 'success')

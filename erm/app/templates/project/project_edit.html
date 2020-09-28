@@ -152,6 +152,23 @@
                         </div>
                     </div>
                 </article>
+                <article class="message is-warning">
+                    <div class="message-header">
+                        Upload รายงานฉบับสมบูรณ์
+                    </div>
+                    <div class="message-body">
+                        <div class="field">
+                            <label class="label">{{ form.final_report_upload.label }}</label>
+                            <div class="control">
+                                {% if project.status != 'full approved' %}
+                                {{ form.final_report_upload(disabled=True) }}
+                                {% else %}
+                                {{ form.final_report_upload(disabled=False) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </article>
                 {% endif %}
                 {% if current_user.role == 1 %}
                 <div class="field">
