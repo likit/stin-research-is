@@ -36,6 +36,7 @@ class ProjectRecordForm(ModelForm):
                               query_factory=lambda: ProjectFundSource.query.all(),
                               widget=Select())
     contract_upload = FileField('Upload เอกสารสัญญา')
+    final_report_upload = FileField('Upload รายงานฉบับสมบูรณ์')
 
 
 class ApplicationForm(ModelForm):
