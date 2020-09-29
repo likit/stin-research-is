@@ -182,3 +182,9 @@ class ProjectProposalDevelopmentSupportForm(ModelForm):
 
 class EthicRecordForm(ModelForm):
     file_upload = FileField('Upload เอกสาร')
+
+
+class SupplementaryDocumentForm(ModelForm):
+    class Meta:
+        model = ProjectSupplementaryDocument
+    file_upload = FileField('Upload เอกสาร')

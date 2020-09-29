@@ -730,3 +730,13 @@ class ProjectProposalDevelopmentSupport(db.Model):
     edited_at = db.Column('edited_at', db.DateTime(timezone=True))
     approved_at = db.Column('approved_at', db.DateTime(timezone=True))
     contract_file_url = db.Column('contract_file_url', db.String())
+
+
+class ProjectSupplementaryDocument(db.Model):
+    __tablename__ = 'project_supplementary_docs'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    filename = db.Column('filename', db.String(), info={'label': 'ชื่อไฟล์'})
+    desc = db.Column('desc', db.Text(), info={'label': 'รายละเอียด'})
+    file_url = db.Column('file_url', db.String(), info={'label': 'URL'})
+    project = db.relationship('ProjectRecord', backref=db.backref('supplementary_docs'))
