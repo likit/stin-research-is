@@ -35,6 +35,8 @@ def handle_bad_request_error(e):
 
 @app.template_filter("localdatetime")
 def local_datetime(dt):
+    if dt is None:
+        return ''
     bangkok = timezone('Asia/Bangkok')
     datetime_format = '%d/%m/%Y %H:%M'
     return dt.astimezone(bangkok).strftime(datetime_format)
