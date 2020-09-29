@@ -80,10 +80,20 @@ class ProjectRecord(db.Model):
                                   db.ForeignKey('parent_projects.id'),
                                   default=None)
     parent_project = db.relationship(ParentProjectRecord, backref=db.backref('children_projects'))
-    objective = db.Column('objective', db.Text(), info={'label': 'วัตถุประสงค์'})
+    objective = db.Column('objective', db.Text(), info={'label': 'วัตถุประสงค์ของโครงการวิจัย'})
     abstract = db.Column('abstract', db.Text(), info={'label': 'บทคัดย่อ'})
-    intro = db.Column('introduction', db.Text(), info={'label': 'บทนำ'})
+    intro = db.Column('introduction', db.Text(), info={'label': 'ความสำคัญและที่มาของปัญหาที่ทำการวิจัย'})
     method = db.Column('method', db.Text(), info={'label': 'ระเบียบวิธีวิจัย'})
+    research_type = db.Column('research_type', db.String(), info={'label': 'ประเภทงานวิจัย'})
+    research_cluster = db.Column('research_cluster', db.String(), info={'label': 'สาขาวิชาการและกลุ่มที่ทำวิจัย'})
+    keywords = db.Column('keywords', db.String(), info={'label': 'คำสำคัญของโครงการวิจัย'})
+    scope = db.Column('scope', db.Text(), info={'label': 'ขอบเขตของโครงการวิจัย'})
+    glossary = db.Column('glossary', db.Text(), info={'label': 'นิยามคำศัพท์'})
+    conceptual_framework = db.Column('conceptual_framework', db.Text(),
+                                     info={'label': 'ทฤษฎี สมมุติฐาน (ถ้ามี) กรอบแนวคิดของโครงการวิจัย'})
+    literature_review = db.Column('literature_review', db.Text(),
+                                     info={'label': 'การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง'})
+    references = db.Column('references', db.Text(), info={'label': 'เอกสารอ้างอิง'})
     status = db.Column('status', db.String(),
                        info={'label': 'สถานะโครงการ',
                              'choices': [(i, i) for i in ['draft',
