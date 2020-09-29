@@ -209,19 +209,25 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
 <script>
+    let toolbar = [
+            // [groupName, [list of button]]
+            ['style', ['style']],
+            ['table', ['table']],
+            ['font', ['bold', 'underline', 'strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']]
+        ]
+    let options = {
+        height: 400,
+        toolbar: toolbar
+    }
     $(document).ready(function() {
-        $('#abstract-editor').summernote({
-            height: 400
-        })
-        $('#intro-editor').summernote({
-            height: 400
-        })
-        $('#objective-editor').summernote({
-            height: 400
-        })
-        $('#method-editor').summernote({
-            height: 400
-        })
+        $('#abstract-editor').summernote(options)
+        $('#intro-editor').summernote(options)
+        $('#objective-editor').summernote(options)
+        $('#method-editor').summernote(options)
     })
 </script>
 {% endblock %}
