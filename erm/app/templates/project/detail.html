@@ -750,6 +750,48 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="title is-size-5">Supplementary Documents</td>
+                    <td>
+                        <table class="table">
+                            <thead>
+                            <th>ชื่อเอกสาร</th>
+                            <th>คำอธิบาย</th>
+                            <th>ไฟล์</th>
+                            </thead>
+                            <tbody>
+                            {% for sup in project.supplementary_docs %}
+                            <tr>
+                                <td>{{ sup.filename }}</td>
+                                <td>{{ sup.desc }}</td>
+                                <td>
+                                    <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
+                                       target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                        <span>view</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% if project.status != 'approved' %}
+                            <tr>
+                                <td colspan="3" class="has-text-centered">
+                                    <a class="button is-small is-rounded is-success is-outlined"
+                                       href="{{ url_for('project.add_supplementary_doc', project_id=project.id) }}"
+                                    >
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span><span>เพิ่มไฟล์</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
                     <td class="title is-size-5">รายงานฉบับสมบูรณ์</td>
                     <td>
                         {% if project.final_report_url %}

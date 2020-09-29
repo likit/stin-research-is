@@ -1,10 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Project: Upload Supplementary Documents{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">Your projects</a></li>
+                    <li><a href="{{ url_for('project.display_project', project_id=project.id) }}">This Project</a></li>
+                    <li class="is-active"><a aria-current="page">Supplementary Documents</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="container has-text-centered">
+                <h1 class="title">Supplementary Files Upload</h1>
+                <div class="box">
+                    <form method="post" enctype="multipart/form-data">
+                        {{ form.csrf_token }}
+                        <table class="table is-fullwidth">
+                            <tr>
+                                <td>{{ form.filename.label }}</td>
+                                <td>{{ form.filename(class="input") }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ form.desc.label }}</td>
+                                <td>{{ form.desc(class="textarea") }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ form.file_upload.label }}</td>
+                                <td>
+                                    {{ form.file_upload() }}
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="buttons is-centered">
+                            <a class="button is-light"
+                               href="{{ url_for('project.display_project', project_id=project.id) }}">
+                                Cancel
+                            </a>
+                            <button class="button is-success" type="submit">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

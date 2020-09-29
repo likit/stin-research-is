@@ -1021,3 +1021,30 @@ def view_reviews(project_id):
     review = ProjectReviewRecord.query.filter_by(
         project_id=project.id, summarized=True).first()
     return render_template('project/summarized_review.html', project=project, review=review)
+
+
+@project.route('/<int:project_id>/supplementary', methods=['GET', 'POST'])
+@login_required
+def add_supplementary_doc(project_id):
+    project = ProjectRecord.query.get(project_id)
+    form = SupplementaryDocumentForm()
+    if request.method == 'POST':
+        sup = ProjectSupplementaryDocument()
+        form.populate_obj(sup)
+        sup.project = project
+        if form.file_upload.data:
+            upfile = form.file_upload.data
+            filename = secure_filename(upfile.filename)
+            upfile.save(filename)
+            file_drive = drive.CreateFile({'title': filename})
+            file_drive.SetContentFile(filename)
+            file_drive.Upload()
+            permission = file_drive.InsertPermission({'type': 'anyone',
+                                                      'value': 'anyone',
+                                                      'role': 'reader'})
+            sup.file_url = file_drive['id']
+            db.session.add(sup)
+            db.session.commit()
+            flash('ไฟล์ได้รับการบันทึกในระบบแล้ว', 'success')
+        return redirect(url_for('project.display_project', project_id=project.id))
+    return render_template('project/supplementary_form.html', form=form, project=project)
