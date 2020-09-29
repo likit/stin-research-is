@@ -1048,3 +1048,21 @@ def add_supplementary_doc(project_id):
             flash('ไฟล์ได้รับการบันทึกในระบบแล้ว', 'success')
         return redirect(url_for('project.display_project', project_id=project.id))
     return render_template('project/supplementary_form.html', form=form, project=project)
+
+
+@project.route('/<int:project_id>/overall_budgets/add', methods=['GET', 'POST'])
+@login_required
+def add_overall_budget_item(project_id):
+    project = ProjectRecord.query.get(project_id)
+    form = ProjectBudgetItemOverallForm()
+    if request.method == 'POST':
+        item = ProjectBudgetItemOverall()
+        form.populate_obj(item)
+        item.project = project
+        item.created_at = arrow.now(tz='Asia/Bangkok').datetime
+        item.edited_at = arrow.now(tz='Asia/Bangkok').datetime
+        db.session.add(item)
+        db.session.commit()
+        flash('รายการงบการเงินได้รับการบันทึกเรียบร้อยแล้ว', 'success')
+        return redirect(url_for('project.display_project', project_id=project.id))
+    return render_template('project/overall_budget_form.html', form=form, project=project)

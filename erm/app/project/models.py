@@ -341,17 +341,31 @@ class ProjectBudgetItem(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     sub_category_id = db.Column('sub_category_id', db.ForeignKey('project_budget_sub_category.id'))
     sub_category = db.relationship(ProjectBudgetSubCategory, backref=db.backref('items'))
-    item = db.Column('item', db.String())
+    item = db.Column('item', db.String(), info={'label': 'หมายเหตุ'})
     phase = db.Column('phase', db.String(),
                       info={'label': 'งวด',
                             'choices': [('1', 'งวดที่ 1'), ('2', 'งวดที่ 2'),
                                         ('3', 'งวดที่ 3'), ('4', 'งวดที่ 4')]})
-    wage = db.Column('wage', db.Numeric(), default=0.0, info={'label': 'ค่าตอบแทน (บาท)'})
+    wage = db.Column('wage', db.Numeric(), default=0.0, info={'label': 'จำนวนเงิน (บาท)'})
     amount_spent = db.Column('amount_spent', db.Numeric(), default=0.0, info={'label': 'งบประมาณที่ใช้ไปแล้ว (บาท)'})
     created_at = db.Column('created_at', db.DateTime(timezone=True))
     edited_at = db.Column('edited_at', db.DateTime(timezone=True))
     milestone_id = db.Column('milestone_id', db.ForeignKey('project_milestone.id'))
     milestone = db.relationship(ProjectMilestone, backref=db.backref('budget_items'))
+
+
+class ProjectBudgetItemOverall(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    sub_category_id = db.Column('sub_category_id', db.ForeignKey('project_budget_sub_category.id'))
+    sub_category = db.relationship(ProjectBudgetSubCategory, backref=db.backref('overall_items'))
+    wage = db.Column('wage', db.Numeric(), default=0.0, info={'label': 'จำนวนเงิน (บาท)'})
+    created_at = db.Column('created_at', db.DateTime(timezone=True))
+    edited_at = db.Column('edited_at', db.DateTime(timezone=True))
+    item = db.Column('item', db.String(), info={'label': 'หมายเหตุ'})
+    phase = db.Column('phase', db.String(), default='0')
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    project = db.relationship('ProjectRecord', backref=db.backref('overall_budgets'))
+
 
 
 reviewer_groups = db.Table('reviewer_groups',

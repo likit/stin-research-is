@@ -143,6 +143,39 @@
                     <td class="content">{{ project.method|safe }}</td>
                 </tr>
                 <tr>
+                    <td class="title is-size-5" width="20%">งบประมาณ</td>
+                    <td>
+                        <table class="table is-fullwidth">
+                            <thead>
+                            <th>รายการ</th>
+                            <th>จำนวนเงิน</th>
+                            <th>หมายเหตุ</th>
+                            </thead>
+                            <tbody>
+                            {% for budget in project.overall_budgets %}
+                            <tr>
+                                <td>{{ budget.sub_category }}</td>
+                                <td>{{ budget.wage }}</td>
+                                <td>{{ budget.item }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="3" class="has-text-centered">
+                                    <a class="button is-rounded is-outlined is-success is-small"
+                                       href="{{ url_for('project.add_overall_budget_item', project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>เพิ่มรายการ</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </td>
+                </tr>
+                <tr>
                     <td class="title is-size-5" width="20%">เพิ่มโครงวันที่</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
                 </tr>
                 <tr>
