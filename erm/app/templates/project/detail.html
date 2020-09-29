@@ -95,16 +95,48 @@
                     <td class="title is-size-5" width="20%">ที่ปรึกษาโครงการ</td><td>{{ project.mentor }}</td>
                 </tr>
                 <tr>
+                    <td class="title is-size-5" width="20%">ประเภทของงานวิจัย</td>
+                    <td class="content">{{ project.research_type }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" width="20%">สาขาวิชาการและกลุ่มที่ทำวิจัย</td>
+                    <td class="content">{{ project.research_cluster }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" width="20%">คำสำคัญของโครงการวิจัย</td>
+                    <td class="content">{{ project.keywords|safe }}</td>
+                </tr>
+                <tr>
                     <td class="title is-size-5" width="20%">บทคัดย่อ</td>
                     <td class="content">{{ project.abstract|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">บทนำ</td>
+                    <td class="title is-size-5" width="20%">ความสำคัญและที่มาของปัญหาที่ทำการวิจัย</td>
                     <td class="content">{{ project.intro|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">จุดประสงค์</td>
+                    <td class="title is-size-5" width="20%">วัตถุประสงค์ของโครงการวิจัย</td>
                     <td class="content">{{ project.objective|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" width="20%">ขอบเขตของโครงงานวิจัย</td>
+                    <td class="content">{{ project.scope|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" width="20%">นิยามคำศัพท์</td>
+                    <td class="content">{{ project.glossary|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" width="20%">ทฤษฎี สมมุติฐานและกรอบแนวคิด</td>
+                    <td class="content">{{ project.conceptual_framework|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" width="20%">การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง</td>
+                    <td class="content">{{ project.literature_review|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" width="20%">เอกสารอ้างอิง</td>
+                    <td class="content">{{ project.references|safe }}</td>
                 </tr>
                 <tr>
                     <td class="title is-size-5" width="20%">ระเบียบวิธีวิจัย</td>

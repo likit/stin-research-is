@@ -65,6 +65,18 @@
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label">{{ form.research_type.label }}</label>
+                            <div class="control">
+                                {{ form.research_type(class="input", placeholder="งานวิจัยพื้นฐาน ประยุกต์ หรือการพัฒนา") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.research_cluster.label }}</label>
+                            <div class="control">
+                                {{ form.research_cluster(class="input", placeholder="ประเภทงานวิจัยตามกรอบการวิจัยของวช.") }}
+                            </div>
+                        </div>
+                        <div class="field">
                             <label class="label">{{ form.abstract.label }}</label>
                             <div class="control">
                                 <div class="content">
@@ -92,6 +104,46 @@
                             <div class="control">
                                 <div class="content">
                                     {{ form.objective(placeholder="Objective", class="textarea", id="objective-editor") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.scope.label }}</label>
+                            <div class="control">
+                                <div class="content">
+                                    {{ form.scope(class="textarea", id="scope-editor") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.glossary.label }}</label>
+                            <div class="control">
+                                <div class="content">
+                                    {{ form.glossary(class="textarea", id="glossary-editor") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.conceptual_framework.label }}</label>
+                            <div class="control">
+                                <div class="content">
+                                    {{ form.conceptual_framework(class="textarea", id="conceptual-framework-editor") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.literature_review.label }}</label>
+                            <div class="control">
+                                <div class="content">
+                                    {{ form.literature_review(class="textarea", id="literature-review-editor") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.references.label }}</label>
+                            <div class="control">
+                                <div class="content">
+                                    {{ form.references(class="textarea", id="references-editor") }}
                                 </div>
                             </div>
                         </div>
@@ -228,6 +280,11 @@
         $('#intro-editor').summernote(options)
         $('#objective-editor').summernote(options)
         $('#method-editor').summernote(options)
+        $('#scope-editor').summernote(options)
+        $('#glossary-editor').summernote(options)
+        $('#conceptual-framework-editor').summernote(options)
+        $('#literature-review-editor').summernote(options)
+        $('#references-editor').summernote(options)
     })
 </script>
 {% endblock %}
