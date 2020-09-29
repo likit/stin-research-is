@@ -410,10 +410,6 @@ def confirm_add_ethic(project_id):
 @login_required
 def add_ethic_request(project_id):
     project = ProjectRecord.query.get(project_id)
-    if project.status != 'concept approved':
-        flash('โครงการต้องผ่านการพิจารณารอบแนวคิดจากคณะกรรมการก่อนส่งเข้าขอพิจารณาจริยธรรมวิจัย', 'warning')
-        return redirect(url_for('project.display_project', project_id=project_id))
-
     ethic = ProjectEthicRecord(project_id=project_id,
                                submitted_at=arrow.now(tz='Asia/Bangkok').datetime,
                                status='submitted')
@@ -424,6 +420,30 @@ def add_ethic_request(project_id):
     db.session.add(project)
     db.session.commit()
     return redirect(url_for('project.display_project', project_id=project.id))
+
+
+@project.route('/ethic/<int:ethic_id>/upload_file', methods=['GET', 'POST'])
+@login_required
+def upload_ethic_doc(ethic_id):
+    ethic = ProjectEthicRecord.query.get(ethic_id)
+    form = EthicRecordForm()
+    if request.method == 'POST':
+        if form.file_upload.data:
+            upfile = form.file_upload.data
+            filename = secure_filename(upfile.filename)
+            upfile.save(filename)
+            file_drive = drive.CreateFile({'title': filename})
+            file_drive.SetContentFile(filename)
+            file_drive.Upload()
+            permission = file_drive.InsertPermission({'type': 'anyone',
+                                                      'value': 'anyone',
+                                                      'role': 'reader'})
+            ethic.upload_file_url = file_drive['id']
+            db.session.add(ethic)
+            db.session.commit()
+            flash('บันทึกไฟล์ที่อัพโหลดเรียบร้อยแล้ว', 'success')
+            return redirect(url_for('project.display_project', project_id=ethic.project.id))
+    return render_template('project/ethic_file_upload.html', form=form, ethic=ethic)
 
 
 @project.route('/archive/<int:archive_id>', methods=['GET'])

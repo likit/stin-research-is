@@ -287,26 +287,41 @@
                         <table class="table is-striped">
                             <thead>
                             <th>ส่งเมื่อ</th>
-                            <th colspan="2">สถานะ</th>
+                            <th>แก้ไขล่าสุดเมื่อ</th>
+                            <th>สถานะ</th>
+                            <th>เอกสาร</th>
+                            <th></th>
                             </thead>
                             <tbody>
                             {% for e in project.ethics %}
                             <tr>
                                 <td>{{ e.submitted_at|localdatetime }}</td>
+                                <td>{{ e.updated_at|localdatetime }}</td>
                                 <td>{{ e.status }}</td>
                                 <td>
-                                    <a href="{{ url_for('project.view_ethic_record', project_id=project.id, ethic_id=e.id) }}"
+                                    {% if e.upload_file_url %}
+                                    <a href="https://drive.google.com/uc?id={{ e.upload_file_url }}"
+                                       target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                        <span>ไฟล์เอกสาร</span>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('project.upload_ethic_doc', ethic_id=e.id) }}"
                                         class="button is-outlined is-primary is-small">
                                         <span class="icon">
-                                            <i class="far fa-eye"></i>
+                                            <i class="far fa-file-alt"></i>
                                         </span>
-                                        <span>reviews</span>
+                                        <span>Upload file</span>
                                     </a>
                                 </td>
                             </tr>
                             {% endfor %}
                             <tr>
-                                <td colspan="3" class="has-text-centered">
+                                <td colspan="5" class="has-text-centered">
                                     <a href="{{ url_for('project.confirm_add_ethic', project_id=project.id) }}"
                                        {% if project.status != "concept approved" %}
                                        disabled

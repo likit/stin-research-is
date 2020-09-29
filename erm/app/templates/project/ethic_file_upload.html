@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Ethic: Upload Document{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">Your projects</a></li>
+                    <li><a href="{{ url_for('project.display_project', project_id=ethic.project.id) }}">This Project</a></li>
+                    <li class="is-active"><a aria-current="page">Ethic record</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="container has-text-centered">
+                <h1 class="title">Ethic Record</h1>
+                <div class="box">
+                    <form method="post" enctype="multipart/form-data">
+                        {{ form.csrf_token }}
+                    <table class="table is-fullwidth">
+                        <tr>
+                            <td>ยื่นเมื่อวันที่</td>
+                            <td>{{ ethic.submitted_at|localdatetime }}</td>
+                        </tr>
+                        <tr>
+                            <td>แก้ไขล่าสุดเมื่อ</td>
+                            <td>{{ ethic.submitted_at|localdatetime }}</td>
+                        </tr>
+                        <tr>
+                            <td>สถานะ</td>
+                            <td>{{ ethic.status }}</td>
+                        </tr>
+                        {% if ethic.upload_file_url %}
+                        <tr>
+                            <td>ไฟล์เอกสาร</td>
+                            <td>
+                                {% if ethic.upload_file_url %}
+                                <a href="https://drive.google.com/uc?id={{ ethic.upload_file_url }}"
+                                   target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                    <span>เปิดไฟล์เอกสาร</span>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td>{{ form.file_upload.label }}</td>
+                            <td>
+                                {{ form.file_upload() }}
+                                {% if ethic.upload_file_url %}
+                                <p class="help is-danger">
+                                    ไฟล์ที่อัพโหลดใหม่จะแทนที่ไฟล์ที่ท่านเคยอัพโหลดไว้แล้ว
+                                </p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="buttons is-centered">
+                        <a class="button is-light"
+                           href="{{ url_for('project.display_project', project_id=ethic.project.id) }}">
+                            Cancel
+                        </a>
+                        <button class="button is-success" type="submit">Upload</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

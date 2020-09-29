@@ -333,6 +333,7 @@ def update_ethic_status(ethic_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             form.populate_obj(ethic)
+            ethic.updated_at = arrow.now(tz='Asia/Bangkok').datetime,
             db.session.add(ethic)
             db.session.commit()
             flash('The ethic status has been updated.', 'success')

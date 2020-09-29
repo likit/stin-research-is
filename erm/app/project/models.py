@@ -243,6 +243,8 @@ class ProjectEthicRecord(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    updated_at = db.Column('updated_at', db.DateTime(timezone=True))
+    upload_file_url = db.Column('upload_file_url', db.String())
     status = db.Column('status', db.String(),
                        info={'label': 'Status',
                              'choices': [(i, i) for i in ['submitted', 'pending', 'reviewing',
