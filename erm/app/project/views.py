@@ -403,6 +403,10 @@ def remove_figure(figure_id):
 @login_required
 def submit_project(project_id):
     project = ProjectRecord.query.get(project_id)
+    if len(project.members) == 0:
+        flash('กรุณาเพิ่มรายชื่อนักวิจัยในโครงการก่อนยื่นขอพิจารณาโครงการ', 'warning')
+        return redirect(url_for('project.display_project', project_id=project.id))
+
     if project.status == 'draft' or \
             project.status == 'concept revising':
         project.status = 'concept submitted'
@@ -416,7 +420,7 @@ def submit_project(project_id):
     archive = make_project_archive(project)
     db.session.add(archive)
     db.session.commit()
-    flash('Project has been submitted for a review.', 'success')
+    flash('ยื่นขอพิจารณาโครงการเรียบร้อยแล้ว', 'success')
     return redirect(url_for('project.display_project', project_id=project.id))
 
 
