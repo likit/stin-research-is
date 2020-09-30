@@ -77,6 +77,13 @@
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label">{{ form.keywords.label }}</label>
+                            <div class="control">
+                                {{ form.keywords(placeholder="เช่น โรค COVID-19;การสวมหน้ากากอนามัย", class="input") }}
+                                <p class="help is-danger">โปรดคั่นคำสำคัญด้วยเครื่องหมาย ; (semicolon) โดยไม่ต้องเว้นวรรค</p>
+                            </div>
+                        </div>
+                        <div class="field">
                             <label class="label">{{ form.abstract.label }}</label>
                             <div class="control">
                                 <div class="content">
@@ -144,6 +151,14 @@
                             <div class="control">
                                 <div class="content">
                                     {{ form.references(class="textarea", id="references-editor") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.expected_benefit.label }}</label>
+                            <div class="control">
+                                <div class="content">
+                                    {{ form.expected_benefit(class="textarea", id="expected-benefit-editor") }}
                                 </div>
                             </div>
                         </div>
@@ -285,6 +300,7 @@
         $('#conceptual-framework-editor').summernote(options)
         $('#literature-review-editor').summernote(options)
         $('#references-editor').summernote(options)
+        $('#expected-benefit-editor').summernote(options)
     })
 </script>
 {% endblock %}

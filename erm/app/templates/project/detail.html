@@ -76,7 +76,7 @@
             </article>
             {% endif %}
             <div class="box">
-            <table class="table is-fullwidth is-striped">
+            <table class="table is-fullwidth is-bordered">
                 {% if project.parent_project %}
                 <tr>
                     <td class="title is-size-5" width="20%">ชุดโครงการ</td><td>{{ project.parent_project }}</td>
@@ -139,13 +139,17 @@
                     <td class="content">{{ project.references|safe }}</td>
                 </tr>
                 <tr>
+                    <td class="title is-size-5" width="20%">ประโยชน์ที่คาดว่าจะได้รับ</td>
+                    <td class="content">{{ project.expected_benefit|safe }}</td>
+                </tr>
+                <tr>
                     <td class="title is-size-5" width="20%">ระเบียบวิธีวิจัย</td>
                     <td class="content">{{ project.method|safe }}</td>
                 </tr>
                 <tr>
                     <td class="title is-size-5" width="20%">งบประมาณ</td>
                     <td>
-                        <table class="table is-fullwidth">
+                        <table class="table is-fullwidth is-striped is-narrow">
                             <thead>
                             <th>รายการ</th>
                             <th>จำนวนเงิน</th>
@@ -218,7 +222,7 @@
                 <tr>
                     <td class="title is-size-5">สมาชิก</td>
                     <td>
-                        <table class="table is-striped">
+                        <table class="table is-striped is-narrow">
                             <thead>
                             <th>ชื่อ</th>
                             <th>บทบาทหน้าที่</th>
@@ -317,13 +321,12 @@
                 <tr>
                     <td class="title is-size-5">จริยธรรมวิจัย</td>
                     <td>
-                        <table class="table is-striped">
+                        <table class="table is-striped is-narrow">
                             <thead>
                             <th>ส่งเมื่อ</th>
                             <th>แก้ไขล่าสุดเมื่อ</th>
                             <th>สถานะ</th>
-                            <th>เอกสาร</th>
-                            <th></th>
+                            <th colspan="2">เอกสาร</th>
                             </thead>
                             <tbody>
                             {% for e in project.ethics %}
@@ -374,7 +377,7 @@
                 <tr>
                     <td class="title is-size-5">Archives</td>
                     <td>
-                        <table class="table is-striped">
+                        <table class="table is-striped is-narrow">
                             <thead>
                             <th>ประทับเวลา</th>
                             <th>สถานะ</th>
@@ -397,12 +400,11 @@
                 <tr>
                     <td class="title is-size-5">ความก้าวหน้า</td>
                     <td>
-                        <table class="table is-striped">
+                        <table class="table is-striped is-narrow">
                             <thead>
                             <th>สถานะ</th>
                             <th>รายงานเมื่อ</th>
-                            <th></th>
-                            <th></th>
+                            <th colspan="2">แก้ไข</th>
                             </thead>
                             <tbody>
                             {% for m in project.milestones %}
@@ -470,15 +472,13 @@
                 <tr>
                     <td class="title is-size-5">ผลงานวิจัยตีพิมพ์</td>
                     <td>
-                        <table class="table is-striped">
+                        <table class="table is-striped is-narrow">
                             <thead>
                             <th>เรื่อง</th>
                             <th>วารสาร</th>
                             <th>ประเภท</th>
-                            {% if project.status == 'approved' %}
+                            <th>แก้ไข</th>
                             <th>ทุนสนับสนุน</th>
-                            {% endif %}
-                            <th></th>
                             </thead>
                             <tbody>
                             {% for p in project.publications %}
@@ -487,7 +487,19 @@
                                 <td>{{ p.journal.name }}</td>
                                 <td>{{ p.category }}</td>
                                 <td>
-                                    {% if project.status != 'draft' %}
+                                    <a href="{{ url_for('project.edit_pub', pub_id=p.id, project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
+                                    </a>
+                                    <a href="{{ url_for('project.remove_pub', pub_id=p.id, project_id=project.id) }}">
+                                        <span class="icon">
+                                           <i class="far fa-trash-alt"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if project.status.endswith('approved') %}
                                     <div class="buttons">
                                         <a href="{{ url_for('project.add_lang_support', project_id=project.id, pub_id=p.id) }}"
                                            class="button is-small is-rounded is-outlined is-link">
@@ -506,23 +518,11 @@
                                     </div>
                                     {% endif %}
                                 </td>
-                                <td>
-                                    <a href="{{ url_for('project.edit_pub', pub_id=p.id, project_id=project.id) }}">
-                                        <span class="icon">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </span>
-                                    </a>
-                                    <a href="{{ url_for('project.remove_pub', pub_id=p.id, project_id=project.id) }}">
-                                        <span class="icon">
-                                           <i class="far fa-trash-alt"></i>
-                                        </span>
-                                    </a>
-                                </td>
                             </tr>
                             </tbody>
                             {% endfor %}
                             <tr>
-                                <td colspan="4" class="has-text-centered">
+                                <td colspan="5" class="has-text-centered">
                                     <a href="{{ url_for('project.add_pub', project_id=project.id) }}"
                                         class="is-link is-outlined is-rounded is-small button">
                                         <span class="icon">
@@ -539,7 +539,7 @@
                 <tr>
                     <td class="title is-size-5">ทุนสนับสนุนการตรวจภาษา</td>
                     <td>
-                        <table class="table is-striped">
+                        <table class="table is-striped is-narrow">
                             <thead>
                             <th>เรื่อง</th>
                             <th>ยอดรวม (บาท)</th>
@@ -593,7 +593,7 @@
                 <tr>
                     <td class="title is-size-5">รางวัลค่าตีพิมพ์หรือทุนสนับสนุนการตีพิมพ์</td>
                     <td>
-                        <table class="table is-striped">
+                        <table class="table is-striped is-narrow">
                             <thead>
                             <th>เรื่อง</th>
                             <th>ยอดรวม (บาท)</th>
@@ -709,7 +709,7 @@
                 <tr>
                     <td class="title is-size-5">การนำงานวิจัยไปใช้ประโยชน์</td>
                     <td>
-                        <table class="table is-striped">
+                        <table class="table is-striped is-narrow">
                             <thead>
                             <th>องค์กร สถานที่ ชุมชน</th>
                             <th>รายละเอียดการใช้งานวิจัย</th>
@@ -742,9 +742,11 @@
                             {% if current_user == project.creator and current_user.is_authenticated %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
-                                    <a href="{{ url_for('project.add_application', project_id=project.id) }}"
+                                    <a
                                        {% if project.status !="finished"%}
                                        disabled
+                                       {% else %}
+                                       href="{{ url_for('project.add_application', project_id=project.id) }}"
                                        {% endif %}
                                        class="is-link is-outlined is-small is-rounded button">
                                             <span class="icon">
@@ -785,7 +787,7 @@
                 <tr>
                     <td class="title is-size-5">Supplementary Documents</td>
                     <td>
-                        <table class="table">
+                        <table class="table is-striped is-narrow">
                             <thead>
                             <th>ชื่อเอกสาร</th>
                             <th>คำอธิบาย</th>
