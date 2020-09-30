@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Project Detail Page{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">Your projects</a></li>
+                    <li class="is-active"><a aria-current="page">Project detail</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="container has-text-centered">
+                <h1 class="title">Project Detail</h1>
+                <h2 class="subtitle is-size-4">{{ project.title_th }}</h2>
+                <p>
+                    {% for member in project.members %}
+                    {% if member.user %}
+                    {{ member.user.profile.fullname_th }} ({{ member.role }}),
+                    {% else %}
+                    {{ member.fullname }} ({{ member.role }}),
+                    {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            <div class="box">
+                <table class="table is-fullwidth is-bordered">
+                    {% if project.parent_project %}
+                    <tr>
+                        <td class="title is-size-5" width="20%">ชุดโครงการ</td><td>{{ project.parent_project }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td class="title is-size-5" width="20%">ชื่อรองภาษาไทย</td><td>{{ project.subtitle_th }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">ชื่อภาษาอังกฤษ</td><td>{{ project.title_en }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">ชื่อรองภาษาอังกฤษ</td><td>{{ project.subtitle_en }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">ที่ปรึกษาโครงการ</td><td>{{ project.mentor }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">ประเภทของงานวิจัย</td>
+                        <td class="content">{{ project.research_type }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">สาขาวิชาการและกลุ่มที่ทำวิจัย</td>
+                        <td class="content">{{ project.research_cluster }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">คำสำคัญของโครงการวิจัย</td>
+                        <td class="content">{{ project.keywords|safe }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">บทคัดย่อ</td>
+                        <td class="content">{{ project.abstract|safe }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5" width="20%">หมวดหมู่</td>
+                        <td>
+                            <div class="field is-grouped is-grouped-multiline">
+                                {% for cat in project.subcategories %}
+                                <div class="control">
+                                    <div class="tags has-addons">
+                                        <p class="tag is-light is-medium is-info">{{ cat.category }}</p>
+                                        <p class="tag is-light is-medium">{{ cat.parent }}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">ผลงานวิจัยตีพิมพ์</td>
+                        <td>
+                            <table class="table is-striped is-narrow">
+                                <thead>
+                                <th>เรื่อง</th>
+                                <th>วารสาร</th>
+                                <th>ประเภท</th>
+                                </thead>
+                                <tbody>
+                                {% for p in project.publications %}
+                                <tr>
+                                    <td>{{ p.title }}</td>
+                                    <td>{{ p.journal.name }}</td>
+                                    <td>{{ p.category }}</td>
+                                </tr>
+                                </tbody>
+                                {% endfor %}
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">การนำงานวิจัยไปใช้ประโยชน์</td>
+                        <td>
+                            <table class="table is-striped is-narrow">
+                                <thead>
+                                <th>องค์กร สถานที่ ชุมชน</th>
+                                <th>รายละเอียดการใช้งานวิจัย</th>
+                                <th>วันที่และเวลา</th>
+                                </thead>
+                                <tbody>
+                                {% for app in project.applications %}
+                                <tr>
+                                    <td>{{ app.org }}</td>
+                                    <td>{{ app.detail }}</td>
+                                    <td>{{ app.date|localdate }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="has-text-centered">
+                <a href="{{ url_for('project.list_projects') }}" class="button is-light is-medium">Back</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

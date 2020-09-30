@@ -101,7 +101,7 @@ def make_project_archive(project):
 
 @project.route('/')
 def list_projects():
-    projects = ProjectRecord.query.all()
+    projects = ProjectRecord.query.filter_by(status='finished')
     return render_template('project/index.html', projects=projects)
 
 
@@ -117,6 +117,10 @@ def list_created_projects(user_id):
 @login_required
 def display_project(project_id):
     project = ProjectRecord.query.get(project_id)
+
+    if project.creator_id != current_user.id:
+        return redirect(url_for('project.display_shorten', project_id=project.id))
+
     gantt_activities = []
     for a in sorted(project.gantt_activities, key=lambda x: x.task_id):
         gantt_activities.append([
@@ -130,6 +134,13 @@ def display_project(project_id):
             a.id
         ])
     return render_template('project/detail.html', project=project, gantt_activities=gantt_activities)
+
+
+@project.route('/detail/<int:project_id>/shorten')
+@login_required
+def display_project_shorten(project_id):
+    project = ProjectRecord.query.get(project_id)
+    return render_template('project/detail_shorten.html', project=project)
 
 
 @project.route('/edit/<int:project_id>', methods=['GET', 'POST'])

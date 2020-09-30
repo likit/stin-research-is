@@ -29,26 +29,14 @@
                     <td>
                         {% for member in project.members %}
                         {% if member.role == 'PI' %}
-                        <a href="{{ url_for('researcher.show_profile', user_id=member.user.id) }}" class="button is-light is-small">
-                            <span class="icon">
-                                <i class="fas fa-user-circle"></i>
-                            </span>
-                            <span>
-                                {{ member.user.profile.fullname_th }}
-                            </span>
-                        </a>
+                        {{ member.user.profile.fullname_th }},
                         {% endif %}
                         {% endfor %}
                     </td>
                     <td>
-                        <a href="{{ url_for('project.display_project', project_id=project.id) }}"
-                           class="button is-small is-primary">
-                            <span class="icon">
-                                <i class="fas fa-info-circle"></i>
-                            </span>
-                            <span>
-                                ดูรายละเอียด
-                            </span>
+                        <a href="{{ url_for('project.display_project_shorten', project_id=project.id) }}"
+                           class="button is-small is-primary is-outlined">
+                            <span>รายละเอียด</span>
                         </a>
                     </td>
                 </tr>
