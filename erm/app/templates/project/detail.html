@@ -417,11 +417,13 @@
                             {% endfor %}
                             <tr>
                                 <td colspan="5" class="has-text-centered">
-                                    <a href="{{ url_for('project.confirm_add_ethic', project_id=project.id) }}"
+                                    <a class="button is-small is-outlined is-link is-rounded"
                                        {% if project.status != "concept approved" %}
                                        disabled
+                                       {% else %}
+                                       href="{{ url_for('project.confirm_add_ethic', project_id=project.id) }}"
                                        {% endif %}
-                                       class="button is-small is-outlined is-link is-rounded">
+                                    >
                                         <span class="icon">
                                             <i class="fas fa-paper-plane"></i>
                                         </span>
