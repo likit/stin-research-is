@@ -1066,3 +1066,34 @@ def add_overall_budget_item(project_id):
         flash('รายการงบการเงินได้รับการบันทึกเรียบร้อยแล้ว', 'success')
         return redirect(url_for('project.display_project', project_id=project.id))
     return render_template('project/overall_budget_form.html', form=form, project=project)
+
+
+@project.route('/<int:project_id>/overall_budgets/<int:item_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_overall_budget_item(item_id, project_id):
+    project = ProjectRecord.query.get(project_id)
+    item = ProjectBudgetItemOverall.query.get(item_id)
+    form = ProjectBudgetItemOverallForm(obj=item)
+    if request.method == 'POST':
+        form.populate_obj(item)
+        item.project = project
+        item.edited_at = arrow.now(tz='Asia/Bangkok').datetime
+        db.session.add(item)
+        db.session.commit()
+        flash('ลบรายการงบการเงินเรียบร้อยแล้ว', 'success')
+        return redirect(url_for('project.display_project', project_id=project.id))
+    return render_template('project/overall_budget_form.html', form=form, project=project)
+
+
+@project.route('/<int:project_id>/overall_budgets/<int:item_id>/remove', methods=['GET', 'POST'])
+@login_required
+def remove_overall_budget_item(item_id, project_id):
+    project = ProjectRecord.query.get(project_id)
+    item = ProjectBudgetItemOverall.query.get(item_id)
+    if item:
+        db.session.delete(item)
+        db.session.commit()
+        flash('รายการงบการเงินได้รับการบันทึกเรียบร้อยแล้ว', 'success')
+    else:
+        flash('ไม่พบรายการในฐานข้อมูลของระบบ', 'warning')
+    return redirect(url_for('project.display_project', project_id=project.id))

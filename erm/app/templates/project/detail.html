@@ -154,17 +154,30 @@
                             <th>รายการ</th>
                             <th>จำนวนเงิน</th>
                             <th>หมายเหตุ</th>
+                            <th>แก้ไข</th>
                             </thead>
                             <tbody>
-                            {% for budget in project.overall_budgets %}
+                            {% for budget in project.overall_budgets|sort(attribute='category_ref') %}
                             <tr>
                                 <td>{{ budget.sub_category }}</td>
                                 <td>{{ budget.wage }}</td>
                                 <td>{{ budget.item }}</td>
+                                <td>
+                                    <a href="{{ url_for('project.edit_overall_budget_item', item_id=budget.id, project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
+                                    </a>
+                                    <a href="{{ url_for('project.remove_overall_budget_item', item_id=budget.id, project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </span>
+                                    </a>
+                                </td>
                             </tr>
                             {% endfor %}
                             <tr>
-                                <td colspan="3" class="has-text-centered">
+                                <td colspan="4" class="has-text-centered">
                                     <a class="button is-rounded is-outlined is-success is-small"
                                        href="{{ url_for('project.add_overall_budget_item', project_id=project.id) }}">
                                         <span class="icon">
