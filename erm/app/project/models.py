@@ -306,6 +306,27 @@ class ProjectGanttActivity(db.Model):
                             })
 
 
+class ProjectOverallGanttActivity(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    detail = db.Column('detail', db.Text(), info={'label': 'รายละเอียด'})
+    start_date = db.Column('start_date', db.Date(), info={'label': 'เริ่มต้น'})
+    end_date = db.Column('end_date', db.Date(), info={'label': 'สิ้นสุด'})
+    task_id = db.Column('task_id', db.Integer(),
+                        info={
+                            'label': 'กิจกรรม',
+                            'choices': ((1, '1. พัฒนาโครงร่างการวิจัยและเครื่องมือการวิจัย'),
+                                        (2, '2. เสนอโครงร่างการวิจัยเพื่อขอรับการพิจารณาจริยธรรมฯ'),
+                                        (3, '3. เสนอขอรับทุนอุดหนุนการวิจัย'),
+                                        (4, '4. ผู้ทรงคุณวุฒิตรวจสอบและแก้ไข'),
+                                        (5, '5. ติดต่อประสานงานเพื่อขอเก็บข้อมูล'),
+                                        (6, '6. ดำเนินการเก็บรวบรวมข้อมูล'),
+                                        (7, '7. วิเคราะห์ผลการวิจัยและอภิปรายผล'),
+                                        (8, '8. จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย'))
+                        })
+    project = db.relationship('ProjectRecord', backref=db.backref('gantt_activities'))
+
+
 class ProjectSummary(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     milestone_id = db.Column('milestone_id', db.ForeignKey('project_milestone.id'))

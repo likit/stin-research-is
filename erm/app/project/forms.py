@@ -143,6 +143,11 @@ class ProjectGanttActivityForm(ModelForm):
         model = ProjectGanttActivity
 
 
+class ProjectOverallGanttActivityForm(ModelForm):
+    class Meta:
+        model = ProjectOverallGanttActivity
+
+
 class ProjectBudgetItemForm(ModelForm):
     class Meta:
         model = ProjectBudgetItem

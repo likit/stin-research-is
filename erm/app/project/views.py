@@ -24,6 +24,15 @@ gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile_dic
 drive = GoogleDrive(gauth)
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+GANTT_ACTIVITIES = dict([(1, '1. พัฒนาโครงร่างการวิจัยและเครื่องมือการวิจัย'),
+                         (2, '2. เสนอโครงร่างการวิจัยเพื่อขอรับการพิจารณาจริยธรรมฯ'),
+                         (3, '3. เสนอขอรับทุนอุดหนุนการวิจัย'),
+                         (4, '4. ผู้ทรงคุณวุฒิตรวจสอบและแก้ไข'),
+                         (5, '5. ติดต่อประสานงานเพื่อขอเก็บข้อมูล'),
+                         (6, '6. ดำเนินการเก็บรวบรวมข้อมูล'),
+                         (7, '7. วิเคราะห์ผลการวิจัยและอภิปรายผล'),
+                         (8, '8. จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย')]
+                        )
 
 
 def make_project_archive(project):
@@ -108,7 +117,19 @@ def list_created_projects(user_id):
 @login_required
 def display_project(project_id):
     project = ProjectRecord.query.get(project_id)
-    return render_template('project/detail.html', project=project)
+    gantt_activities = []
+    for a in sorted(project.gantt_activities, key=lambda x: x.task_id):
+        gantt_activities.append([
+            str(a.task_id),
+            GANTT_ACTIVITIES.get(a.task_id),
+            a.start_date.isoformat(),
+            a.end_date.isoformat(),
+            None, 0, None,
+            a.start_date,
+            a.end_date,
+            a.id
+        ])
+    return render_template('project/detail.html', project=project, gantt_activities=gantt_activities)
 
 
 @project.route('/edit/<int:project_id>', methods=['GET', 'POST'])
@@ -540,20 +561,11 @@ def clone_milestone(project_id):
 @login_required
 def list_gantt_activity(project_id, milestone_id):
     milestone = ProjectMilestone.query.get(milestone_id)
-    activities = dict([(1, '1. พัฒนาโครงร่างการวิจัยและเครื่องมือการวิจัย'),
-                       (2, '2. เสนอโครงร่างการวิจัยเพื่อขอรับการพิจารณาจริยธรรมฯ'),
-                       (3, '3. เสนอขอรับทุนอุดหนุนการวิจัย'),
-                       (4, '4. ผู้ทรงคุณวุฒิตรวจสอบและแก้ไข'),
-                       (5, '5. ติดต่อประสานงานเพื่อขอเก็บข้อมูล'),
-                       (6, '6. ดำเนินการเก็บรวบรวมข้อมูล'),
-                       (7, '7. วิเคราะห์ผลการวิจัยและอภิปรายผล'),
-                       (8, '8. จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย')]
-                      )
     gantt_activities = []
     for a in sorted(milestone.gantt_activities, key=lambda x: x.task_id):
         gantt_activities.append([
             str(a.task_id),
-            activities.get(a.task_id),
+            GANTT_ACTIVITIES.get(a.task_id),
             a.start_date.isoformat(),
             a.end_date.isoformat(),
             None, float(a.completion), None
@@ -1097,3 +1109,47 @@ def remove_overall_budget_item(item_id, project_id):
     else:
         flash('ไม่พบรายการในฐานข้อมูลของระบบ', 'warning')
     return redirect(url_for('project.display_project', project_id=project.id))
+
+
+@project.route('/<int:project_id>/activity/add', methods=['GET', 'POST'])
+@login_required
+def add_overall_gantt_activity(project_id):
+    project = ProjectRecord.query.get(project_id)
+    form = ProjectOverallGanttActivityForm()
+    if request.method == 'POST':
+        new_activity = ProjectOverallGanttActivity()
+        form.populate_obj(new_activity)
+        new_activity.project = project
+        db.session.add(new_activity)
+        db.session.commit()
+        flash('เพิ่มกิจกรรมใหม่เรียบร้อย', 'success')
+        return redirect(url_for('project.display_project', project_id=project.id))
+    return render_template('project/overall_gantt_form.html', form=form, project=project)
+
+
+@project.route('/activity/<int:activity_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_overall_gantt_activity(activity_id):
+    activity = ProjectOverallGanttActivity.query.get(activity_id)
+    form = ProjectOverallGanttActivityForm(obj=activity)
+    if request.method == 'POST':
+        form.populate_obj(activity)
+        db.session.add(activity)
+        db.session.commit()
+        flash('แก้ไขกิจกรรมใหม่เรียบร้อย', 'success')
+        return redirect(url_for('project.display_project', project_id=activity.project.id))
+    return render_template('project/overall_gantt_form.html', form=form, project=activity.project)
+
+
+@project.route('/activity/<int:activity_id>/remove', methods=['GET', 'POST'])
+@login_required
+def remove_overall_gantt_activity(activity_id):
+    activity = ProjectOverallGanttActivity.query.get(activity_id)
+    project_id = activity.project.id
+    if activity:
+        db.session.delete(activity)
+        db.session.commit()
+        flash('ลบกิจกรรมเรียบร้อย', 'success')
+    else:
+        flash('ไม่พบกิจกรรมในฐานข้อมูล', 'warning')
+    return redirect(url_for('project.display_project', project_id=project_id))

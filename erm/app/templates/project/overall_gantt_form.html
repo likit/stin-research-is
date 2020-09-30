@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Project Activity/Timeline Page{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">Your projects</a></li>
+                    <li><a href="{{ url_for('project.display_project', project_id=project.id) }}">Project detail</a></li>
+                    <li class="is-active"><a aria-current="page">Activity Form</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-one-third is-offset-4">
+                <h1 class="title has-text-centered">Add/Edit Activity</h1>
+                {% include "messages.html" %}
+                <form class="box" method="post">
+                    {{ form.csrf_token }}
+                    <div class="field">
+                        <label class="label">{{ form.task_id.label }}</label>
+                        <div class="select">
+                            {{ form.task_id() }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.start_date.label }}</label>
+                        <div class="control">
+                            {{ form.start_date(class="input", type="text") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.end_date.label }}</label>
+                        <div class="control">
+                            {{ form.end_date(class="input", type="text") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.detail.label }}</label>
+                        <div class="control">
+                            {{ form.detail(class="textarea") }}
+                        </div>
+                    </div>
+                    <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                            <a href="{{ url_for('project.display_project', project_id=project.id) }}"
+                               class="button is-light">Cancel</a>
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-success">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('input[name="start_date"]').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        });
+        $('input[name="end_date"]').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        });
+    });
+</script>
+{% endblock %}

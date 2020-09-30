@@ -147,6 +147,52 @@
                     <td class="content">{{ project.method|safe }}</td>
                 </tr>
                 <tr>
+                    <td class="title is-size-5" width="20%">แผนการดำเนินงาน</td>
+                    <td>
+                        <div id="chart_div"></div>
+                        <table class="table is-striped is-narrow is-fullwidth">
+                            <thead>
+                            <th>รายการ</th>
+                            <th>เริ่มต้น</th>
+                            <th>สิ้นสุด</th>
+                            <th>แก้ไข</th>
+                            </thead>
+                            <tbody>
+                            {% for activity in gantt_activities %}
+                            <tr>
+                                <td>{{ activity[1] }}</td>
+                                <td>{{ activity[-3]|localdate }}</td>
+                                <td>{{ activity[-2]|localdate }}</td>
+                                <td>
+                                    <a href="{{ url_for('project.edit_overall_gantt_activity', activity_id=activity[-1]) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt has-text-dark"></i>
+                                        </span>
+                                    </a>
+                                    <a href="{{ url_for('project.remove_overall_gantt_activity', activity_id=activity[-1]) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-trash-alt has-text-danger"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="4" class="has-text-centered">
+                                    <a href="{{ url_for('project.add_overall_gantt_activity', project_id=project.id) }}"
+                                       class="button is-small is-rounded is-outlined is-success">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>เพิ่มรายการ</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
                     <td class="title is-size-5" width="20%">งบประมาณ</td>
                     <td>
                         <table class="table is-fullwidth is-striped is-narrow">
@@ -881,4 +927,47 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    google.charts.load('current', {'packages':['gantt']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function daysToMilliseconds(days) {
+        return days * 24 * 60 * 60 * 1000;
+    }
+
+    function drawChart() {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Task ID');
+        data.addColumn('string', 'Task Name');
+        data.addColumn('date', 'Start Date');
+        data.addColumn('date', 'End Date');
+        data.addColumn('number', 'Duration');
+        data.addColumn('number', 'Percent Complete');
+        data.addColumn('string', 'Dependencies');
+
+        var activities = {{ gantt_activities|tojson|safe }};
+        console.log(activities)
+        var gantt_activities = [];
+        activities.forEach(function(item) {
+            start_date = new Date(item[2]);
+            end_date = new Date(item[3]);
+            gantt_activities.push([item[0],
+                item[1], start_date, end_date,
+                item[4], item[5], item[6]]);
+        });
+        data.addRows(gantt_activities);
+        let options = {
+            height: 275
+        };
+
+        var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+</script>
 {% endblock %}
