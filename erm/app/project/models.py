@@ -367,6 +367,9 @@ class ProjectBudgetItemOverall(db.Model):
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     project = db.relationship('ProjectRecord', backref=db.backref('overall_budgets'))
 
+    @property
+    def category_ref(self):
+        return '{}.{}'.format(self.sub_category.category.id, self.sub_category.id)
 
 
 reviewer_groups = db.Table('reviewer_groups',
