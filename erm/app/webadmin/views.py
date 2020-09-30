@@ -31,6 +31,16 @@ scopes = ['https://www.googleapis.com/auth/drive']
 gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile_dict, scopes)
 drive = GoogleDrive(gauth)
 
+GANTT_ACTIVITIES = dict([(1, '1. พัฒนาโครงร่างการวิจัยและเครื่องมือการวิจัย'),
+                         (2, '2. เสนอโครงร่างการวิจัยเพื่อขอรับการพิจารณาจริยธรรมฯ'),
+                         (3, '3. เสนอขอรับทุนอุดหนุนการวิจัย'),
+                         (4, '4. ผู้ทรงคุณวุฒิตรวจสอบและแก้ไข'),
+                         (5, '5. ติดต่อประสานงานเพื่อขอเก็บข้อมูล'),
+                         (6, '6. ดำเนินการเก็บรวบรวมข้อมูล'),
+                         (7, '7. วิเคราะห์ผลการวิจัยและอภิปรายผล'),
+                         (8, '8. จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย')]
+                        )
+
 
 def send_mail(recp, title, message):
     mail_info = MailInfo.query.first()
@@ -52,7 +62,22 @@ def list_submissions():
 @login_required
 def submission_detail(project_id):
     project = ProjectRecord.query.get(project_id)
-    return render_template('webadmin/submission_detail.html', project=project)
+    gantt_activities = []
+    for a in sorted(project.gantt_activities, key=lambda x: x.task_id):
+        gantt_activities.append([
+            str(a.task_id),
+            GANTT_ACTIVITIES.get(a.task_id),
+            a.start_date.isoformat(),
+            a.end_date.isoformat(),
+            None, 0, None,
+            a.start_date,
+            a.end_date,
+            a.id
+        ])
+    return render_template('webadmin/submission_detail.html',
+                           project=project,
+                           gantt_activities=gantt_activities
+                           )
 
 
 @webadmin.route('/submissions/<int:project_id>/ethics/<int:ethic_id>/reviewers/add')
@@ -260,6 +285,18 @@ def write_review(project_id, review_id):
     if token_data.get('review_id') != review_id:
         return 'Invalid JSON Web Token or the token has expired. Please contact the sender for a valid token to access this page.'
     project = ProjectRecord.query.get(project_id)
+    gantt_activities = []
+    for a in sorted(project.gantt_activities, key=lambda x: x.task_id):
+        gantt_activities.append([
+            str(a.task_id),
+            GANTT_ACTIVITIES.get(a.task_id),
+            a.start_date.isoformat(),
+            a.end_date.isoformat(),
+            None, 0, None,
+            a.start_date,
+            a.end_date,
+            a.id
+        ])
     review = ProjectReviewRecord.query.get(review_id)
     if review.submitted_at:
         return redirect(url_for('webadmin.confirm_review'))
@@ -275,7 +312,11 @@ def write_review(project_id, review_id):
             db.session.commit()
             return redirect(url_for('webadmin.confirm_review'))
 
-    return render_template('webadmin/review_form.html', form=form, project=project, review=review)
+    return render_template('webadmin/review_form.html',
+                           form=form,
+                           project=project,
+                           review=review,
+                           gantt_activities=gantt_activities)
 
 
 @webadmin.route('/submissions/confirm', methods=['GET', 'POST'])

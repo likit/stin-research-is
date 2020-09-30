@@ -7,58 +7,134 @@
 <section class="section">
     <div class="container">
         <div class="columns">
-            <div class="column is-two-thirds is-offset-2">
+            <div class="column is-four-fifths is-offset-1">
                 {% for cat,msg in get_flashed_messages(with_categories=true) %}
                 <p class="notification is-{{ cat }}">{{ msg }}</p>
                 {% endfor %}
                 <div class="box">
                     <h1 class="title has-text-centered">Project Detail</h1>
-                    <table class="table is-fullwidth is-striped">
+                    <table class="table is-fullwidth is-bordered">
+                        {% if project.parent_project %}
                         <tr>
-                            <td class="title is-size-5" width="20%">Thai Title</td>
-                            <td><h1 class="title is-size-4">{{ project.title_th }}</h1></td>
-                        </tr>
-                        <tr>
-                            <td class="title is-size-5" width="20%">Thai Subtitle</td>
-                            <td>{{ project.subtitle_th }}</td>
-                        </tr>
-                        <tr>
-                            <td class="title is-size-5" width="20%">English Title</td>
-                            <td>{{ project.title_en }}</td>
-                        </tr>
-                        <tr>
-                            <td class="title is-size-5" width="20%">English Subtitle</td>
-                            <td>{{ project.subtitle_en }}</td>
-                        </tr>
-                        <tr>
-                            <td class="title is-size-5" width="20%">Abstract</td>
-                            <td class="content">{{ project.abstract|safe }}</td>
-                        </tr>
-                        <tr>
-                            <td class="title is-size-5" width="20%">Introduction</td>
-                            <td class="content">{{ project.intro|safe }}</td>
-                        </tr>
-                        <tr>
-                            <td class="title is-size-5" width="20%">Objective</td>
-                            <td class="content">{{ project.objective|safe }}</td>
-                        </tr>
-                        <tr>
-                            <td class="title is-size-5" width="20%">Method</td>
-                            <td class="content">{{ project.method|safe }}</td>
-                        </tr>
-                        <tr>
-                            <td class="title is-size-5" width="20%">Updated at</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
-                        </tr>
-                        {% if current_user.is_authenticated and project.creator == current_user %}
-                        <tr>
-                            <td class="title is-size-5" width="20%">Prospected Journals</td><td>{{ project.prospected_journals }}</td>
-                        </tr>
-                        <tr>
-                            <td class="title is-size-5" width="20%">Uses or Applications</td><td>{{ project.use_applications }}</td>
+                            <td class="title is-size-5" width="20%">ชุดโครงการ</td><td>{{ project.parent_project }}</td>
                         </tr>
                         {% endif %}
                         <tr>
-                            <td class="title is-size-5" width="20%">Category</td>
+                            <td class="title is-size-5" width="20%">ชื่อรองภาษาไทย</td><td>{{ project.subtitle_th }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">ชื่อภาษาอังกฤษ</td><td>{{ project.title_en }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">ชื่อรองภาษาอังกฤษ</td><td>{{ project.subtitle_en }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">ที่ปรึกษาโครงการ</td><td>{{ project.mentor }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">ประเภทของงานวิจัย</td>
+                            <td class="content">{{ project.research_type }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">สาขาวิชาการและกลุ่มที่ทำวิจัย</td>
+                            <td class="content">{{ project.research_cluster }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">คำสำคัญของโครงการวิจัย</td>
+                            <td class="content">{{ project.keywords|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">บทคัดย่อ</td>
+                            <td class="content">{{ project.abstract|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">ความสำคัญและที่มาของปัญหาที่ทำการวิจัย</td>
+                            <td class="content">{{ project.intro|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">วัตถุประสงค์ของโครงการวิจัย</td>
+                            <td class="content">{{ project.objective|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">ขอบเขตของโครงงานวิจัย</td>
+                            <td class="content">{{ project.scope|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">นิยามคำศัพท์</td>
+                            <td class="content">{{ project.glossary|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">ทฤษฎี สมมุติฐานและกรอบแนวคิด</td>
+                            <td class="content">{{ project.conceptual_framework|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง</td>
+                            <td class="content">{{ project.literature_review|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">เอกสารอ้างอิง</td>
+                            <td class="content">{{ project.references|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">ประโยชน์ที่คาดว่าจะได้รับ</td>
+                            <td class="content">{{ project.expected_benefit|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">ระเบียบวิธีวิจัย</td>
+                            <td class="content">{{ project.method|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">แผนการดำเนินงาน</td>
+                            <td>
+                                <div id="chart_div"></div>
+                                <table class="table is-striped is-narrow is-fullwidth">
+                                    <thead>
+                                    <th>รายการ</th>
+                                    <th>เริ่มต้น</th>
+                                    <th>สิ้นสุด</th>
+                                    </thead>
+                                    <tbody>
+                                    {% for activity in gantt_activities %}
+                                    <tr>
+                                        <td>{{ activity[1] }}</td>
+                                        <td>{{ activity[-3]|localdate }}</td>
+                                        <td>{{ activity[-2]|localdate }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">งบประมาณ</td>
+                            <td>
+                                <table class="table is-fullwidth is-striped is-narrow">
+                                    <thead>
+                                    <th>รายการ</th>
+                                    <th>จำนวนเงิน</th>
+                                    <th>หมายเหตุ</th>
+                                    </thead>
+                                    <tbody>
+                                    {% for budget in project.overall_budgets|sort(attribute='category_ref') %}
+                                    <tr>
+                                        <td>{{ budget.sub_category }}</td>
+                                        <td>{{ budget.wage }}</td>
+                                        <td>{{ budget.item }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">วารสารที่คาดว่าจะส่งตีพิมพ์ผลงาน</td><td>{{ project.prospected_journals }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">การนำไปใช้ประโยชน์</td><td>{{ project.use_applications }}</td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5" width="20%">หมวดหมู่</td>
                             <td>
                                 <div class="field is-grouped is-grouped-multiline">
                                     {% for cat in project.subcategories %}
@@ -73,7 +149,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5">Members</td>
+                            <td class="title is-size-5">ผู้ร่วมวิจัย</td>
                             <td>
                                 <table class="table is-striped">
                                     <thead>
@@ -84,7 +160,7 @@
                                     <tbody>
                                     {% for member in project.members %}
                                     <tr>
-                                        <td>{{ member.user.profile }}</td>
+                                        <td>{{ member.user.fullname_thai or member.fullname }}</td>
                                         <td>{{ member.role }}</td>
                                         <td>{{ member.user.email }}</td>
                                     </tr>
@@ -94,44 +170,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5">Application</td>
-                            <td>
-                                <table class="table is-striped">
-                                    <thead>
-                                    <th>องค์กร สถานที่ ชุมชน</th>
-                                    <th>รายละเอียดการใช้งานวิจัย</th>
-                                    <th>วันที่และเวลา</th>
-                                    </thead>
-                                    <tbody>
-                                    {% for app in project.applications %}
-                                    <tr>
-                                        <td>{{ app.org }}</td>
-                                        <td>{{ app.detail }}</td>
-                                        <td>{{ app.date|localdate }}</td>
-                                        <td>
-                                            {% if current_user == project.creator and current_user.is_authenticated %}
-                                            <a href="{{ url_for('project.edit_application', app_id=app.id) }}">
-                                            <span class="icon">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </span>
-                                                <span>Edit</span>
-                                            </a>
-                                            <a href="{{ url_for('project.remove_application', app_id=app.id) }}">
-                                            <span class="icon">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </span>
-                                                <span>Remove</span>
-                                            </a>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="title is-size-5">Figures</td>
+                            <td class="title is-size-5">รูปภาพ</td>
                             <td>
                                 <table class="table">
                                     <thead>
@@ -155,30 +194,31 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5">Timeline</td>
+                            <td class="title is-size-5">Supplementary Documents</td>
                             <td>
-                                <table class="table">
+                                <table class="table is-striped is-narrow">
                                     <thead>
-                                    <th>Goal/Task/Requirement</th>
-                                    <th>Deadline</th>
-                                    <th>Status</th>
-                                    <th></th>
+                                    <th>ชื่อเอกสาร</th>
+                                    <th>คำอธิบาย</th>
+                                    <th>ไฟล์</th>
                                     </thead>
                                     <tbody>
-                                    {% for m in project.milestones %}
+                                    {% for sup in project.supplementary_docs %}
                                     <tr>
-                                        <td>{{ m.goal }}</td>
-                                        {% if m.deadline %}
-                                        <td>{{ m.deadline|localdatetime }}</td>
-                                        {% else %}
-                                        <td>Not specified</td>
-                                        {% endif %}
-                                        <td>{{ m.status }}</td>
+                                        <td>{{ sup.filename }}</td>
+                                        <td>{{ sup.desc }}</td>
                                         <td>
+                                            <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
+                                               target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                                <span>view</span>
+                                            </a>
                                         </td>
                                     </tr>
-                                    </tbody>
                                     {% endfor %}
+                                    </tbody>
                                 </table>
                             </td>
                         </tr>
@@ -445,4 +485,47 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    google.charts.load('current', {'packages':['gantt']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function daysToMilliseconds(days) {
+        return days * 24 * 60 * 60 * 1000;
+    }
+
+    function drawChart() {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Task ID');
+        data.addColumn('string', 'Task Name');
+        data.addColumn('date', 'Start Date');
+        data.addColumn('date', 'End Date');
+        data.addColumn('number', 'Duration');
+        data.addColumn('number', 'Percent Complete');
+        data.addColumn('string', 'Dependencies');
+
+        var activities = {{ gantt_activities|tojson|safe }};
+        console.log(activities)
+        var gantt_activities = [];
+        activities.forEach(function(item) {
+            start_date = new Date(item[2]);
+            end_date = new Date(item[3]);
+            gantt_activities.push([item[0],
+                item[1], start_date, end_date,
+                item[4], item[5], item[6]]);
+        });
+        data.addRows(gantt_activities);
+        let options = {
+            height: 275
+        };
+
+        var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+</script>
 {% endblock %}
