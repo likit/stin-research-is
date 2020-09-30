@@ -94,6 +94,7 @@ class ProjectRecord(db.Model):
     literature_review = db.Column('literature_review', db.Text(),
                                      info={'label': 'การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง'})
     references = db.Column('references', db.Text(), info={'label': 'เอกสารอ้างอิง'})
+    expected_benefit = db.Column('expected_benefit', db.Text(), info={'label': 'ประโยชน์ที่คาดว่าจะได้รับ'})
     status = db.Column('status', db.String(),
                        info={'label': 'สถานะโครงการ',
                              'choices': [(i, i) for i in ['draft',
