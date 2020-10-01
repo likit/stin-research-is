@@ -122,6 +122,9 @@ class ProjectRecord(db.Model):
     contract_no = db.Column('contract_no', db.String(), nullable=True, info={'label': 'หมายเลขสัญญา'})
     contract_url = db.Column('contract_url', db.String(), nullable=True)
     final_report_url = db.Column('final_report_url', db.String(), nullable=True, info={'label': 'รายงานฉบับสมบูรณ์'})
+    finance_summary_file_url = db.Column('finance_summary_file_url', db.String(), nullable=True, info={'label': 'รายงานฉบับสมบูรณ์'})
+    bookbank_cover_file_url = db.Column('bookbank_cover_file_url', db.String(), nullable=True, info={'label': 'รายงานฉบับสมบูรณ์'})
+    bookbank_last_page_file_url = db.Column('bookbank_last_page_file_url', db.String(), nullable=True, info={'label': 'รายงานฉบับสมบูรณ์'})
     mentor = db.Column('mentor', db.String(), nullable=True, info={'label': 'ที่ปรึกษา'})
 
     @property

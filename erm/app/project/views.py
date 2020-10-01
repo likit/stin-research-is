@@ -401,12 +401,14 @@ def edit_figure(figure_id):
 def remove_figure(figure_id):
     figure = ProjectFigure.query.get(figure_id)
     try:
+        file1 = drive.CreateFile({'id': figure.url})
+        file1.Trash()
         db.session.delete(figure)
         db.session.commit()
     except:
-        flash('Error occurred.', 'danger')
+        flash('ไม่สามารถลบรูปภาพได้', 'danger')
     else:
-        flash('Figure has been removed.', 'success')
+        flash('ลบไฟล์รูปภาพออกจากระบบเรียบร้อยแล้ว', 'success')
     return redirect(request.referrer)
 
 
@@ -1077,6 +1079,19 @@ def add_supplementary_doc(project_id):
     return render_template('project/supplementary_form.html', form=form, project=project)
 
 
+@project.route('/<int:project_id>/supplementary/<int:doc_id>/remove')
+@login_required
+def remove_supplementary_doc(project_id, doc_id):
+    doc = ProjectSupplementaryDocument.query.get(doc_id)
+    file1 = drive.CreateFile({'id': doc.file_url})
+    file1.Trash()
+    db.session.delete(doc)
+    db.session.commit()
+    flash('ลบไฟล์ออกจากระบบเรียบร้อยแล้ว', 'success')
+    return redirect(url_for('project.display_project', project_id=project_id))
+
+
+
 @project.route('/<int:project_id>/overall_budgets/add', methods=['GET', 'POST'])
 @login_required
 def add_overall_budget_item(project_id):
@@ -1168,3 +1183,32 @@ def remove_overall_gantt_activity(activity_id):
     else:
         flash('ไม่พบกิจกรรมในฐานข้อมูล', 'warning')
     return redirect(url_for('project.display_project', project_id=project_id))
+
+
+@project.route('/<int:project_id>/file_upload', methods=['GET', 'POST'])
+@login_required
+def upload_summary_file(project_id):
+    project = ProjectRecord.query.get(project_id)
+    form = FileUploadForm()
+    if request.method == 'POST':
+        if form.file_upload.data:
+            upfile = form.file_upload.data
+            filename = secure_filename(upfile.filename)
+            upfile.save(filename)
+            file_drive = drive.CreateFile({'title': filename})
+            file_drive.SetContentFile(filename)
+            file_drive.Upload()
+            permission = file_drive.InsertPermission({'type': 'anyone',
+                                                      'value': 'anyone',
+                                                      'role': 'reader'})
+            if form.file_type.data == 'finance':
+                project.finance_summary_file_url = file_drive['id']
+            elif form.file_type.data == 'bookbank_cover':
+                project.bookbank_cover_file_url = file_drive['id']
+            elif form.file_type.data == 'bookbank_last_page':
+                project.bookbank_last_page_file_url = file_drive['id']
+            db.session.add(project)
+            db.session.commit()
+            flash('อัพโหลดไฟล์เรียบร้อย', 'success')
+            return redirect(url_for('project.display_project', project_id=project.id))
+    return render_template('project/file_upload.html', form=form)

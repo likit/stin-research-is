@@ -216,7 +216,7 @@
                                     </a>
                                     <a href="{{ url_for('project.remove_overall_budget_item', item_id=budget.id, project_id=project.id) }}">
                                         <span class="icon">
-                                            <i class="fas fa-trash-alt"></i>
+                                            <i class="fas fa-trash-alt has-text-danger"></i>
                                         </span>
                                     </a>
                                 </td>
@@ -285,7 +285,8 @@
                             <thead>
                             <th>ชื่อ</th>
                             <th>บทบาทหน้าที่</th>
-                            <th>email</th>
+                            <th>E-mail</th>
+                            <th>แก้ไข</th>
                             </thead>
                             <tbody>
                             {% for member in project.members %}
@@ -297,7 +298,7 @@
                                     {% if current_user == project.creator and project.editable %}
                                     <a href="{{ url_for('project.remove_member', project_id=project.id, member_id=member.id) }}">
                                         <span class="icon">
-                                            <i class="fas fa-trash-alt"></i>
+                                            <i class="fas fa-trash-alt has-text-danger"></i>
                                         </span>
                                     </a>
                                     {% endif %}
@@ -350,7 +351,7 @@
                                         </a>
                                         <a href="{{ url_for('project.remove_figure', figure_id=fig.id) }}">
                                             <span class="icon">
-                                                <i class="fas fa-trash-alt"></i>
+                                                <i class="fas fa-trash-alt has-text-danger"></i>
                                             </span>
                                         </a>
                                         {% endif %}
@@ -555,7 +556,7 @@
                                     </a>
                                     <a href="{{ url_for('project.remove_pub', pub_id=p.id, project_id=project.id) }}">
                                         <span class="icon">
-                                           <i class="far fa-trash-alt"></i>
+                                           <i class="far fa-trash-alt has-text-danger"></i>
                                         </span>
                                     </a>
                                 </td>
@@ -792,7 +793,7 @@
                                     </a>
                                     <a href="{{ url_for('project.remove_application', app_id=app.id) }}">
                                             <span class="icon">
-                                                <i class="fas fa-trash-alt"></i>
+                                                <i class="fas fa-trash-alt has-text-danger"></i>
                                             </span>
                                         <span>ลบออก</span>
                                     </a>
@@ -853,6 +854,7 @@
                             <th>ชื่อเอกสาร</th>
                             <th>คำอธิบาย</th>
                             <th>ไฟล์</th>
+                            <th>แก้ไข</th>
                             </thead>
                             <tbody>
                             {% for sup in project.supplementary_docs %}
@@ -868,11 +870,18 @@
                                         <span>view</span>
                                     </a>
                                 </td>
+                                <td>
+                                    <a href="{{ url_for('project.remove_supplementary_doc', doc_id=sup.id, project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-trash-alt has-text-danger"></i>
+                                        </span>
+                                    </a>
+                                </td>
                             </tr>
                             {% endfor %}
                             {% if project.status != 'approved' %}
                             <tr>
-                                <td colspan="3" class="has-text-centered">
+                                <td colspan="4" class="has-text-centered">
                                     <a class="button is-small is-rounded is-success is-outlined"
                                        href="{{ url_for('project.add_supplementary_doc', project_id=project.id) }}"
                                     >
@@ -893,6 +902,81 @@
                         {% if project.final_report_url %}
                         <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
                             target="_blank">
+                            <span class="icon">
+                                <i class="far fa-file-alt"></i>
+                            </span>
+                            <span>ไฟล์รายงาน</span>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">เอกสารประกอบการปิดโครงการ</td>
+                    <td>
+                        <table class="table">
+                            <thead>
+                            <th>รายการเอกสาร</th>
+                            <th>ไฟล์</th>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>สรุปรายงานการใช้เงิน</td>
+                                <td>
+                                    {% if project.finance_summary_file_url %}
+                                    <a href="https://drive.google.com/uc?id={{ project.finance_summary_file_url }}"
+                                       target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                        <span>ดูไฟล์</span>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>หน้าแรกสมุดบัญชีธนาคาร</td>
+                                <td>
+                                    {% if project.bookbank_cover_file_url %}
+                                    <a href="https://drive.google.com/uc?id={{ project.bookbank_cover_file_url }}"
+                                       target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                        <span>ดูไฟล์</span>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>หน้าสุดท้ายสมุดบัญชีธนาคาร</td>
+                                <td>
+                                    {% if project.bookbank_last_page_file_url %}
+                                    <a href="https://drive.google.com/uc?id={{ project.bookbank_last_page_file_url }}"
+                                       target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                        <span>ดูไฟล์</span>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="has-text-centered">
+                                    <a class="button is-small is-rounded is-outlined is-success"
+                                       href="{{ url_for('project.upload_summary_file', project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span>เพิ่มไฟล์</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        {% if project.final_report_url %}
+                        <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
+                           target="_blank">
                             <span class="icon">
                                 <i class="far fa-file-alt"></i>
                             </span>
