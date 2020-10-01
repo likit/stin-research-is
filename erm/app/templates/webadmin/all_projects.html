@@ -1,10 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}All Projects Page{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="columns">
+        <div class="column">
+            <div class="container">
+                <h1 class="title has-text-centered">โครงการวิจัยทั้งหมด</h1>
+                <table class="table is-narrow is-striped" id="projectTable">
+                    <thead>
+                    <th>No.</th>
+                    <th>Thai Title</th>
+                    <th>English Title</th>
+                    <th>Create Datetime</th>
+                    <th>Status</th>
+                    <th>PIs</th>
+                    <th>Detail</th>
+                    </thead>
+                    <tbody>
+                    {% for project in projects|sort(attribute='created_at', reverse=True) %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ project.title_th }}</td>
+                        <td>{{ project.title_en }}</td>
+                        <td>{{ project.created_at|localdatetime }}</td>
+                        <td>{{ project.status }}</td>
+                        <td>
+                            {% for member in project.members %}
+                            {% if member.role == 'PI' %}
+                                {% if member.user %}
+                                {{ member.user.profile.fullname_th }},
+                                {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('webadmin.display_detail', project_id=project.id) }}"
+                               class="button is-small is-primary is-outlined">
+                                <span>รายละเอียด</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('#projectTable').DataTable();
+    })
+</script>
+{% endblock %}

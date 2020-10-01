@@ -950,3 +950,32 @@ def approve_intl_conference_support(request_id):
         db.session.commit()
         flash('The request has been approved.', 'success')
         return render_template('webadmin/intl_conference_support_list.html')
+
+
+@webadmin.route('/projects')
+def list_projects():
+    projects = ProjectRecord.query.all()
+    return render_template('webadmin/all_projects.html', projects=projects)
+
+
+@webadmin.route('/projects/<int:project_id>/detail')
+@superuser
+@login_required
+def display_detail(project_id):
+    project = ProjectRecord.query.get(project_id)
+    gantt_activities = []
+    for a in sorted(project.gantt_activities, key=lambda x: x.task_id):
+        gantt_activities.append([
+            str(a.task_id),
+            GANTT_ACTIVITIES.get(a.task_id),
+            a.start_date.isoformat(),
+            a.end_date.isoformat(),
+            None, 0, None,
+            a.start_date,
+            a.end_date,
+            a.id
+        ])
+    return render_template('webadmin/detail.html',
+                           project=project,
+                           gantt_activities=gantt_activities
+                           )
