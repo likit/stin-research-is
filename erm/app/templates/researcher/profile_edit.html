@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 
 {% block title %}Profile Page{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+{% endblock %}
 {% block page_content %}
 {% include "nav.html" %}
 <section class="section">
@@ -61,6 +65,26 @@
                     </div>
                   </div>
                 </div>
+                <div class="field">
+                    <label class="label">{{ form.position.label }}</label>
+                    <div class="control">
+                        {{ form.position(class='input') }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.field_expertise.label }}</label>
+                    <div class="control">
+                        {{ form.field_expertise(class='input') }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.experience.label }}</label>
+                    <div class="control">
+                        <div class="content">
+                            {{ form.experience(class='textarea', id='exp-editor') }}
+                        </div>
+                    </div>
+                </div>
                 <div class="field is-grouped is-grouped-centered">
                     <div class="control">
                         <button type="submit" class="button is-success">
@@ -78,4 +102,29 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+<script>
+    let toolbar = [
+        // [groupName, [list of button]]
+        ['style', ['style']],
+        ['table', ['table']],
+        ['font', ['bold', 'underline', 'strikethrough', 'superscript', 'subscript']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']]
+    ]
+    let options = {
+        height: 400,
+        toolbar: toolbar
+    }
+    $(document).ready(function() {
+        $('#exp-editor').summernote(options)
+    })
+</script>
 {% endblock %}

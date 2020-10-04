@@ -50,14 +50,17 @@ class Profile(db.Model):
     user_id = db.Column('user_id', db.ForeignKey('users.id'))
     user = db.relationship(User, backref=db.backref('profile', uselist=False))
     photo_url = db.Column('photo_url', db.String(), nullable=True)
-    title_th = db.Column('title_th', db.String(), info={'label': 'Thai Title'})
-    title_en = db.Column('title_en', db.String(), info={'label': 'English Title'})
-    firstname_th = db.Column('firstname_th', db.String(), info={'label': 'Thai First Name'})
-    lastname_th = db.Column('lastname_th', db.String(), info={'label': 'Thai Last Name'})
-    firstname_en = db.Column('firstname_en', db.String(), info={'label': 'English First Name'})
-    lastname_en = db.Column('lastname_en', db.String(), info={'label': 'English Last Name'})
+    title_th = db.Column('title_th', db.String(), info={'label': 'คำนำหน้า'})
+    title_en = db.Column('title_en', db.String(), info={'label': 'Title'})
+    firstname_th = db.Column('firstname_th', db.String(), info={'label': 'ชื่อ'})
+    lastname_th = db.Column('lastname_th', db.String(), info={'label': 'นามสกุล'})
+    firstname_en = db.Column('firstname_en', db.String(), info={'label': 'First Name'})
+    lastname_en = db.Column('lastname_en', db.String(), info={'label': 'Last Name'})
     program_id = db.Column('program_id', db.ForeignKey('programs.id'))
     program = db.relationship(Program, backref=db.backref('researchers'))
+    position = db.Column('position', db.String(), info={'label': 'ตำแหน่งปัจจุบัน'})
+    field_expertise = db.Column('field_expertise', db.String(), info={'label': 'สาขาวิชาการที่มีความชำนาญพิเศษ'})
+    experience = db.Column('experience', db.Text(), info={'label': 'ประสบการณ์ที่เกี่ยวข้องกับการบริหารงานวิจัย'})
 
     def __init__(self, user_id=None):
         self.user_id = user_id

@@ -58,6 +58,18 @@
                         <td>{{ user.profile.program or '-' }}</td>
                     </tr>
                     <tr>
+                        <td class="title is-size-5">ตำแหน่งปัจจุบัน</td>
+                        <td>{{ user.profile.position or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">สาขาวิชาการที่มีความชำนาญพิเศษ</td>
+                        <td>{{ user.profile.field_expertise or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">ประสบการณ์ที่เกี่ยวข้องกับการบริหารงานวิจัย</td>
+                        <td class="content">{{ user.profile.experience|safe or '-' }}</td>
+                    </tr>
+                    <tr>
                         <td class="title is-size-5">Education</td>
                         <td>
                         <table class="table is-fullwidth is-striped is-narrow">
