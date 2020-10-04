@@ -222,3 +222,10 @@ class FileUploadForm(FlaskForm):
                                      ('bookbank_last_page', 'หน้าสุดท้ายสมุดบัญชี')
                                      ])
     file_upload = FileField('Upload')
+
+
+class CVForm(ModelForm):
+    class Meta:
+        model = ProjectCVFile
+
+    file_upload = FileField('Upload เอกสาร')

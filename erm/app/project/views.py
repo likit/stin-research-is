@@ -1215,3 +1215,42 @@ def upload_summary_file(project_id):
             flash('อัพโหลดไฟล์เรียบร้อย', 'success')
             return redirect(url_for('project.display_project', project_id=project.id))
     return render_template('project/file_upload.html', form=form)
+
+
+@project.route('/<int:project_id>/cv', methods=['GET', 'POST'])
+@login_required
+def add_cv_file(project_id):
+    project = ProjectRecord.query.get(project_id)
+    form = CVForm()
+    if request.method == 'POST':
+        cv = ProjectCVFile()
+        form.populate_obj(cv)
+        cv.project = project
+        if form.file_upload.data:
+            upfile = form.file_upload.data
+            filename = secure_filename(upfile.filename)
+            upfile.save(filename)
+            file_drive = drive.CreateFile({'title': filename})
+            file_drive.SetContentFile(filename)
+            file_drive.Upload()
+            permission = file_drive.InsertPermission({'type': 'anyone',
+                                                      'value': 'anyone',
+                                                      'role': 'reader'})
+            cv.file_url = file_drive['id']
+            db.session.add(cv)
+            db.session.commit()
+            flash('ไฟล์ได้รับการบันทึกในระบบแล้ว', 'success')
+        return redirect(url_for('project.display_project', project_id=project.id))
+    return render_template('project/cv_form.html', form=form, project=project)
+
+
+@project.route('/<int:project_id>/cv/<int:doc_id>/remove')
+@login_required
+def remove_cv_file(project_id, doc_id):
+    doc = ProjectCVFile.query.get(doc_id)
+    file1 = drive.CreateFile({'id': doc.file_url})
+    file1.Trash()
+    db.session.delete(doc)
+    db.session.commit()
+    flash('ลบไฟล์ออกจากระบบเรียบร้อยแล้ว', 'success')
+    return redirect(url_for('project.display_project', project_id=project_id))

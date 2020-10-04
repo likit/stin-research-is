@@ -782,3 +782,12 @@ class ProjectSupplementaryDocument(db.Model):
     desc = db.Column('desc', db.Text(), info={'label': 'รายละเอียด'})
     file_url = db.Column('file_url', db.String(), info={'label': 'URL'})
     project = db.relationship('ProjectRecord', backref=db.backref('supplementary_docs'))
+
+
+class ProjectCVFile(db.Model):
+    __tablename__ = 'project_cv_files'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    project_id = db.Column('project_id', db.ForeignKey('projects.id'))
+    filename = db.Column('filename', db.String(), info={'label': 'ชื่อไฟล์'})
+    file_url = db.Column('file_url', db.String(), info={'label': 'URL'})
+    project = db.relationship('ProjectRecord', backref=db.backref('cv_files'))
