@@ -1003,7 +1003,10 @@ def export_docx(project_id):
         doc = Document()
         members = []
         for member in project.members:
-            members.append('{} ({})'.format(member.user.profile.fullname_th, member.role))
+            if member.user:
+                members.append('{} ({})'.format(member.user.profile.fullname_th, member.role))
+            else:
+                members.append('{} ({})'.format(member.fullname, member.affil))
         doc.add_heading('รายละเอียดโครงการวิจัย', 0)
         doc.add_heading('ชื่อภาษาไทย', level=1)
         doc.add_heading(project.title_th, level=1)
