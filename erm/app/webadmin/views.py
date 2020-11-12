@@ -42,6 +42,9 @@ GANTT_ACTIVITIES = dict([(1, '1. พัฒนาโครงร่างกา�
                         )
 
 
+STIN_EMAIL = os.environ.get('MAIL_USERNAME')
+
+
 def send_mail(recp, title, message):
     mail_info = MailInfo.query.first()
     signature = '\n\n-----------------------\n' + mail_info.signature
@@ -310,6 +313,12 @@ def write_review(project_id, review_id):
             review.submitted_at = arrow.now(tz='Asia/Bangkok').datetime
             db.session.add(review)
             db.session.commit()
+
+            message = '{} ได้ทำการประเมินและส่งผลการประเมินของโครงการ {} แล้วเมื่อ {}'\
+                .format(review.reviewer.fullname, project.title_th, review.submitted_at)
+
+            send_mail(STIN_EMAIL, title='การตอบกลับการรีวิวของผู้ทรงคุณวุฒิ', message=message)
+
             return redirect(url_for('webadmin.confirm_review'))
 
     return render_template('webadmin/review_form.html',
