@@ -183,9 +183,6 @@ def view_reviews(project_id):
         form = ProjectReviewRecordForm()
 
     if request.method == 'POST':
-        print(form.alignment_select.data)
-        print(form.outcome_detail_select.data)
-        print(form.benefit_detail_select.data)
         if form.validate_on_submit():
             if review is None:
                 review = ProjectReviewRecord()
