@@ -1,21 +1,17 @@
 import os
 import arrow
+import requests
 import wtforms
-from io import BytesIO
-from flask import render_template, request, redirect, url_for, flash, Response
+import pypandoc
+from flask import render_template, request, redirect, url_for, flash, Response, send_file
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
-
-from docx import Document
-
-from app import db
 from . import project_bp as project
-from .models import *
 from .forms import *
 from app.main.models import User
-import requests
 from pydrive.auth import ServiceAccountCredentials, GoogleAuth
 from pydrive.drive import GoogleDrive
+
 
 gauth = GoogleAuth()
 keyfile_dict = requests.get(os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')).json()
@@ -1000,50 +996,103 @@ def add_proposal_development_support(project_id):
 def export_docx(project_id):
     def generate():
         project = ProjectRecord.query.get(project_id)
-        doc = Document()
         members = []
         for member in project.members:
             if member.user:
                 members.append('{} ({})'.format(member.user.profile.fullname_th, member.role))
             else:
                 members.append('{} ({})'.format(member.fullname, member.affil))
-        doc.add_heading('รายละเอียดโครงการวิจัย', 0)
-        doc.add_heading('ชื่อภาษาไทย', level=1)
-        doc.add_heading(project.title_th, level=1)
-        doc.add_heading(project.subtitle_th, level=2)
-        doc.add_heading('ชื่อภาษาอังกฤษ', level=1)
-        doc.add_heading(project.title_en, level=3)
-        doc.add_heading(project.subtitle_en, level=4)
-        doc.add_heading('แหล่งทุน', level=1)
-        doc.add_paragraph(project.fund_source.name)
-        doc.add_heading('ที่ปรึกษาโครงการ', level=1)
-        doc.add_paragraph(project.mentor)
-        doc.add_heading('คณะผู้วิจัย', level=1)
-        doc.add_paragraph(', '.join(members))
-        doc.add_heading('บทคัดย่อ', level=1)
-        doc.add_paragraph(project.abstract)
-        doc.add_heading('บทนำ', level=1)
-        doc.add_paragraph(project.intro)
-        doc.add_heading('วัตถุประสงค์', level=1)
-        doc.add_paragraph(project.objective)
-        doc.add_heading('ระเบียบวิธีวิจัย', level=1)
-        doc.add_paragraph(project.method)
-        doc.add_heading('วารสารที่คาดว่าจะเผยแพร่', level=1)
-        doc.add_paragraph(project.prospected_journals)
-        doc.add_heading('การนำไปใช้ประโยชน์', level=1)
-        doc.add_paragraph(project.use_applications)
-        doc.add_heading('แก้ไขล่าสุดเมื่อวันที่', level=1)
-        doc.add_paragraph(project.updated_at.strftime('วันที่ %d-%m-%Y เวลา %H:%M นาฬิกา'))
-        doc.add_heading('ผู้ส่งโครงการ', level=1)
-        doc.add_paragraph('{} {}'.format(current_user.profile.title_th, current_user.profile.fullname_th))
-        doc.add_heading('สถานะโครงการ', level=1)
-        doc.add_paragraph(project.status)
-        out_stream = BytesIO()
-        doc.save(out_stream)
-        return out_stream.getvalue()
 
-    return Response(generate(),
-                    mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        content = '<h1>โครงการวิจัย</h1>'
+        content += '<hr>'
+        content += '<h2>ชื่อภาษาไทย</h2>'
+        content += '<h3>{}</h3><br>'.format(project.title_th)
+        content += '<h2>ชื่อรองภาษาไทย</h2>'
+        content += '<h3>{}</h3><br>'.format(project.subtitle_th)
+        content += '<h2>ชื่อภาษาอังกฤษ</h2>'
+        content += '<h3>{}</h3><br>'.format(project.title_en)
+        content += '<h2>ชื่อรองภาษาอังกฤษ</h2>'
+        content += '<h3>{}</h3><br>'.format(project.subtitle_en)
+        content += '<h2>แหล่งทุน</h2>'
+        content += '<h3>{}</h3><br>'.format(project.fund_source.name)
+        content += '<h2>ที่ปรึกษาโครงการ</h2>'
+        content += '<h3>{}</h3><br>'.format(project.mentor)
+        content += '<h2>คณะผู้วิจัย</h2>'
+        content += '<h3>{}</h3><br>'.format(', '.join(members))
+        content += '<h2>คำสำคัญ</h2>'
+        content += '<p>{}</p>'.format(', '.join(project.keywords.split(';')))
+        content += '<h2>บทคัดย่อ</h2>'
+        content += project.abstract
+        content += '<h2>ความสำคัญและที่มาของงานวิจัย</h2>'
+        content += project.intro
+        content += '<h2>วัตถุประสงค์</h2>'
+        content += project.objective
+        content += '<h2>ขอบเขตงานวิจัย</h2>'
+        content += project.scope
+        content += '<h2>นิยามคำศัพท์</h2>'
+        content += project.glossary
+        content += '<h2>ทฤษฎี สมมุติฐาน (ถ้ามี) กรอบแนวคิดของโครงการวิจัย</h2>'
+        content += project.conceptual_framework
+        content += '<h2>การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง</h2>'
+        content += project.literature_review
+        content += '<h2>เอกสารอ้างอิง</h2>'
+        content += project.references
+        content += '<h2>ประโยชน์ที่คาดว่าจะได้รับ</h2>'
+        content += project.expected_benefit
+        content += '<h2>ระเบียบวิธีวิจัย</h2>'
+        content += project.method
+        content += '<h2>วารสารที่คาดว่าจะเผยแพร่</h2>'
+        content += project.prospected_journals
+        content += '<h2>การนำไปใช้ประโยชน์</h2>'
+        content += project.use_applications
+        content += '<h2>แผนการดำเนินงาน</h2>'
+        content += ('<table border="1"><tbody>'
+                    '<tr><td>ลำดับที่</td>'
+                    '<td>กิจกรรม</td>'
+                    '<td>วันที่เริ่มต้น</td>'
+                    '<td>วันที่สิ้นสุด</td></tr>')
+        for a in sorted(project.gantt_activities, key=lambda x: x.task_id):
+            content += '<tr>'
+            content += '<td>{}</td>'.format(a.task_id)
+            content += '<td>{}</td>'.format(GANTT_ACTIVITIES.get(a.task_id))
+            content += '<td>{}</td>'.format(a.start_date.strftime('%d-%m-%Y'))
+            content += '<td>{}</td>'.format(a.end_date.strftime('%d-%m-%Y'))
+            content += '</tr>'
+        content += '</tbody></table>'
+
+        content += '<h2>งบประมาณ</h2>'
+        content += ('<table border="1"><tbody>'
+                    '<tr><td>ลำดับ</td>'
+                    '<td>หมวด</td>'
+                    '<td>รายการ</td>'
+                    '<td>จำนวนเงิน</td>'
+                    '<td>หมายเหตุ</td></tr>')
+        for n, budget in enumerate(sorted(project.overall_budgets, key=lambda x: x.category_ref), start=1):
+            content += '<tr>'
+            content += '<td>{}</td>'.format(n)
+            content += '<td>{}</td>'.format(budget.sub_category.category.category)
+            content += '<td>{}</td>'.format(budget.sub_category.sub_category)
+            content += '<td>{}</td>'.format(budget.wage)
+            content += '<td>{}</td>'.format(budget.item)
+            content += '</tr>'
+        content += '</tbody></table>'
+
+        content += '<h2>แก้ไขล่าสุดเมื่อวันที่</h2>'
+        content += '<p>{}</p>'.format(project.updated_at.strftime('วันที่ %d-%m-%Y เวลา %H:%M นาฬิกา'))
+        content += '<h2>ผู้ส่งโครงการ</h2>'
+        content += '<p>{} {}</p>'.format(current_user.profile.title_th, current_user.profile.fullname_th)
+        content += '<h2>สถานะโครงการ</h2>'
+        content += '<p>{}</p>'.format(project.status)
+
+        content += '<h2>รูปภาพ</h2>'
+        for fig in project.figures:
+            imgUrl = 'https://drive.google.com/uc?id={}'.format(fig.url)
+            content += '<br><img src="{}">'.format(imgUrl)
+            content += '<br>{}) {}<br>'.format(fig.fignum, fig.title)
+        pypandoc.convert_text(content, 'docx', format='html', outputfile='app/export.docx')
+
+    generate()
+    return send_file('export.docx')
 
 
 @project.route('/<int:project_id>/reviews')
