@@ -8,9 +8,20 @@ from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from . import project_bp as project
 from .forms import *
-from app.main.models import User
+from app.main.models import User, MailInfo
+from app import mail
 from pydrive.auth import ServiceAccountCredentials, GoogleAuth
 from pydrive.drive import GoogleDrive
+from flask_mail import Message
+
+STIN_EMAIL = os.environ.get('MAIL_USERNAME')
+
+
+def send_mail(recp, title, message):
+    mail_info = MailInfo.query.first()
+    signature = '\n\n-----------------------\n' + mail_info.signature
+    message = Message(subject=title, body=message + signature, recipients=[recp])
+    mail.send(message)
 
 
 gauth = GoogleAuth()
@@ -429,6 +440,13 @@ def submit_project(project_id):
     archive = make_project_archive(project)
     db.session.add(archive)
     db.session.commit()
+    for member in project.members:
+        mail = member.user.email if member.user else member.email
+        if mail:
+            message = ('ศูนย์วิจัยได้รับโครงการวิจัยเรื่อง{} ที่ท่านร่วมทำวิจัยในฐานะ {} เพื่อพิจารณาแล้วเมื่อวันที่ {}'\
+                      ' หากท่านไม่ได้เข้าร่วมทำวิจัยในโครงการนี้ กรุณาแจ้งให้ทางศูนย์ทราบทันที')\
+                .format(project.title_th, member.role, project.submitted_at.strftime('%d/%m/%Y %H:%M'))
+            send_mail(mail, 'โครงการวิจัยที่ท่านเข้าร่วมได้ยื่นขอรับการพิจารณาแล้ว', message)
     flash('ยื่นขอพิจารณาโครงการเรียบร้อยแล้ว', 'success')
     return redirect(url_for('project.display_project', project_id=project.id))
 

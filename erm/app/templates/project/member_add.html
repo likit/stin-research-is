@@ -42,6 +42,12 @@
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label">{{ form.email.label }}</label>
+                            <div class="control">
+                                {{ form.email(class="input", type="email") }}
+                            </div>
+                        </div>
+                        <div class="field">
                             <label class="label">{{ form.affil.label }}</label>
                             <div class="control">
                                 {{ form.affil(class="input") }}

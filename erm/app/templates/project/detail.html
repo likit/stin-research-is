@@ -293,7 +293,7 @@
                             <tr>
                                 <td>{{ member.user.profile or member.fullname }}</td>
                                 <td>{{ member.role }}</td>
-                                <td>{{ member.user.email }}</td>
+                                <td>{{ member.user.email or member.email or '-' }}</td>
                                 <td>
                                     {% if current_user == project.creator and project.editable %}
                                     <a href="{{ url_for('project.remove_member', project_id=project.id, member_id=member.id) }}">
