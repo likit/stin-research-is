@@ -29,15 +29,15 @@
                             <td class="title is-size-5" width="20%">ชื่อรองภาษาอังกฤษ</td><td>{{ project.subtitle_en }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">ที่ปรึกษาโครงการ</td><td>{{ project.mentor }}</td>
+                            <td class="title is-size-5" width="20%">ที่ปรึกษาโครงการ</td><td>{{ project.mentor or '-' }}</td>
                         </tr>
                         <tr>
                             <td class="title is-size-5" width="20%">ประเภทของงานวิจัย</td>
-                            <td class="content">{{ project.research_type }}</td>
+                            <td class="content">{{ project.research_type or '-' }}</td>
                         </tr>
                         <tr>
                             <td class="title is-size-5" width="20%">สาขาวิชาการและกลุ่มที่ทำวิจัย</td>
-                            <td class="content">{{ project.research_cluster }}</td>
+                            <td class="content">{{ project.research_cluster or '-' }}</td>
                         </tr>
                         <tr>
                             <td class="title is-size-5" width="20%">คำสำคัญของโครงการวิจัย</td>
@@ -297,21 +297,6 @@
                             <label class="label">{{ form.idea_comment.label }}</label>
                             <div class="control">
                                 {{ form.idea_comment(class="textarea") }}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="field">
-                            <label class="label">{{ form.objective.label }}</label>
-                            <div class="control">
-                                <div class="select">
-                                    {{ form.objective() }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">{{ form.objective_comment.label }}</label>
-                            <div class="control">
-                                {{ form.objective_comment(class="textarea") }}
                             </div>
                         </div>
                         <hr>

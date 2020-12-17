@@ -213,7 +213,12 @@ def send_for_reviews(project_id):
             for review in project.reviews:
                 serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=3600)
                 token = serializer.dumps({'review_id': review.id})
-                url = url_for('webadmin.write_review', project_id=project.id, review_id=review.id, token=token, _external=True)
+                url = url_for('webadmin.write_review',
+                              project_id=project.id,
+                              review_id=review.id,
+                              token=token,
+                              _external=True)
+
                 message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
                     .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
                 try:
@@ -229,8 +234,59 @@ def send_for_reviews(project_id):
                     db.session.add(new_send)
             db.session.commit()
             flash('The project has been sent for all reviewers.', 'success')
-            return redirect(url_for('webadmin.submission_detail', project_id=project.id))
+            return redirect(url_for('webadmin.submission_detail',
+                                    project_id=project.id))
+        else:
+            flash(form.errors, 'danger')
+
     return render_template('webadmin/send_reviews.html', form=form, project=project)
+
+
+@webadmin.route('/submissions/<int:project_id>/reviews/send/<int:reviewer_id>',
+                methods=['GET', 'POST'])
+@superuser
+@login_required
+def send_for_review_single(project_id, reviewer_id=None):
+    project = ProjectRecord.query.get(project_id)
+    form = ProjectReviewSendRecordForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            review = ProjectReviewRecord.query.filter_by(reviewer_id=reviewer_id,
+                                                         project_id=project_id).first()
+            if review:
+                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=3600)
+                token = serializer.dumps({'review_id': review.id})
+                url = url_for('webadmin.write_review',
+                              project_id=project.id,
+                              review_id=review.id,
+                              token=token,
+                              _external=True)
+
+                message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
+                    .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
+                try:
+                    send_mail(review.reviewer.email,
+                              title=form.title.data,
+                              message=message)
+                except:
+                    flash('Failed to send an email to {}'.format(review.reviewer.email), 'danger')
+                else:
+                    new_send = ProjectReviewSendRecord()
+                    form.populate_obj(new_send)
+                    new_send.review_id = review.id
+                    new_send.to = review.reviewer.email
+                    new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
+                    db.session.add(new_send)
+                db.session.commit()
+                flash('The project has been sent for all reviewers.', 'success')
+                return redirect(url_for('webadmin.submission_detail',
+                                        project_id=project.id))
+            else:
+                flash('Reviewer does not exists.', 'danger')
+        else:
+            flash(form.error, 'danger')
+    return render_template('webadmin/send_reviews.html',
+                           form=form, project=project)
 
 
 @webadmin.route('/submissions/<int:project_id>/reviews/sends', methods=['GET', 'POST'])

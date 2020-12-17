@@ -31,7 +31,15 @@
                                     <thead>
                                     <th>To</th>
                                     <th>At</th>
-                                    <th></th>
+                                    <th>
+                                        <a class="button is-primary is-outlined",
+                                            href="{{ url_for('webadmin.send_for_reviews', project_id=project.id, reviewer_id=review.reviewer.id) }}">
+                                            <span class="icon">
+                                                <i class="far fa-paper-plane"></i>
+                                            </span>
+                                            <span>Send</span>
+                                        </a>
+                                    </th>
                                     </thead>
                                     {% for record in review.send_records %}
                                     <tbody>
@@ -40,9 +48,9 @@
                                         <td>{{ record.sent_at|localdatetime }}</td>
                                         <td>
                                             <a href="{{ url_for('webadmin.resend_for_review', project_id=project.id, record_id=record.id) }}"
-                                               class="button is-link is-outlined">
+                                               class="button is-warning is-outlined">
                                                 <span class="icon">
-                                                    <i class="fas fa-share"></i>
+                                                    <i class="far fa-paper-plane"></i>
                                                 </span>
                                                 <span>Resend</span>
                                             </a>

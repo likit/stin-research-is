@@ -472,7 +472,7 @@ class ProjectReviewRecord(db.Model):
                                    info={'label': 'ข้อคิดเห็น'})
 
     sampling = db.Column('sampling', db.Unicode(),
-                     info={'label': 'การเลือกสุ่มตัวอย่าง',
+                     info={'label': 'การเลือกกลุ่มตัวอย่าง',
                            'choices': [(c, c) for c in ('ถูกต้อง', 'ควรปรับปรุง')]})
     sampling_comment = db.Column('sampling_comment', db.Text(),
                              info={'label': 'ข้อคิดเห็น'})
@@ -532,12 +532,17 @@ class ProjectReviewRecord(db.Model):
     budget = db.Column('budget', db.Unicode(),
                      info={'label': 'งบประมาณ',
                            'choices': [(c, c) for c in ('เหมาะสม', 'ควรปรับปรุง')]})
+
     budget_comment = db.Column('budget_comment', db.Text(),
                              info={'label': 'ข้อคิดเห็น'})
 
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
-    reviewer = db.relationship('ProjectReviewer', backref=db.backref('records'))
-    project = db.relationship('ProjectRecord', backref=db.backref('reviews'))
+    reviewer = db.relationship('ProjectReviewer',
+                               backref=db.backref('records',
+                                                  cascade='all, delete-orphan'))
+    project = db.relationship('ProjectRecord',
+                              backref=db.backref('reviews',
+                                                 cascade='all, delete-orphan'))
     summarized = db.Column('summarized', db.Boolean(), default=False)
     released_at = db.Column('released_at', db.DateTime(timezone=True))
 
@@ -551,7 +556,9 @@ class ProjectReviewSendRecord(db.Model):
     message = db.Column('message', db.Text(), info={'label': 'Message'})
     footer = db.Column('footer', db.String(), info={'label': 'Footer'})
     deadline = db.Column('deadline', db.Date())
-    review = db.relationship('ProjectReviewRecord', backref=db.backref('send_records'))
+    review = db.relationship('ProjectReviewRecord',
+                             backref=db.backref('send_records',
+                                                cascade='all, delete-orphan'))
     to = db.Column('to', db.String())
 
 
