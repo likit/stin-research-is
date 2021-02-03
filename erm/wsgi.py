@@ -49,6 +49,19 @@ def local_datetime(dt):
     return dt.strftime(datetime_format)
 
 
+@app.context_processor
+def utility_processor():
+    # the context processor returns a dictionary that will be injected into the template context
+    def sum_objects(obj_list, attr):
+        return sum([getattr(obj, attr) for obj in obj_list])
+    return {'sum_objs': sum_objects}
+
+
+@app.template_filter("format_number")
+def format_number(number, formatting='{0:.2f}', currency=''):
+    return formatting.format(number) + ' ' + currency
+
+
 admin.add_view(ModelView(User, db.session, category='Main'))
 admin.add_view(ModelView(MailInfo, db.session, category='Main'))
 admin.add_view(ModelView(Profile, db.session, category='Researcher'))

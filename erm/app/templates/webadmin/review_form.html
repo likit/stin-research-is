@@ -118,10 +118,15 @@
                                     {% for budget in project.overall_budgets|sort(attribute='category_ref') %}
                                     <tr>
                                         <td>{{ budget.sub_category }}</td>
-                                        <td>{{ budget.wage }}</td>
+                                        <td align="right">{{ budget.wage|format_number }}</td>
                                         <td>{{ budget.item }}</td>
                                     </tr>
                                     {% endfor %}
+                                    <tr>
+                                        <td align="right">รวม</td>
+                                        <td align="right">{{ sum_objs(project.overall_budgets, 'wage')|format_number }}</td>
+                                        <td></td>
+                                    </tr>
                                     </tbody>
 
                                 </table>

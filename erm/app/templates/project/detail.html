@@ -180,7 +180,7 @@
                             <tr>
                                 <td colspan="4" class="has-text-centered">
                                     <a href="{{ url_for('project.add_overall_gantt_activity', project_id=project.id) }}"
-                                       class="button is-small is-rounded is-outlined is-success">
+                                       class="button is-small is-rounded is-link">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -206,7 +206,7 @@
                             {% for budget in project.overall_budgets|sort(attribute='category_ref') %}
                             <tr>
                                 <td>{{ budget.sub_category }}</td>
-                                <td>{{ budget.wage }}</td>
+                                <td align="right">{{ budget.wage|format_number }}</td>
                                 <td>{{ budget.item }}</td>
                                 <td>
                                     <a href="{{ url_for('project.edit_overall_budget_item', item_id=budget.id, project_id=project.id) }}">
@@ -223,8 +223,14 @@
                             </tr>
                             {% endfor %}
                             <tr>
+                                <td align="right">รวม</td>
+                                <td align="right">{{ sum_objs(project.overall_budgets, 'wage')|format_number }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
                                 <td colspan="4" class="has-text-centered">
-                                    <a class="button is-rounded is-outlined is-success is-small"
+                                    <a class="button is-rounded is-link is-small"
                                        href="{{ url_for('project.add_overall_budget_item', project_id=project.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
@@ -313,7 +319,7 @@
                                        {% else %}
                                        disabled
                                        {% endif %}
-                                       class="is-link is-small is-outlined is-rounded button">
+                                       class="is-link is-small is-rounded button">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -360,7 +366,7 @@
                             {% endfor %}
                             <tr>
                                 <td colspan="5" class="has-text-centered">
-                                    <a class="is-link is-outlined is-small is-rounded button"
+                                    <a class="is-link is-small is-rounded button"
                                        {% if current_user == project.creator and project.editable %}
                                        href="{{ url_for('project.add_figure', project_id=project.id) }}"
                                        {% else %}
@@ -407,7 +413,7 @@
                                 </td>
                                 <td>
                                     <a href="{{ url_for('project.upload_ethic_doc', ethic_id=e.id) }}"
-                                        class="button is-outlined is-primary is-small">
+                                        class="button is-primary is-small">
                                         <span class="icon">
                                             <i class="far fa-file-alt"></i>
                                         </span>
@@ -418,7 +424,7 @@
                             {% endfor %}
                             <tr>
                                 <td colspan="5" class="has-text-centered">
-                                    <a class="button is-small is-outlined is-link is-rounded"
+                                    <a class="button is-small is-link is-rounded"
                                        {% if project.status != "concept approved" %}
                                        disabled
                                        {% else %}
@@ -483,20 +489,20 @@
                                 <td>
                                     <div class="buttons has-addons">
                                         <a href="{{ url_for('project.list_gantt_activity', project_id=project.id, milestone_id=m.id) }}"
-                                            class="button is-small is-primary is-outlined">
+                                            class="button is-small is-primary">
                                             <span class="icon">
                                                <i class="far fa-calendar-alt"></i>
                                             </span>
                                             <span>Gantt Chart</span>
                                         </a>
-                                        <a class="button is-small is-primary is-outlined"
+                                        <a class="button is-small is-primary"
                                             href="{{ url_for('project.list_budget_items', project_id=project.id, milestone_id=m.id) }}">
                                             <span class="icon">
                                                 <i class="fas fa-dollar-sign"></i>
                                             </span>
                                             <span>งบประมาณ</span>
                                         </a>
-                                        <a class="button is-small is-primary is-outlined"
+                                        <a class="button is-small is-primary"
                                            href="{{ url_for('project.list_summaries', project_id=project.id, milestone_id=m.id) }}">
                                             <span class="icon">
                                                 <i class="fas fa-flag"></i>
@@ -512,14 +518,14 @@
                                 <td colspan="4" class="has-text-centered">
                                     <div class="buttons is-centered">
                                     <a href="{{ url_for('project.add_milestone', project_id=project.id) }}"
-                                        class="button is-small is-rounded is-outlined is-link">
+                                        class="button is-small is-rounded is-link">
                                         <span class="icon">
                                                 <i class="fas fa-plus"></i>
                                         </span>
                                         <span>เพิ่มรายการ</span>
                                     </a>
                                     <a href="{{ url_for('project.clone_milestone', project_id=project.id) }}"
-                                       class="button is-small is-rounded is-outlined is-primary">
+                                       class="button is-small is-rounded is-primary">
                                         <span class="icon">
                                                 <i class="fas fa-plus"></i>
                                         </span>
@@ -564,14 +570,14 @@
                                     {% if project.status.endswith('approved') %}
                                     <div class="buttons">
                                         <a href="{{ url_for('project.add_lang_support', project_id=project.id, pub_id=p.id) }}"
-                                           class="button is-small is-rounded is-outlined is-link">
+                                           class="button is-small is-rounded is-link">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
                                             <span>ตรวจภาษา</span>
                                         </a>
                                         <a href="{{ url_for('project.add_pub_reward', project_id=project.id, pub_id=p.id) }}"
-                                                class="button is-small is-rounded is-outlined is-link">
+                                                class="button is-small is-rounded is-link">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -586,7 +592,7 @@
                             <tr>
                                 <td colspan="5" class="has-text-centered">
                                     <a href="{{ url_for('project.add_pub', project_id=project.id) }}"
-                                        class="is-link is-outlined is-rounded is-small button">
+                                        class="is-link is-rounded is-small button">
                                         <span class="icon">
                                                 <i class="fas fa-plus"></i>
                                         </span>
@@ -742,7 +748,7 @@
                             <tr>
                                 <td colspan="4" class="has-text-centered">
                                     <a href="{{ url_for('project.add_proposal_development_support', project_id=project.id) }}"
-                                       class="button is-rounded is-outlined is-link is-small">
+                                       class="button is-rounded is-link is-small">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -810,7 +816,7 @@
                                        {% else %}
                                        href="{{ url_for('project.add_application', project_id=project.id) }}"
                                        {% endif %}
-                                       class="is-link is-outlined is-small is-rounded button">
+                                       class="is-link is-small is-rounded button">
                                             <span class="icon">
                                                 <i class="fas fa-plus"></i>
                                             </span><span>เพิ่มรายการ</span>
@@ -827,7 +833,7 @@
                     <td class="title is-size-5">Project Reviews</td>
                     <td>
                         {% if project.summarized_review_ready %}
-                        <a class="button is-primary is-outlined"
+                        <a class="button is-primary
                             href="{{ url_for('project.view_reviews', project_id=project.id) }}">
                             <span>See review</span>
                         </a>
@@ -882,7 +888,7 @@
                             {% if project.status != 'approved' %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
-                                    <a class="button is-small is-rounded is-success is-outlined"
+                                    <a class="button is-small is-rounded is-link"
                                        href="{{ url_for('project.add_supplementary_doc', project_id=project.id) }}"
                                     >
                                         <span class="icon">
@@ -930,7 +936,7 @@
                             {% if project.status != 'approved' %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
-                                    <a class="button is-small is-rounded is-success is-outlined"
+                                    <a class="button is-small is-rounded is-link"
                                        href="{{ url_for('project.add_cv_file', project_id=project.id) }}"
                                     >
                                         <span class="icon">
@@ -1011,7 +1017,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2" class="has-text-centered">
-                                    <a class="button is-small is-rounded is-outlined is-success"
+                                    <a class="button is-small is-rounded is-link"
                                        href="{{ url_for('project.upload_summary_file', project_id=project.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
@@ -1085,7 +1091,6 @@
         data.addColumn('string', 'Dependencies');
 
         var activities = {{ gantt_activities|tojson|safe }};
-        console.log(activities)
         var gantt_activities = [];
         activities.forEach(function(item) {
             start_date = new Date(item[2]);
@@ -1101,7 +1106,9 @@
 
         var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
 
-        chart.draw(data, options);
+        if (jQuery.isEmptyObject(activities)) {
+            chart.draw(data, options);
+        }
     }
 </script>
 {% endblock %}
