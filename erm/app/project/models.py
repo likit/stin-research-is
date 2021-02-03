@@ -358,9 +358,17 @@ class ProjectBudgetSubCategory(db.Model):
     sub_category = db.Column('sub_category', db.String())
     category_id = db.Column('category_id', db.ForeignKey('project_budget_category.id'))
     category = db.relationship(ProjectBudgetCategory, backref=db.backref('subcategories'))
+    desc = db.Column('desc', db.String(255), nullable=True, info={
+        'label': 'รายละเอียด'
+    })
 
     def __str__(self):
-        return '<{}> {}. {}'.format(self.category.category, self.sub_category_id, self.sub_category)
+        repr = '<{}> {}. {}'.format(self.category.category,
+                                    self.sub_category_id, self.sub_category, self.desc)
+        if self.desc:
+            return '{} ({})'.format(repr, self.desc)
+        else:
+            return repr
 
 
 class ProjectBudgetItem(db.Model):
