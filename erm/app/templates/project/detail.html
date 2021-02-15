@@ -164,6 +164,7 @@
                                 <td>{{ activity[-3]|localdate }}</td>
                                 <td>{{ activity[-2]|localdate }}</td>
                                 <td>
+                                    {% if current_user == project.creator and project.editable %}
                                     <a href="{{ url_for('project.edit_overall_gantt_activity', activity_id=activity[-1]) }}">
                                         <span class="icon">
                                             <i class="fas fa-pencil-alt has-text-dark"></i>
@@ -174,11 +175,13 @@
                                             <i class="fas fa-trash-alt has-text-danger"></i>
                                         </span>
                                     </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endfor %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
+                                    {% if current_user == project.creator and project.editable %}
                                     <a href="{{ url_for('project.add_overall_gantt_activity', project_id=project.id) }}"
                                        class="button is-small is-rounded is-link">
                                         <span class="icon">
@@ -186,6 +189,7 @@
                                         </span>
                                         <span>เพิ่มรายการ</span>
                                     </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             </tbody>
@@ -209,6 +213,7 @@
                                 <td align="right">{{ budget.wage|format_number }}</td>
                                 <td>{{ budget.item }}</td>
                                 <td>
+                                    {% if current_user == project.creator and project.editable %}
                                     <a href="{{ url_for('project.edit_overall_budget_item', item_id=budget.id, project_id=project.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-pencil-alt"></i>
@@ -219,6 +224,7 @@
                                             <i class="fas fa-trash-alt has-text-danger"></i>
                                         </span>
                                     </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endfor %}
@@ -230,6 +236,7 @@
                             </tr>
                             <tr>
                                 <td colspan="4" class="has-text-centered">
+                                    {% if current_user == project.creator and project.editable %}
                                     <a class="button is-rounded is-link is-small"
                                        href="{{ url_for('project.add_overall_budget_item', project_id=project.id) }}">
                                         <span class="icon">
@@ -237,6 +244,7 @@
                                         </span>
                                         <span>เพิ่มรายการ</span>
                                     </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             </tbody>
@@ -888,6 +896,7 @@
                             {% if project.status != 'approved' %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
+                                    {% if current_user == project.creator and project.editable %}
                                     <a class="button is-small is-rounded is-link"
                                        href="{{ url_for('project.add_supplementary_doc', project_id=project.id) }}"
                                     >
@@ -895,6 +904,7 @@
                                             <i class="fas fa-plus"></i>
                                         </span><span>เพิ่มไฟล์</span>
                                     </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endif %}
@@ -936,6 +946,7 @@
                             {% if project.status != 'approved' %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
+                                    {% if current_user == project.creator and project.editable %}
                                     <a class="button is-small is-rounded is-link"
                                        href="{{ url_for('project.add_cv_file', project_id=project.id) }}"
                                     >
@@ -943,6 +954,7 @@
                                             <i class="fas fa-plus"></i>
                                         </span><span>เพิ่มไฟล์</span>
                                     </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endif %}
@@ -1101,12 +1113,12 @@
         });
         data.addRows(gantt_activities);
         let options = {
-            height: 275
+            height: 600,
         };
 
         var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
 
-        if (jQuery.isEmptyObject(activities)) {
+        if (!jQuery.isEmptyObject(activities)) {
             chart.draw(data, options);
         }
     }
