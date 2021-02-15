@@ -7,84 +7,85 @@
 <section class="section">
     <div class="container">
         <div class="columns">
-            <div class="column is-four-fifths is-offset-1">
+            <div class="column">
                 {% for cat,msg in get_flashed_messages(with_categories=true) %}
                 <p class="notification is-{{ cat }}">{{ msg }}</p>
                 {% endfor %}
                 <div class="box">
                     <h1 class="title has-text-centered">Project Detail</h1>
                     <table class="table is-fullwidth is-bordered">
+                        <col style="width: 20%">
                         {% if project.parent_project %}
                         <tr>
-                            <td class="title is-size-5" width="20%">ชุดโครงการ</td><td>{{ project.parent_project }}</td>
+                            <td class="title is-size-5">ชุดโครงการ</td><td>{{ project.parent_project }}</td>
                         </tr>
                         {% endif %}
                         <tr>
-                            <td class="title is-size-5" width="20%">ชื่อรองภาษาไทย</td><td>{{ project.subtitle_th }}</td>
+                            <td class="title is-size-5">ชื่อรองภาษาไทย</td><td>{{ project.subtitle_th }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">ชื่อภาษาอังกฤษ</td><td>{{ project.title_en }}</td>
+                            <td class="title is-size-5">ชื่อภาษาอังกฤษ</td><td>{{ project.title_en }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">ชื่อรองภาษาอังกฤษ</td><td>{{ project.subtitle_en }}</td>
+                            <td class="title is-size-5">ชื่อรองภาษาอังกฤษ</td><td>{{ project.subtitle_en }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">ที่ปรึกษาโครงการ</td><td>{{ project.mentor or '-' }}</td>
+                            <td class="title is-size-5">ที่ปรึกษาโครงการ</td><td>{{ project.mentor or '-' }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">ประเภทของงานวิจัย</td>
+                            <td class="title is-size-5">ประเภทของงานวิจัย</td>
                             <td class="content">{{ project.research_type or '-' }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">สาขาวิชาการและกลุ่มที่ทำวิจัย</td>
+                            <td class="title is-size-5">สาขาวิชาการและกลุ่มที่ทำวิจัย</td>
                             <td class="content">{{ project.research_cluster or '-' }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">คำสำคัญของโครงการวิจัย</td>
+                            <td class="title is-size-5">คำสำคัญของโครงการวิจัย</td>
                             <td class="content">{{ project.keywords|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">บทคัดย่อ</td>
+                            <td class="title is-size-5">บทคัดย่อ</td>
                             <td class="content">{{ project.abstract|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">ความสำคัญและที่มาของปัญหาที่ทำการวิจัย</td>
+                            <td class="title is-size-5">ความสำคัญและที่มาของปัญหาที่ทำการวิจัย</td>
                             <td class="content">{{ project.intro|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">วัตถุประสงค์ของโครงการวิจัย</td>
+                            <td class="title is-size-5">วัตถุประสงค์ของโครงการวิจัย</td>
                             <td class="content">{{ project.objective|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">ขอบเขตของโครงงานวิจัย</td>
+                            <td class="title is-size-5">ขอบเขตของโครงงานวิจัย</td>
                             <td class="content">{{ project.scope|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">นิยามคำศัพท์</td>
+                            <td class="title is-size-5">นิยามคำศัพท์</td>
                             <td class="content">{{ project.glossary|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">ทฤษฎี สมมุติฐานและกรอบแนวคิด</td>
+                            <td class="title is-size-5">ทฤษฎี สมมุติฐานและกรอบแนวคิด</td>
                             <td class="content">{{ project.conceptual_framework|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง</td>
+                            <td class="title is-size-5">การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง</td>
                             <td class="content">{{ project.literature_review|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">เอกสารอ้างอิง</td>
+                            <td class="title is-size-5">เอกสารอ้างอิง</td>
                             <td class="content">{{ project.references|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">ประโยชน์ที่คาดว่าจะได้รับ</td>
+                            <td class="title is-size-5">ประโยชน์ที่คาดว่าจะได้รับ</td>
                             <td class="content">{{ project.expected_benefit|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">ระเบียบวิธีวิจัย</td>
+                            <td class="title is-size-5">ระเบียบวิธีวิจัย</td>
                             <td class="content">{{ project.method|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">แผนการดำเนินงาน</td>
+                            <td class="title is-size-5">แผนการดำเนินงาน</td>
                             <td>
                                 <div id="chart_div"></div>
                                 <table class="table is-striped is-narrow is-fullwidth">
@@ -106,7 +107,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">งบประมาณ</td>
+                            <td class="title is-size-5">งบประมาณ</td>
                             <td>
                                 <table class="table is-fullwidth is-striped is-narrow">
                                     <thead>
@@ -133,13 +134,13 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">วารสารที่คาดว่าจะส่งตีพิมพ์ผลงาน</td><td>{{ project.prospected_journals }}</td>
+                            <td class="title is-size-5">วารสารที่คาดว่าจะส่งตีพิมพ์ผลงาน</td><td>{{ project.prospected_journals }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">การนำไปใช้ประโยชน์</td><td>{{ project.use_applications }}</td>
+                            <td class="title is-size-5">การนำไปใช้ประโยชน์</td><td>{{ project.use_applications }}</td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5" width="20%">หมวดหมู่</td>
+                            <td class="title is-size-5">หมวดหมู่</td>
                             <td>
                                 <div class="field is-grouped is-grouped-multiline">
                                     {% for cat in project.subcategories %}
@@ -510,12 +511,15 @@
         });
         data.addRows(gantt_activities);
         let options = {
-            height: 275
+            height: '600',
+            width: '100%'
         };
 
         var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
 
-        chart.draw(data, options);
+        if (!jQuery.isEmptyObject(activities)) {
+            chart.draw(data, options);
+        }
     }
 </script>
 {% endblock %}
