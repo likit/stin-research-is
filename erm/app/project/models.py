@@ -150,10 +150,8 @@ class ProjectRecord(db.Model):
 
     @property
     def editable(self):
-        if self.status == 'draft' or self.status == 'concept approved':
+        if self.status == 'draft' or self.status == 'revising':
             return True
-        elif self.status.endswith('submitted'):
-            return False
         else:
             return False
 
