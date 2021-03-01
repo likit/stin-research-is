@@ -99,15 +99,15 @@ class ProjectRecord(db.Model):
     status = db.Column('status', db.String(),
                        info={'label': 'สถานะโครงการ',
                              'choices': [(i, i) for i in ['draft',
-                                                          'concept submitted',
-                                                          'concept revising',
-                                                          'concept approved',
-                                                          'full submitted',
-                                                          'full revising',
-                                                          'full approved',
+                                                          'submitted',
+                                                          'revising',
+                                                          'approved',
                                                           'rejected',
                                                           'finished',
-                                                          'terminated']]})
+                                                          'terminated'
+                                                         ]
+                                        ]
+                            })
     prospected_journals = db.Column('prospected_journals', db.Text(),
                                     info={'label': 'วารสารวิชาการที่คาดหวังจะส่งผลงานเข้าเผยแพร่'})
     use_applications = db.Column('use_applications', db.Text(),

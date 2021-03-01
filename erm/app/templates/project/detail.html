@@ -31,7 +31,7 @@
                 </p>
                 <br>
                 <div class="tags has-addons is-centered">
-                    <span class="tag is-medium is-primary">สถานะ</span>
+                    <span class="tag is-medium is-primary is-outlined">สถานะ</span>
                     <span class="tag is-medium">{{ project.status }}</span>
                 </div>
             </div>
@@ -183,7 +183,7 @@
                                 <td colspan="4" class="has-text-centered">
                                     {% if current_user == project.creator and project.editable %}
                                     <a href="{{ url_for('project.add_overall_gantt_activity', project_id=project.id) }}"
-                                       class="button is-small is-rounded is-link">
+                                       class="button is-small  is-link is-outlined">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -237,7 +237,7 @@
                             <tr>
                                 <td colspan="4" class="has-text-centered">
                                     {% if current_user == project.creator and project.editable %}
-                                    <a class="button is-rounded is-link is-small"
+                                    <a class="button  is-link is-small is-outlined"
                                        href="{{ url_for('project.add_overall_budget_item', project_id=project.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
@@ -262,7 +262,7 @@
                 <tr>
                     <td class="title is-size-5" width="20%">สถานะ</td>
                     <td>
-                        <span class="tag is-medium is-primary">{{ project.status }}</span>
+                        <span class="tag is-medium is-primary is-outlined">{{ project.status }}</span>
                     </td>
                 </tr>
                 {% if project.status == 'submitted' %}
@@ -327,7 +327,7 @@
                                        {% else %}
                                        disabled
                                        {% endif %}
-                                       class="is-link is-small is-rounded button">
+                                       class="is-link is-small  button is-outlined">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -374,7 +374,7 @@
                             {% endfor %}
                             <tr>
                                 <td colspan="5" class="has-text-centered">
-                                    <a class="is-link is-small is-rounded button"
+                                    <a class="is-link is-small  button is-outlined"
                                        {% if current_user == project.creator and project.editable %}
                                        href="{{ url_for('project.add_figure', project_id=project.id) }}"
                                        {% else %}
@@ -421,7 +421,7 @@
                                 </td>
                                 <td>
                                     <a href="{{ url_for('project.upload_ethic_doc', ethic_id=e.id) }}"
-                                        class="button is-primary is-small">
+                                        class="button is-primary is-small is-outlined">
                                         <span class="icon">
                                             <i class="far fa-file-alt"></i>
                                         </span>
@@ -432,7 +432,7 @@
                             {% endfor %}
                             <tr>
                                 <td colspan="5" class="has-text-centered">
-                                    <a class="button is-small is-link is-rounded"
+                                    <a class="button is-small is-link  is-outlined"
                                        {% if project.status != "concept approved" %}
                                        disabled
                                        {% else %}
@@ -497,20 +497,20 @@
                                 <td>
                                     <div class="buttons has-addons">
                                         <a href="{{ url_for('project.list_gantt_activity', project_id=project.id, milestone_id=m.id) }}"
-                                            class="button is-small is-primary">
+                                            class="button is-small is-primary is-outlined">
                                             <span class="icon">
                                                <i class="far fa-calendar-alt"></i>
                                             </span>
                                             <span>Gantt Chart</span>
                                         </a>
-                                        <a class="button is-small is-primary"
+                                        <a class="button is-small is-primary is-outlined"
                                             href="{{ url_for('project.list_budget_items', project_id=project.id, milestone_id=m.id) }}">
                                             <span class="icon">
                                                 <i class="fas fa-dollar-sign"></i>
                                             </span>
                                             <span>งบประมาณ</span>
                                         </a>
-                                        <a class="button is-small is-primary"
+                                        <a class="button is-small is-primary is-outlined"
                                            href="{{ url_for('project.list_summaries', project_id=project.id, milestone_id=m.id) }}">
                                             <span class="icon">
                                                 <i class="fas fa-flag"></i>
@@ -526,14 +526,14 @@
                                 <td colspan="4" class="has-text-centered">
                                     <div class="buttons is-centered">
                                     <a href="{{ url_for('project.add_milestone', project_id=project.id) }}"
-                                        class="button is-small is-rounded is-link">
+                                        class="button is-small  is-link is-outlined">
                                         <span class="icon">
                                                 <i class="fas fa-plus"></i>
                                         </span>
                                         <span>เพิ่มรายการ</span>
                                     </a>
                                     <a href="{{ url_for('project.clone_milestone', project_id=project.id) }}"
-                                       class="button is-small is-rounded is-primary">
+                                       class="button is-small  is-primary is-outlined">
                                         <span class="icon">
                                                 <i class="fas fa-plus"></i>
                                         </span>
@@ -578,14 +578,14 @@
                                     {% if project.status.endswith('approved') %}
                                     <div class="buttons">
                                         <a href="{{ url_for('project.add_lang_support', project_id=project.id, pub_id=p.id) }}"
-                                           class="button is-small is-rounded is-link">
+                                           class="button is-small  is-link is-outlined">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
                                             <span>ตรวจภาษา</span>
                                         </a>
                                         <a href="{{ url_for('project.add_pub_reward', project_id=project.id, pub_id=p.id) }}"
-                                                class="button is-small is-rounded is-link">
+                                                class="button is-small  is-link is-outlined">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -600,7 +600,7 @@
                             <tr>
                                 <td colspan="5" class="has-text-centered">
                                     <a href="{{ url_for('project.add_pub', project_id=project.id) }}"
-                                        class="is-link is-rounded is-small button">
+                                        class="is-link  is-small button is-outlined">
                                         <span class="icon">
                                                 <i class="fas fa-plus"></i>
                                         </span>
@@ -756,7 +756,7 @@
                             <tr>
                                 <td colspan="4" class="has-text-centered">
                                     <a href="{{ url_for('project.add_proposal_development_support', project_id=project.id) }}"
-                                       class="button is-rounded is-link is-small">
+                                       class="button is-link is-small is-outlined">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -824,7 +824,7 @@
                                        {% else %}
                                        href="{{ url_for('project.add_application', project_id=project.id) }}"
                                        {% endif %}
-                                       class="is-link is-small is-rounded button">
+                                       class="is-link is-small is-outlined button">
                                             <span class="icon">
                                                 <i class="fas fa-plus"></i>
                                             </span><span>เพิ่มรายการ</span>
@@ -841,7 +841,7 @@
                     <td class="title is-size-5">Project Reviews</td>
                     <td>
                         {% if project.summarized_review_ready %}
-                        <a class="button is-primary
+                        <a class="button is-primary is-outlined
                             href="{{ url_for('project.view_reviews', project_id=project.id) }}">
                             <span>See review</span>
                         </a>
@@ -851,7 +851,7 @@
                 <tr>
                     <td class="title is-size-5">สร้างไฟล์</td>
                     <td>
-                        <a class="button is-primary"
+                        <a class="button is-primary is-outlined"
                            href="{{ url_for('project.export_docx', project_id=project.id) }}">
                             <span class="icon">
                                 <i class="far fa-file-word"></i>
@@ -897,7 +897,7 @@
                             <tr>
                                 <td colspan="4" class="has-text-centered">
                                     {% if current_user == project.creator and project.editable %}
-                                    <a class="button is-small is-rounded is-link"
+                                    <a class="button is-small  is-link is-outlined"
                                        href="{{ url_for('project.add_supplementary_doc', project_id=project.id) }}"
                                     >
                                         <span class="icon">
@@ -947,7 +947,7 @@
                             <tr>
                                 <td colspan="4" class="has-text-centered">
                                     {% if current_user == project.creator and project.editable %}
-                                    <a class="button is-small is-rounded is-link"
+                                    <a class="button is-small  is-link is-outlined"
                                        href="{{ url_for('project.add_cv_file', project_id=project.id) }}"
                                     >
                                         <span class="icon">
@@ -1029,7 +1029,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2" class="has-text-centered">
-                                    <a class="button is-small is-rounded is-link"
+                                    <a class="button is-small  is-link is-outlined"
                                        href="{{ url_for('project.upload_summary_file', project_id=project.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
@@ -1057,7 +1057,7 @@
                 <a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}"
                    class="button is-light is-medium">Back</a>
                 {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
-                <a class="button is-link is-medium"
+                <a class="button is-link is-medium is-outlined"
                     {% if not project.status.endswith('submitted') or project.status == 'draft' %}
                         href="{{ url_for('project.edit_project', project_id=project.id) }}"
                     {% else %}
@@ -1065,7 +1065,7 @@
                     {% endif %}
                 >Edit</a>
                 <a
-                   class="button is-primary is-medium"
+                   class="button is-primary is-outlined is-medium"
                     {% if project.status == 'concept approved' and project.get_ethic_status() == 'approved' %}
                         href="{{ url_for('project.submit_project', project_id=project.id) }}"
                     {% elif project.status == 'draft' or project.status.endswith('revising') %}
