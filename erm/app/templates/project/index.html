@@ -29,7 +29,11 @@
                     <td>
                         {% for member in project.members %}
                         {% if member.role == 'PI' %}
-                        {{ member.user.profile.fullname_th }},
+                            {% if member.profile %}
+                            {{ member.user.profile.fullname_th }},
+                            {% else %}
+                            {{ member.fullname }},
+                            {% endif %}
                         {% endif %}
                         {% endfor %}
                     </td>
