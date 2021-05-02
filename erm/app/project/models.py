@@ -150,10 +150,7 @@ class ProjectRecord(db.Model):
 
     @property
     def editable(self):
-        if self.status == 'draft' or self.status == 'revising':
-            return True
-        else:
-            return False
+        return self.status == 'draft' or self.status == 'revising'
 
     def __str__(self):
         return self.title_th[:50]
