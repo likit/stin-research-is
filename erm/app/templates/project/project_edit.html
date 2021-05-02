@@ -227,7 +227,7 @@
                         <div class="field">
                             <label class="label">{{ form.final_report_upload.label }}</label>
                             <div class="control">
-                                {% if project.status != 'full approved' %}
+                                {% if project.status != 'approved' %}
                                 {{ form.final_report_upload(disabled=True) }}
                                 {% else %}
                                 {{ form.final_report_upload(disabled=False) }}

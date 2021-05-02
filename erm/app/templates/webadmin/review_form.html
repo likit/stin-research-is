@@ -184,7 +184,7 @@
                                     <th>Title</th>
                                     <th>Description</th>
                                     <th>File ID</th>
-                                    <th></th>
+                                    <th>Preview</th>
                                     </thead>
                                     <tbody>
                                     {% for fig in project.figures %}
@@ -193,6 +193,33 @@
                                         <td>{{ fig.title }}</td>
                                         <td>{{ fig.desc }}</td>
                                         <td><img src="https://drive.google.com/uc?id={{ fig.url }}"></td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="title is-size-5">CV Files</td>
+                            <td>
+                                <table class="table is-striped is-narrow">
+                                    <thead>
+                                    <th>ชื่อเอกสาร</th>
+                                    <th>ไฟล์</th>
+                                    </thead>
+                                    <tbody>
+                                    {% for cv in project.cv_files %}
+                                    <tr>
+                                        <td>{{ cv.filename }}</td>
+                                        <td>
+                                            <a href="https://drive.google.com/uc?id={{ cv.file_url }}"
+                                               target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                                <span>view</span>
+                                            </a>
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                     </tbody>
@@ -214,7 +241,7 @@
                                         <td>{{ sup.filename }}</td>
                                         <td>{{ sup.desc }}</td>
                                         <td>
-                                            <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
+                                            <a href="https://drive.google.com/uc?id={{ sup.file_url }}"
                                                target="_blank">
                                         <span class="icon">
                                             <i class="far fa-file-alt"></i>

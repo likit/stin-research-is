@@ -147,6 +147,13 @@
                         <td class="title is-size-5" width="20%">สถานะโครงการ</td>
                         <td>
                             <span class="tag is-medium is-primary">{{ project.status }}</span>
+                            <a href="{{ url_for('webadmin.update_status', project_id=project.id) }}"
+                               class="button is-small">
+                                <span class="icon">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                                    <span>แก้ไขสถานะ</span>
+                            </a>
                         </td>
                     </tr>
                     {% if project.status == 'submitted' %}

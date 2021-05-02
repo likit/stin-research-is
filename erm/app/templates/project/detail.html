@@ -876,7 +876,7 @@
                                 <td>{{ sup.filename }}</td>
                                 <td>{{ sup.desc }}</td>
                                 <td>
-                                    <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
+                                    <a href="https://drive.google.com/uc?id={{ sup.file_url }}"
                                        target="_blank">
                                         <span class="icon">
                                             <i class="far fa-file-alt"></i>
@@ -1058,7 +1058,7 @@
                    class="button is-light is-medium">Back</a>
                 {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
                 <a class="button is-link is-medium is-outlined"
-                    {% if not project.status.endswith('submitted') or project.status == 'draft' %}
+                    {% if project.editable %}
                         href="{{ url_for('project.edit_project', project_id=project.id) }}"
                     {% else %}
                         disabled
@@ -1066,9 +1066,9 @@
                 >Edit</a>
                 <a
                    class="button is-primary is-outlined is-medium"
-                    {% if project.status == 'concept approved' and project.get_ethic_status() == 'approved' %}
+                    {% if project.editable and project.get_ethic_status() == 'approved' %}
                         href="{{ url_for('project.submit_project', project_id=project.id) }}"
-                    {% elif project.status == 'draft' or project.status.endswith('revising') %}
+                    {% elif project.editable %}
                         href="{{ url_for('project.submit_project', project_id=project.id) }}"
                     {% else %}
                         disabled
