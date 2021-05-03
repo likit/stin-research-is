@@ -155,27 +155,6 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="title is-size-5">ผู้ร่วมวิจัย</td>
-                            <td>
-                                <table class="table is-striped">
-                                    <thead>
-                                    <th>ชื่อ</th>
-                                    <th>บทบาทหน้าที่</th>
-                                    <th>email</th>
-                                    </thead>
-                                    <tbody>
-                                    {% for member in project.members %}
-                                    <tr>
-                                        <td>{{ member.user.fullname_thai or member.fullname }}</td>
-                                        <td>{{ member.role }}</td>
-                                        <td>{{ member.user.email }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
                             <td class="title is-size-5">รูปภาพ</td>
                             <td>
                                 <table class="table">
