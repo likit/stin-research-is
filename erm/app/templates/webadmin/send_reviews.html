@@ -53,7 +53,7 @@
                     <div class="field">
                         <label class="label">{{ form.deadline.label }}</label>
                         <div class="control">
-                            {{ form.deadline(class="input is-danger") }}
+                            {{ form.deadline(class="input is-danger", type="text") }}
                         </div>
                     </div>
                     <div class="field is-grouped is-grouped-centered">
@@ -75,6 +75,9 @@
 <script>
     $('input[name="deadline"]').daterangepicker({
         singleDatePicker: true,
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
     });
 </script>
 {% endblock %}
