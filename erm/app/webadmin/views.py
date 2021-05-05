@@ -211,7 +211,7 @@ def send_for_reviews(project_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             for review in project.reviews:
-                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=3600)
+                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=604800)
                 token = serializer.dumps({'review_id': review.id})
                 url = url_for('webadmin.write_review',
                               project_id=project.id,
@@ -254,7 +254,7 @@ def send_for_review_single(project_id, reviewer_id=None):
             review = ProjectReviewRecord.query.filter_by(reviewer_id=reviewer_id,
                                                          project_id=project_id).first()
             if review:
-                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=3600)
+                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=604800)
                 token = serializer.dumps({'review_id': review.id})
                 url = url_for('webadmin.write_review',
                               project_id=project.id,
@@ -313,7 +313,7 @@ def resend_for_review(project_id, record_id):
             new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
             db.session.add(new_send)
             db.session.commit()
-            serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=3600)
+            serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=604800)
             token = serializer.dumps({'review_id': send_record.review.id})
             url = url_for('webadmin.write_review',
                           project_id=project.id, review_id=send_record.review.id,
@@ -524,7 +524,7 @@ def send_for_ethic_reviews(project_id, ethic_id):
     if request.method == 'POST':
         if form.validate_on_submit():
             for review in ethic.reviews:
-                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=3600)
+                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=604800)
                 token = serializer.dumps({'review_id': review.id})
                 url = url_for('webadmin.write_ethic_review', project_id=project.id, review_id=review.id, token=token, _external=True)
                 message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
@@ -573,7 +573,7 @@ def resend_for_ethic_review(project_id, record_id, ethic_id):
             db.session.add(new_send)
             db.session.commit()
             serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'),
-                                                         expires_in=3600)
+                                                         expires_in=604800)
             token = serializer.dumps({'review_id': send_record.review.id})
             url = url_for('webadmin.write_ethic_review',
                               project_id=project.id, review_id=send_record.review.id,
