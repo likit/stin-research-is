@@ -248,13 +248,15 @@ def send_for_reviews(project_id):
 @login_required
 def send_for_review_single(project_id, reviewer_id=None):
     project = ProjectRecord.query.get(project_id)
+    reviewer = ProjectReviewer.query.get(reviewer_id)
     form = ProjectReviewSendRecordForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             review = ProjectReviewRecord.query.filter_by(reviewer_id=reviewer_id,
                                                          project_id=project_id).first()
             if review:
-                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=1814400)
+                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'),
+                                                             expires_in=1814400)
                 token = serializer.dumps({'review_id': review.id})
                 url = url_for('webadmin.write_review',
                               project_id=project.id,
@@ -286,7 +288,7 @@ def send_for_review_single(project_id, reviewer_id=None):
         else:
             flash(form.error, 'danger')
     return render_template('webadmin/send_reviews.html',
-                           form=form, project=project)
+                           form=form, project=project, to=reviewer)
 
 
 @webadmin.route('/submissions/<int:project_id>/reviews/sends', methods=['GET', 'POST'])
