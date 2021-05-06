@@ -430,13 +430,26 @@
                                     <td>{{ r.academic_title }}</td>
                                     <td>{{ r.fullname }}</td>
                                     <td>{{ r.affiliation }}</td>
-                                    <td>{{ r.email }}</td>
                                     <td>
-                                        <a href="{{ url_for('webadmin.remove_reviewer', project_id=project.id, reviewer_id=r.id) }}">
-                                        <span class="icon">
-                                            <i class="fas fa-trash-alt has-text-danger"></i>
+                                        <span>
+                                            {{ r.email }}
                                         </span>
-                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="buttons">
+                                            <a class="button is-link is-rounded"
+                                               href="{{ url_for('webadmin.send_for_review_single', project_id=project.id, reviewer_id=r.id) }}">
+                                                <span class="icon">
+                                                    <i class="far fa-paper-plane"></i>
+                                                </span>
+                                            </a>
+                                            <a class="button is-danger is-rounded"
+                                               href="{{ url_for('webadmin.remove_reviewer', project_id=project.id, reviewer_id=r.id) }}">
+                                                <span class="icon">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </span>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -444,32 +457,32 @@
                                     <td colspan="6" class="has-text-centered">
                                         <div class="buttons is-centered">
                                             <a href="{{ url_for('webadmin.list_project_reviewers', project_id=project.id) }}"
-                                               class="button is-link is-outlined">
+                                               class="button is-link is-outlined is-rounded">
                                             <span class="icon">
                                                 <i class="fas fa-user-plus"></i>
                                             </span>
                                                 <span>Reviewers</span>
                                             </a>
                                             <a href="{{ url_for('webadmin.view_reviews', project_id=project.id) }}"
-                                               class="button is-link is-outlined">
+                                               class="button is-link is-outlined is-rounded">
                                                 <span class="icon">
                                                     <i class="far fa-eye"></i>
                                                 </span>
                                                 <span>View</span>
                                             </a>
                                             <a href="{{ url_for('webadmin.send_for_reviews', project_id=project.id) }}"
-                                               class="button is-primary is-outlined">
+                                               class="button is-primary is-outlined is-rounded">
                                                 <span class="icon">
                                                     <i class="far fa-envelope"></i>
                                                 </span>
-                                                <span>Send</span>
+                                                <span>Send All</span>
                                             </a>
                                             <a href="{{ url_for('webadmin.view_send_records', project_id=project.id) }}"
-                                               class="button is-primary is-outlined">
+                                               class="button is-primary is-outlined is-rounded">
                                                 <span class="icon">
                                                     <i class="far fa-envelope"></i>
                                                 </span>
-                                                <span>Send History</span>
+                                                <span>Sent History</span>
                                             </a>
                                         </div>
                                     </td>

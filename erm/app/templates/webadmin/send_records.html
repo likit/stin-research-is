@@ -32,8 +32,8 @@
                                     <th>To</th>
                                     <th>At</th>
                                     <th>
-                                        <a class="button is-primary is-outlined",
-                                            href="{{ url_for('webadmin.send_for_reviews', project_id=project.id, reviewer_id=review.reviewer.id) }}">
+                                        <a class="button is-primary is-rounded",
+                                            href="{{ url_for('webadmin.send_for_review_single', project_id=project.id, reviewer_id=review.reviewer.id) }}">
                                             <span class="icon">
                                                 <i class="far fa-paper-plane"></i>
                                             </span>
@@ -48,7 +48,7 @@
                                         <td>{{ record.sent_at|localdatetime }}</td>
                                         <td>
                                             <a href="{{ url_for('webadmin.resend_for_review', project_id=project.id, record_id=record.id) }}"
-                                               class="button is-warning is-outlined">
+                                               class="button is-warning is-rounded is-outlined">
                                                 <span class="icon">
                                                     <i class="far fa-paper-plane"></i>
                                                 </span>
