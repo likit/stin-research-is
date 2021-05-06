@@ -434,6 +434,9 @@ class ProjectReviewer(db.Model):
     def fullname(self):
         return '{} {}'.format(self.firstname, self.lastname)
 
+    def __str__(self):
+        return self.fullname
+
 
 class ProjectReviewRecord(db.Model):
     __tablename__ = 'project_review_records'
