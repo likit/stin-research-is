@@ -472,6 +472,18 @@
                                 {{ form.status() }}
                             </div>
                         </div>
+                        <hr>
+                        <h1 class="title is-size-5">กรุณาตรวจสอบข้อมูลและยืนยันการส่งผลการประเมิน</h1>
+                        <h1 class="subtitle
+                            is-size-6">เมื่อกดส่งแล้วกรุณารอข้อความยืนยันก่อนปิดหน้าเพจหรือเบราเซอร์</h1>
+                        <div class="field">
+                            <div class="control">
+                                <label class="label">
+                                    {{ form.confirm_submission() }} {{ form.confirm_submission.label  }}
+                                </label>
+                                <p class="has-text-danger help">*required</p>
+                            </div>
+                        </div>
                         <div class="field is-grouped is-grouped-centered">
                             <div class="control">
                                 <button type="submit" class="button is-success">Submit</button>

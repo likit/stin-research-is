@@ -360,7 +360,7 @@ def write_review(project_id, review_id):
         return redirect(url_for('webadmin.confirm_review'))
     form = ProjectReviewRecordForm()
     if request.method == 'POST':
-        if form.validate_on_submit():
+        if form.validate_on_submit() and form.confirm_submission.data:
             form.populate_obj(review)
             review.alignment = '|'.join(form.alignment_select.data)
             review.outcome_detail = '|'.join(form.outcome_detail_select.data)
@@ -375,6 +375,9 @@ def write_review(project_id, review_id):
             send_mail(STIN_EMAIL, title='การตอบกลับการรีวิวของผู้ทรงคุณวุฒิ', message=message)
 
             return redirect(url_for('webadmin.confirm_review'))
+        else:
+            for e in form.errors:
+                flash('{}'.format(e), 'danger')
 
     return render_template('webadmin/review_form.html',
                            form=form,
