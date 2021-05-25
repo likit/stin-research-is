@@ -26,7 +26,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5">ความสอดคล้องกับยุทธศาาตร์ฯ</p></td>
+                        <td class="title is-size-5">ความสอดคล้องกับยุทธศาตร์ฯ</p></td>
                         <td>{{ review.alignment|replace('|', ', ') }}, {{ review.alignment_other }}</td>
                         <td>
                             {{ review.alignment_comment }}
@@ -36,6 +36,13 @@
                         <td class="title is-size-5">ความเห็นเกี่ยวกับชื่อโครงการวิจัย</td>
                         <td colspan="2">
                             {{ review.title_comment }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">วัตถุประสงค์</p></td>
+                        <td>{{ review.objective }}</td>
+                        <td>
+                            {{ review.objective_comment }}
                         </td>
                     </tr>
                     <tr>
