@@ -13,6 +13,7 @@
                 {% endfor %}
                 <div class="box">
                     <h1 class="title has-text-centered">Project Detail</h1>
+                    <h2 class="subtitle has-text-centered is-size-4">{{ project.title_th }}</h2>
                     <table class="table is-fullwidth is-bordered">
                         <col style="width: 20%">
                         {% if project.parent_project %}
@@ -20,6 +21,9 @@
                             <td class="title is-size-5">ชุดโครงการ</td><td>{{ project.parent_project }}</td>
                         </tr>
                         {% endif %}
+                        <tr>
+                            <td class="title is-size-5">ชื่อภาษาไทย</td><td>{{ project.title_th }}</td>
+                        </tr>
                         <tr>
                             <td class="title is-size-5">ชื่อรองภาษาไทย</td><td>{{ project.subtitle_th }}</td>
                         </tr>
