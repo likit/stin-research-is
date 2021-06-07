@@ -29,12 +29,9 @@ class ProjectReviewSendRecordForm(BaseModelForm):
         model = ProjectReviewSendRecord
 
 
-class ProjectReviewRecordForm(BaseModelForm):
+class ProjectReviewRecordAdminForm(BaseModelForm):
     class Meta:
         model = ProjectReviewRecord
-
-    confirm_submission = BooleanField('ยืนยันการส่งแบบฟอร์ม',
-                                      validators=[DataRequired()])
 
     alignment_select = MultiCheckboxField('ความสอดคล้องกับยุทธศาสตร์หรือประเด็นการวิจัยหลักของสถาบัน',
                                           choices=[(i, i) for i in
@@ -58,6 +55,13 @@ class ProjectReviewRecordForm(BaseModelForm):
                                                          'ประโยชน์เชิงพานิชย์',
                                                          'ประโยชน์ทางอ้อมทางงานสร้างสรรค์',
                                                          'อื่นๆ')])
+
+class ProjectReviewRecordForm(ProjectReviewRecordAdminForm):
+    class Meta:
+        model = ProjectReviewRecord
+
+    confirm_submission = BooleanField('ยืนยันการส่งแบบฟอร์ม',
+                                      validators=[DataRequired()])
 
 
 class ProjectEthicReviewSendRecordForm(BaseModelForm):

@@ -14,7 +14,7 @@ from app.researcher.models import IntlConferenceSupport
 from app.project.models import *
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
                                 ProjectEthicReviewSendRecordForm,
-                                ProjectEthicReviewRecordForm, ProjectEthicRecordForm,
+                                ProjectEthicReviewRecordForm, ProjectEthicRecordForm, ProjectReviewRecordAdminForm,
                                 )
 from app.project.forms import *
 from app.main.models import User, MailInfo
@@ -169,7 +169,7 @@ def view_reviews(project_id):
     review = ProjectReviewRecord.query.filter_by(project_id=project.id,
                                                  summarized=True).first()
     if review:
-        form = ProjectReviewRecordForm(obj=review)
+        form = ProjectReviewRecordAdminForm(obj=review)
         form.alignment_select.data = review.alignment.split('|')
         form.outcome_detail_select.data = review.outcome_detail.split('|')
         form.benefit_detail_select.data = review.benefit_detail.split('|')
@@ -180,7 +180,7 @@ def view_reviews(project_id):
             db.session.commit()
             flash('The review has been released.', 'success')
     else:
-        form = ProjectReviewRecordForm()
+        form = ProjectReviewRecordAdminForm()
 
     if request.method == 'POST':
         if form.validate_on_submit():
