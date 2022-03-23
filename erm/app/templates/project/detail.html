@@ -1083,7 +1083,7 @@
             <div class="has-text-centered">
                 <a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}"
                    class="button is-light is-medium">Back</a>
-                {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
+                {% if (project.creator == current_user or current_user.role == 1) %}
                 <a class="button is-link is-medium is-outlined"
                     {% if project.editable %}
                         href="{{ url_for('project.edit_project', project_id=project.id) }}"
