@@ -428,27 +428,24 @@ def submit_project(project_id):
         flash('กรุณาเพิ่มรายชื่อนักวิจัยในโครงการก่อนยื่นขอพิจารณาโครงการ', 'warning')
         return redirect(url_for('project.display_project', project_id=project.id))
 
-    if project.status == 'draft' or \
-            project.status == 'revising':
+    if project.editable:
         project.status = 'submitted'
-    elif project.status == 'approved' or \
-            project.status == 'revising':
-        project.status = 'submitted'
-
-    project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
-    project.submitted_at = arrow.now(tz='Asia/Bangkok').datetime
-    db.session.add(project)
-    archive = make_project_archive(project)
-    db.session.add(archive)
-    db.session.commit()
-    for member in project.members:
-        mail = member.user.email if member.user else member.email
-        if mail:
-            message = ('ศูนย์วิจัยได้รับโครงการวิจัยเรื่อง{} ที่ท่านร่วมทำวิจัยในฐานะ {} เพื่อพิจารณาแล้วเมื่อวันที่ {}'\
-                      ' หากท่านไม่ได้เข้าร่วมทำวิจัยในโครงการนี้ กรุณาแจ้งให้ทางศูนย์ทราบทันที')\
-                .format(project.title_th, member.role, project.submitted_at.strftime('%d/%m/%Y %H:%M'))
-            send_mail(mail, 'โครงการวิจัยที่ท่านเข้าร่วมได้ยื่นขอรับการพิจารณาแล้ว', message)
-    flash('ยื่นขอพิจารณาโครงการเรียบร้อยแล้ว', 'success')
+        project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
+        project.submitted_at = arrow.now(tz='Asia/Bangkok').datetime
+        db.session.add(project)
+        # archive = make_project_archive(project)
+        # db.session.add(archive)
+        db.session.commit()
+        for member in project.members:
+            mail = member.user.email if member.user else member.email
+            if mail:
+                message = ('ศูนย์วิจัยได้รับโครงการวิจัยเรื่อง{} ที่ท่านร่วมทำวิจัยในฐานะ {} เพื่อพิจารณาแล้วเมื่อวันที่ {}'\
+                          ' หากท่านไม่ได้เข้าร่วมทำวิจัยในโครงการนี้ กรุณาแจ้งให้ทางศูนย์ทราบทันที')\
+                    .format(project.title_th, member.role, project.submitted_at.strftime('%d/%m/%Y %H:%M'))
+                send_mail(mail, 'โครงการวิจัยที่ท่านเข้าร่วมได้ยื่นขอรับการพิจารณาแล้ว', message)
+        flash('ยื่นขอพิจารณาโครงการเรียบร้อยแล้ว', 'success')
+    else:
+        flash('ไม่สามารถยื่นส่งโครงการได้', 'warning')
     return redirect(url_for('project.display_project', project_id=project.id))
 
 
@@ -1174,7 +1171,7 @@ def add_overall_budget_item(project_id):
         db.session.add(item)
         db.session.commit()
         flash('รายการงบการเงินได้รับการบันทึกเรียบร้อยแล้ว', 'success')
-        return redirect(url_for('project.display_project', project_id=project.id))
+        return redirect(url_for('project.add_overall_budget_item', project_id=project.id))
     return render_template('project/overall_budget_form.html', form=form, project=project)
 
 
