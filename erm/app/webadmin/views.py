@@ -1046,3 +1046,19 @@ def display_detail(project_id):
                            project=project,
                            gantt_activities=gantt_activities
                            )
+
+
+@webadmin.route('/progress-reports')
+@superuser
+@login_required
+def list_progress_reports():
+    milestone_query = ProjectMilestone.query.filter_by(received_at=None)\
+        .order_by(ProjectMilestone.created_at.desc())
+    return render_template('webadmin/progress_reports.html', milestones=milestone_query)
+
+
+@webadmin.route('/progress-reports/<int:milestone_id>/gantt-chart')
+@superuser
+@login_required
+def list_gantt_activity():
+    pass

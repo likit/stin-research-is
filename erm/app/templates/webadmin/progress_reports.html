@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Progress Report{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="column">
+        <div class="container has-text-centered">
+            <h1 class="title">Progress Report</h1>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            {% include "messages.html" %}
+            <div class="box">
+                <table class="table is-fullwidth is-striped">
+                    <thead>
+                    <th>ชื่อโครงการ</th>
+                    <th>รายงานเมื่อ</th>
+                    <th></th>
+                    <th colspan="2">รับเมื่อ</th>
+                    </thead>
+                    {% for milestone in milestones %}
+                    <tr>
+                        <td>{{ milestone.project.title_th }}</td>
+                        <td style="width:20%"> {{ milestone.created_at|localdatetime }}</td>
+                        <td>
+                            <div class="buttons has-addons">
+                                <a href="{{ url_for('webadmin.list_gantt_activity', milestone_id=m.id) }}"
+                                   class="button is-small is-primary is-outlined">
+                                            <span class="icon">
+                                               <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                    <span>Gantt Chart</span>
+                                </a>
+                                <a class="button is-small is-primary is-outlined"
+                                   href="{{ url_for('webadmin.list_budget_items', milestone_id=m.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-dollar-sign"></i>
+                                            </span>
+                                    <span>งบประมาณ</span>
+                                </a>
+                                <a class="button is-small is-primary is-outlined"
+                                   href="{{ url_for('webadmin.list_summaries', milestone_id=m.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-flag"></i>
+                                            </span>
+                                    <span>ผลการดำเนินงาน</span>
+                                </a>
+                                {% if m.file_url %}
+                                <a class="button is-small is-primary is-outlined"
+                                   href="https://drive.google.com/uc?id={{ m.file_url }}">
+                                    ดูไฟล์แนบ
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td style="width:20%">{{ milestone.received_at|localdatetime }}</td>
+                        <td>
+                            <div class="field has-addons">
+                                <p class="control">
+                                    {% if not milestone.received_at %}
+                                    <a class="button is-small is-outlined is-primary">
+                                        <span>รับทราบ</span>
+                                    </a>
+                                    {% endif %}
+                                    <a class="button is-small is-outlined is-primary">
+                                        <span>รายละเอียด</span>
+                                    </a>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
