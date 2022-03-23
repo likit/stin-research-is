@@ -29,20 +29,18 @@
                 <table class="table is-fullwidth is-striped">
                     <thead>
                     <th>หมวด</th>
-                    <th>รายการย่อย</th>
-                    <th>งวด</th>
                     <th>ค่าตอบแทน (บาท)</th>
                     <th>งบที่ใช้ไปแล้ว (บาท)</th>
+                    <th>รายละเอียด</th>
                     <th colspan="2">แก้ไขเมื่อ</th>
                     </thead>
                     <tbody>
                     {% for item in milestone.budget_items %}
                     <tr>
-                        <td>{{ item.sub_category.category }}</td>
-                        <td>{{ item.sub_category.sub_category }}</td>
-                        <td>{{ item.phase }}</td>
+                        <td>{{ item.category.category }}</td>
                         <td>{{ item.wage }}</td>
                         <td>{{ item.amount_spent }}</td>
+                        <td>{{ item.detail }}</td>
                         <td>{{ item.edited_at|localdatetime }} น.</td>
                         <td>
                             <a href="{{ url_for('project.edit_budget_item', project_id=project_id, milestone_id=milestone.id, item_id=item.id) }}"
