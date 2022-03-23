@@ -21,6 +21,10 @@
                 <h1 class="title">Project Detail</h1>
                 <h2 class="subtitle is-size-4">{{ project.title_th }}</h2>
                 <p>
+                    <span class="icon">
+                        <i class="fas fa-users"></i>
+                    </span>
+                {% if project.members %}
                     {% for member in project.members %}
                     {% if member.user %}
                         {{ member.user.profile.fullname_th }} ({{ member.role }}),
@@ -28,6 +32,9 @@
                         {{ member.fullname }} ({{ member.role }}),
                     {% endif %}
                     {% endfor %}
+                {% else %}
+                โครงการยังไม่มีสมาชิก <a href="{{ url_for('project.add_member', project_id=project.id) }}">เพิ่มสมาชิกที่นี่</a>
+                {% endif %}
                 </p>
                 <br>
                 <div class="tags has-addons is-centered">
@@ -299,6 +306,7 @@
                             <thead>
                             <th>ชื่อ</th>
                             <th>บทบาทหน้าที่</th>
+                            <th>สัดส่วนในผลงานวิจัย</th>
                             <th>E-mail</th>
                             <th>แก้ไข</th>
                             </thead>
@@ -307,6 +315,7 @@
                             <tr>
                                 <td>{{ member.user.profile or member.fullname }}</td>
                                 <td>{{ member.role }}</td>
+                                <td>{{ member.contribution }}</td>
                                 <td>{{ member.user.email or member.email or '-' }}</td>
                                 <td>
                                     {% if current_user == project.creator and project.editable %}

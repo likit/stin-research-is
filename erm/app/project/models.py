@@ -20,6 +20,7 @@ class ProjectMember(db.Model):
     lastname = db.Column('lastname', db.String(), info={'label': 'นามสกุล'})
     affil = db.Column('affiliation', db.String(), info={'label': 'สังกัด'})
     email = db.Column('email', db.String(), info={'label': 'E-mail'})
+    contribution = db.Column('contribution', db.Numeric(), info={'label': 'สัดส่วนในผลงานวิจัย'})
 
     def __str__(self):
         return self.role
