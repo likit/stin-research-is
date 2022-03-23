@@ -178,6 +178,7 @@ def view_reviews(project_id):
             review.released_at = arrow.now(tz='Asia/Bangkok').datetime
             db.session.add(review)
             db.session.commit()
+            # TODO: send an email to notify the project coordinator
             flash('The review has been released.', 'success')
     else:
         form = ProjectReviewRecordAdminForm()
