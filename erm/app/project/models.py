@@ -153,6 +153,34 @@ class ProjectRecord(db.Model):
     def editable(self):
         return self.status == 'draft' or self.status == 'revising'
 
+    @property
+    def draft_mode(self):
+        return self.status == 'draft'
+
+    @property
+    def approved(self):
+        return self.status == 'approved'
+
+    @property
+    def finished(self):
+        return self.status == 'finished'
+
+    @property
+    def revising(self):
+        return self.status == 'revising'
+
+    @property
+    def submitted(self):
+        return self.status == 'submitted'
+
+    @property
+    def rejected(self):
+        return self.status == 'rejected'
+
+    @property
+    def terminated(self):
+        return self.status == 'terminated'
+
     def __str__(self):
         return self.title_th[:50]
 

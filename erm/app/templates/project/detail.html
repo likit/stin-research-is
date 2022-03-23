@@ -47,7 +47,7 @@
     <div class="columns">
         <div class="column is-four-fifths is-offset-1">
             {% include "messages.html" %}
-            {% if project.status == 'concept approved' %}
+            {% if project.approved %}
             <article class="message is-success">
                 <div class="message-header">
                     Action Required
@@ -69,7 +69,7 @@
                 </p>
                 {% endif %}
             </article>
-            {% elif project.status.endswith('revising') %}
+            {% elif project.revising %}
             <article class="message is-success">
                 <div class="message-header">
                     Action Required
@@ -86,75 +86,75 @@
             <table class="table is-fullwidth is-bordered">
                 {% if project.parent_project %}
                 <tr>
-                    <td class="title is-size-5" width="20%">ชุดโครงการ</td><td>{{ project.parent_project }}</td>
+                    <td class="title is-size-5" style="width:20%">ชุดโครงการ</td><td>{{ project.parent_project }}</td>
                 </tr>
                 {% endif %}
                 <tr>
-                    <td class="title is-size-5" width="20%">ชื่อรองภาษาไทย</td><td>{{ project.subtitle_th }}</td>
+                    <td class="title is-size-5" style="width:20%">ชื่อรองภาษาไทย</td><td>{{ project.subtitle_th }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">ชื่อภาษาอังกฤษ</td><td>{{ project.title_en }}</td>
+                    <td class="title is-size-5" style="width:20%">ชื่อภาษาอังกฤษ</td><td>{{ project.title_en }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">ชื่อรองภาษาอังกฤษ</td><td>{{ project.subtitle_en }}</td>
+                    <td class="title is-size-5" style="width:20%">ชื่อรองภาษาอังกฤษ</td><td>{{ project.subtitle_en }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">ที่ปรึกษาโครงการ</td><td>{{ project.mentor }}</td>
+                    <td class="title is-size-5" style="width:20%">ที่ปรึกษาโครงการ</td><td>{{ project.mentor }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">ประเภทของงานวิจัย</td>
+                    <td class="title is-size-5" style="width:20%">ประเภทของงานวิจัย</td>
                     <td class="content">{{ project.research_type }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">สาขาวิชาการและกลุ่มที่ทำวิจัย</td>
+                    <td class="title is-size-5" style="width:20%">สาขาวิชาการและกลุ่มที่ทำวิจัย</td>
                     <td class="content">{{ project.research_cluster }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">คำสำคัญของโครงการวิจัย</td>
+                    <td class="title is-size-5" style="width:20%">คำสำคัญของโครงการวิจัย</td>
                     <td class="content">{{ project.keywords|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">บทคัดย่อ</td>
+                    <td class="title is-size-5" style="width:20%">บทคัดย่อ</td>
                     <td class="content">{{ project.abstract|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">ความสำคัญและที่มาของปัญหาที่ทำการวิจัย</td>
+                    <td class="title is-size-5" style="width:20%">ความสำคัญและที่มาของปัญหาที่ทำการวิจัย</td>
                     <td class="content">{{ project.intro|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">วัตถุประสงค์ของโครงการวิจัย</td>
+                    <td class="title is-size-5" style="width:20%">วัตถุประสงค์ของโครงการวิจัย</td>
                     <td class="content">{{ project.objective|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">ขอบเขตของโครงงานวิจัย</td>
+                    <td class="title is-size-5" style="width:20%">ขอบเขตของโครงงานวิจัย</td>
                     <td class="content">{{ project.scope|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">นิยามคำศัพท์</td>
+                    <td class="title is-size-5" style="width:20%">นิยามคำศัพท์</td>
                     <td class="content">{{ project.glossary|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">ทฤษฎี สมมุติฐานและกรอบแนวคิด</td>
+                    <td class="title is-size-5" style="width:20%">ทฤษฎี สมมุติฐานและกรอบแนวคิด</td>
                     <td class="content">{{ project.conceptual_framework|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง</td>
+                    <td class="title is-size-5" style="width:20%">การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง</td>
                     <td class="content">{{ project.literature_review|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">เอกสารอ้างอิง</td>
+                    <td class="title is-size-5" style="width:20%">เอกสารอ้างอิง</td>
                     <td class="content">{{ project.references|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">ประโยชน์ที่คาดว่าจะได้รับ</td>
+                    <td class="title is-size-5" style="width:20%">ประโยชน์ที่คาดว่าจะได้รับ</td>
                     <td class="content">{{ project.expected_benefit|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">ระเบียบวิธีวิจัย</td>
+                    <td class="title is-size-5" style="width:20%">ระเบียบวิธีวิจัย</td>
                     <td class="content">{{ project.method|safe }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">แผนการดำเนินงาน</td>
+                    <td class="title is-size-5" style="width:20%">แผนการดำเนินงาน</td>
                     <td>
                         <div id="chart_div"></div>
                         <table class="table is-striped is-narrow is-fullwidth">
@@ -204,7 +204,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">งบประมาณ</td>
+                    <td class="title is-size-5" style="width:20%">งบประมาณ</td>
                     <td>
                         <table class="table is-fullwidth is-striped is-narrow">
                             <thead>
@@ -260,32 +260,32 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">เพิ่มโครงวันที่</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
+                    <td class="title is-size-5" style="width:20%">เพิ่มโครงวันที่</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">แก้ไขวันที่</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
+                    <td class="title is-size-5" style="width:20%">แก้ไขวันที่</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
                 </tr>
-                {% if current_user.is_authenticated and project.creator == current_user %}
+                {% if project.creator == current_user %}
                 <tr>
-                    <td class="title is-size-5" width="20%">สถานะ</td>
+                    <td class="title is-size-5" style="width:20%">สถานะ</td>
                     <td>
                         <span class="tag is-medium is-primary is-outlined">{{ project.status }}</span>
                     </td>
                 </tr>
-                {% if project.status == 'submitted' %}
+                {% if project.submitted %}
                 <tr>
-                    <td class="title is-size-5" width="20%">ส่งเมื่อวันที่</td><td>วันที่ {{ project.submitted_at|localdatetime }} นาฬิกา</td>
+                    <td class="title is-size-5" style="width:20%">ส่งเมื่อวันที่</td><td>วันที่ {{ project.submitted_at|localdatetime }} นาฬิกา</td>
                 </tr>
                 {% endif %}
                 <tr>
-                    <td class="title is-size-5" width="20%">วารสารที่คาดว่าจะเผยแพร่</td><td>{{ project.prospected_journals or '-' }}</td>
+                    <td class="title is-size-5" style="width:20%">วารสารที่คาดว่าจะเผยแพร่</td><td>{{ project.prospected_journals or '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5" width="20%">การนำไปใช้ประโยชน์</td><td>{{ project.use_applications or '-' }}</td>
+                    <td class="title is-size-5" style="width:20%">การนำไปใช้ประโยชน์</td><td>{{ project.use_applications or '-' }}</td>
                 </tr>
                 {% endif %}
                 <tr>
-                    <td class="title is-size-5" width="20%">หมวดหมู่</td>
+                    <td class="title is-size-5" style="width:20%">หมวดหมู่</td>
                     <td>
                         <div class="field is-grouped is-grouped-multiline">
                             {% for cat in project.subcategories %}
@@ -329,19 +329,16 @@
                             </tr>
                             {% endfor %}
                             <tr>
-                                <td colspan="4" class="has-text-centered">
-                                    <a
-                                       {% if current_user == project.creator and project.editable %}
-                                       href="{{ url_for('project.add_member', project_id=project.id) }}"
-                                       {% else %}
-                                       disabled
-                                       {% endif %}
+                                <td colspan="5" class="has-text-centered">
+                                    {% if current_user == project.creator and project.editable %}
+                                    <a href="{{ url_for('project.add_member', project_id=project.id) }}"
                                        class="is-link is-small  button is-outlined">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span>
                                         <span>เพิ่มรายชื่อนักวิจัย</span>
                                     </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             </tbody>
@@ -381,26 +378,23 @@
                                     </td>
                                 </tr>
                             {% endfor %}
+                            {% if current_user == project.creator and project.editable %}
                             <tr>
                                 <td colspan="5" class="has-text-centered">
                                     <a class="is-link is-small  button is-outlined"
-                                       {% if current_user == project.creator and project.editable %}
-                                       href="{{ url_for('project.add_figure', project_id=project.id) }}"
-                                       {% else %}
-                                       disabled
-                                       {% endif %}
-                                        >
+                                       href="{{ url_for('project.add_figure', project_id=project.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
                                         </span><span>เพิ่มรูป</span>
                                     </a>
                                 </td>
                             </tr>
+                            {% endif %}
                             </tbody>
                         </table>
                     </td>
                 </tr>
-                {% if (project.creator == current_user or current_user.role == 1) and current_user.is_authenticated %}
+                {% if (project.creator == current_user or current_user.role == 1) %}
                 <tr>
                     <td class="title is-size-5">จริยธรรมวิจัย</td>
                     <td>
@@ -439,15 +433,11 @@
                                 </td>
                             </tr>
                             {% endfor %}
+                            {% if project.approved %}
                             <tr>
                                 <td colspan="5" class="has-text-centered">
                                     <a class="button is-small is-link  is-outlined"
-                                       {% if project.status != "concept approved" %}
-                                       disabled
-                                       {% else %}
-                                       href="{{ url_for('project.confirm_add_ethic', project_id=project.id) }}"
-                                       {% endif %}
-                                    >
+                                       href="{{ url_for('project.confirm_add_ethic', project_id=project.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-paper-plane"></i>
                                         </span>
@@ -455,6 +445,7 @@
                                     </a>
                                 </td>
                             </tr>
+                            {% endif %}
                             </tbody>
                         </table>
                     </td>
@@ -483,7 +474,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">ความก้าวหน้า</td>
+                    <td class="title is-size-5">ความก้าวหน้า
+                        <p class="help has-text-info">
+                            เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว
+                        </p>
+                    </td>
                     <td>
                         <table class="table is-striped is-narrow">
                             <thead>
@@ -497,11 +492,13 @@
                                 <td>{{ m.status }}</td>
                                 <td>{{ m.created_at|localdatetime }}</td>
                                 <td>
+                                    {% if current_user == project.creator and project.approved %}
                                     <a href="{{ url_for('project.edit_milestone', project_id=project.id, milestone_id=m.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-pencil-alt"></i>
                                         </span>
                                     </a>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     <div class="buttons has-addons">
@@ -531,6 +528,7 @@
                             </tr>
                             </tbody>
                             {% endfor %}
+                            {% if current_user == project.creator and project.approved %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
                                     <div class="buttons is-centered">
@@ -551,11 +549,16 @@
                                     </div>
                                 </td>
                             </tr>
+                            {% endif %}
                         </table>
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">ผลงานวิจัยตีพิมพ์</td>
+                    <td class="title is-size-5">ผลงานวิจัยตีพิมพ์
+                        <p class="help has-text-info">
+                            เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว
+                        </p>
+                    </td>
                     <td>
                         <table class="table is-striped is-narrow">
                             <thead>
@@ -584,7 +587,7 @@
                                     </a>
                                 </td>
                                 <td>
-                                    {% if project.status.endswith('approved') %}
+                                    {% if project.approved %}
                                     <div class="buttons">
                                         <a href="{{ url_for('project.add_lang_support', project_id=project.id, pub_id=p.id) }}"
                                            class="button is-small  is-link is-outlined">
@@ -606,6 +609,7 @@
                             </tr>
                             </tbody>
                             {% endfor %}
+                            {% if current_user == project.creator and project.approved %}
                             <tr>
                                 <td colspan="5" class="has-text-centered">
                                     <a href="{{ url_for('project.add_pub', project_id=project.id) }}"
@@ -617,10 +621,11 @@
                                     </a>
                                 </td>
                             </tr>
+                            {% endif %}
                         </table>
                     </td>
                 </tr>
-                {% if project.status != 'draft' %}
+                {% if project.approved %}
                 <tr>
                     <td class="title is-size-5">ทุนสนับสนุนการตรวจภาษา</td>
                     <td>
@@ -676,7 +681,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">รางวัลค่าตีพิมพ์หรือทุนสนับสนุนการตีพิมพ์</td>
+                    <td class="title is-size-5">รางวัลค่าตีพิมพ์หรือทุนสนับสนุนการตีพิมพ์
+                        <p class="help has-text-info">
+                            เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว
+                        </p>
+                    </td>
                     <td>
                         <table class="table is-striped is-narrow">
                             <thead>
@@ -689,41 +698,41 @@
                             </thead>
                             <tbody>
                             {% for pub in project.publications %}
-                            {% for reward in pub.pub_rewards %}
-                            <tr>
-                                <td>{{ pub.title }}</td>
-                                <td>{{ reward.amount }}</td>
-                                <td>
-                                    {% if reward.status == 'อนุมัติ' %}
-                                    <span class="icon">
-                                            <i class="far fa-check-circle has-text-success"></i>
+                                {% for reward in pub.pub_rewards %}
+                                <tr>
+                                    <td>{{ pub.title }}</td>
+                                    <td>{{ reward.amount }}</td>
+                                    <td>
+                                        {% if reward.status == 'อนุมัติ' %}
+                                        <span class="icon">
+                                                <i class="far fa-check-circle has-text-success"></i>
+                                            </span>
+                                        {% elif reward.status == 'ยกเลิก' or reward.status == 'ไม่อนุมัติ' %}
+                                        <span class="icon">
+                                                <i class="far fa-times-circle has-text-danger"></i>
                                         </span>
-                                    {% elif reward.status == 'ยกเลิก' or reward.status == 'ไม่อนุมัติ' %}
-                                    <span class="icon">
-                                            <i class="far fa-times-circle has-text-danger"></i>
-                                    </span>
+                                        {% else %}
+                                        <span class="icon">
+                                                <i class="far fa-clock"></i>
+                                            </span>
+                                        {% endif %}
+                                        <span>
+                                                {{ reward.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ reward.submitted_at|localdatetime }}</td>
+                                    {% if reward.edited_at %}
+                                    <td>{{ reward.edited_at|localdatetime }}</td>
                                     {% else %}
-                                    <span class="icon">
-                                            <i class="far fa-clock"></i>
-                                        </span>
+                                    <td></td>
                                     {% endif %}
-                                    <span>
-                                            {{ reward.status }}
-                                    </span>
-                                </td>
-                                <td>{{ reward.submitted_at|localdatetime }}</td>
-                                {% if reward.edited_at %}
-                                <td>{{ reward.edited_at|localdatetime }}</td>
-                                {% else %}
-                                <td></td>
-                                {% endif %}
-                                {% if reward.approved_at %}
-                                <td>{{ reward.approved_at|localdatetime }}</td>
-                                {% else %}
-                                <td></td>
-                                {% endif %}
-                            </tr>
-                            {% endfor %}
+                                    {% if reward.approved_at %}
+                                    <td>{{ reward.approved_at|localdatetime }}</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
                             {% endfor %}
                             </tbody>
                         </table>
@@ -731,7 +740,11 @@
                 </tr>
                 {% endif %}
                 <tr>
-                    <td class="title is-size-5">เงินสนับสนุนโครงการให้คำปรึกษาเพื่อพัฒนาข้อเสนอโครงการวิจัยหรือแผนงานวิจัยและสถิติวิจัย</td>
+                    <td class="title is-size-5">เงินสนับสนุนโครงการให้คำปรึกษาเพื่อพัฒนาข้อเสนอโครงการวิจัยหรือแผนงานวิจัยและสถิติวิจัย
+                        <p class="help has-text-info">
+                            เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว
+                        </p>
+                    </td>
                     <td>
                         <table class="table is-striped is-narrow">
                             <thead>
@@ -762,6 +775,7 @@
                                 </td>
                             </tr>
                             {% endfor %}
+                            {% if project.creator == current_user and project.approved %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
                                     <a href="{{ url_for('project.add_proposal_development_support', project_id=project.id) }}"
@@ -773,12 +787,17 @@
                                     </a>
                                 </td>
                             </tr>
+                            {% endif %}
                             </tbody>
                         </table>
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">หมายเลขสัญญา</td>
+                    <td class="title is-size-5">หมายเลขสัญญา
+                        <p class="help has-text-info">
+                            เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว
+                        </p>
+                    </td>
                     <td>
                         {% if project.contract_url %}
                         <a href="https://drive.google.com/uc?id={{ project.contract_url }}"
@@ -792,7 +811,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">การนำงานวิจัยไปใช้ประโยชน์</td>
+                    <td class="title is-size-5">การนำงานวิจัยไปใช้ประโยชน์
+                        <span class="help has-text-info">เพิ่มรายการได้หลังจบโครงการ</span>
+                    </td>
                     <td>
                         <table class="table is-striped is-narrow">
                             <thead>
@@ -807,7 +828,7 @@
                                 <td>{{ app.detail }}</td>
                                 <td>{{ app.date|localdate }}</td>
                                 <td>
-                                    {% if current_user == project.creator and current_user.is_authenticated %}
+                                    {% if current_user == project.creator and project.finished %}
                                     <a href="{{ url_for('project.edit_application', app_id=app.id) }}">
                                             <span class="icon">
                                                 <i class="fas fa-pencil-alt"></i>
@@ -824,15 +845,10 @@
                                 </td>
                             </tr>
                             {% endfor %}
-                            {% if current_user == project.creator and current_user.is_authenticated %}
+                            {% if current_user == project.creator and project.finished %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
-                                    <a
-                                       {% if project.status !="finished"%}
-                                       disabled
-                                       {% else %}
-                                       href="{{ url_for('project.add_application', project_id=project.id) }}"
-                                       {% endif %}
+                                    <a href="{{ url_for('project.add_application', project_id=project.id) }}"
                                        class="is-link is-small is-outlined button">
                                             <span class="icon">
                                                 <i class="fas fa-plus"></i>
@@ -902,10 +918,9 @@
                                 </td>
                             </tr>
                             {% endfor %}
-                            {% if project.status != 'approved' %}
+                            {% if current_user == project.creator and project.editable %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
-                                    {% if current_user == project.creator and project.editable %}
                                     <a class="button is-small  is-link is-outlined"
                                        href="{{ url_for('project.add_supplementary_doc', project_id=project.id) }}"
                                     >
@@ -913,7 +928,6 @@
                                             <i class="fas fa-plus"></i>
                                         </span><span>เพิ่มไฟล์</span>
                                     </a>
-                                    {% endif %}
                                 </td>
                             </tr>
                             {% endif %}
@@ -952,10 +966,9 @@
                                 </td>
                             </tr>
                             {% endfor %}
-                            {% if project.status != 'approved' %}
+                            {% if current_user == project.creator and project.editable %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
-                                    {% if current_user == project.creator and project.editable %}
                                     <a class="button is-small  is-link is-outlined"
                                        href="{{ url_for('project.add_cv_file', project_id=project.id) }}"
                                     >
@@ -963,7 +976,6 @@
                                             <i class="fas fa-plus"></i>
                                         </span><span>เพิ่มไฟล์</span>
                                     </a>
-                                    {% endif %}
                                 </td>
                             </tr>
                             {% endif %}
@@ -972,7 +984,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">รายงานฉบับสมบูรณ์</td>
+                    <td class="title is-size-5">รายงานฉบับสมบูรณ์
+                        <p class="help has-text-info">
+                            เพิ่มข้อมูลได้หลังจากสิ้นสุดโครงการ
+                        </p>
+                    </td>
                     <td>
                         {% if project.final_report_url %}
                         <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
@@ -1036,6 +1052,7 @@
                                     {% endif %}
                                 </td>
                             </tr>
+                            {% if current_user == project.creator and project.finished %}
                             <tr>
                                 <td colspan="2" class="has-text-centered">
                                     <a class="button is-small  is-link is-outlined"
@@ -1047,6 +1064,7 @@
                                     </a>
                                 </td>
                             </tr>
+                            {% endif %}
                             </tbody>
                         </table>
                         {% if project.final_report_url %}
