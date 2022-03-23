@@ -370,7 +370,7 @@ class ProjectBudgetCategory(db.Model):
     category = db.Column('category', db.String())
 
     def __str__(self):
-        return '{} {}'.format(self.category_id, self.category)
+        return self.category
 
 
 class ProjectBudgetSubCategory(db.Model):
@@ -396,6 +396,8 @@ class ProjectBudgetItem(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     sub_category_id = db.Column('sub_category_id', db.ForeignKey('project_budget_sub_category.id'))
     sub_category = db.relationship(ProjectBudgetSubCategory, backref=db.backref('items'))
+    category_id = db.Column('category_id', db.ForeignKey('project_budget_category.id'))
+    category = db.relationship(ProjectBudgetCategory, backref=db.backref('items'))
     item = db.Column('item', db.String(), info={'label': 'หมายเหตุ'})
     phase = db.Column('phase', db.String(),
                       info={'label': 'งวด',
@@ -407,6 +409,7 @@ class ProjectBudgetItem(db.Model):
     edited_at = db.Column('edited_at', db.DateTime(timezone=True))
     milestone_id = db.Column('milestone_id', db.ForeignKey('project_milestone.id'))
     milestone = db.relationship(ProjectMilestone, backref=db.backref('budget_items'))
+    detail = db.Column('detail', db.Text())
 
 
 class ProjectBudgetItemOverall(db.Model):
