@@ -158,9 +158,10 @@ class ProjectOverallGanttActivityForm(ModelForm):
 class ProjectBudgetItemForm(ModelForm):
     class Meta:
         model = ProjectBudgetItem
+        exclude = ['phase']
 
-    sub_category = QuerySelectField(ProjectBudgetSubCategory,
-                                    query_factory=lambda: ProjectBudgetSubCategory.query.all(),
+    category = QuerySelectField(ProjectBudgetCategory,
+                                    query_factory=lambda: ProjectBudgetCategory.query.order_by('category_id').all(),
                                     widget=Select())
 
 

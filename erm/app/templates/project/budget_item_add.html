@@ -26,13 +26,7 @@
                     <div class="field">
                         <label class="label">หมวดค่าใช้จ่าย</label>
                         <div class="select">
-                            {{ form.sub_category() }}
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">{{ form.phase.label }}</label>
-                        <div class="select">
-                            {{ form.phase() }}
+                            {{ form.category() }}
                         </div>
                     </div>
                     <div class="field">
@@ -45,6 +39,12 @@
                         <label class="label">{{ form.amount_spent.label }}</label>
                         <div class="control">
                             {{ form.amount_spent(class="input") }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.detail.label }}</label>
+                        <div class="control">
+                            {{ form.detail(class="textarea") }}
                         </div>
                     </div>
                     <div class="field is-grouped is-grouped-centered">
