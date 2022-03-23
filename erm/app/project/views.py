@@ -521,6 +521,30 @@ def add_milestone(project_id):
     return render_template('project/milestone_add.html', project=project, form=form)
 
 
+@project.route('/<int:project_id>/milestones/<int:milestone_id>/file-upload', methods=['GET', 'POST'])
+@login_required
+def add_milestone_file_upload(project_id, milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    form = ProjectMilestoneForm(obj=milestone)
+    if request.method == 'POST':
+        upfile = form.file_url.data
+        if upfile:
+            filename = secure_filename(upfile.filename)
+            upfile.save(filename)
+            file_drive = drive.CreateFile({'title': filename})
+            file_drive.SetContentFile(filename)
+            file_drive.Upload()
+            permission = file_drive.InsertPermission({'type': 'anyone',
+                                                      'value': 'anyone',
+                                                      'role': 'reader'})
+            milestone.file_url = file_drive['id']
+        db.session.add(milestone)
+        db.session.commit()
+        flash('File has been uploaded successfully', 'success')
+        return redirect(url_for('project.display_project', project_id=project_id))
+    return render_template('project/activity_file_upload.html', form=form)
+
+
 @project.route('/<int:project_id>/milestones/<int:milestone_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_milestone(project_id, milestone_id):
@@ -641,7 +665,7 @@ def edit_gantt_activity(project_id, milestone_id, record_id):
             db.session.add(record)
             db.session.commit()
             flash('Activity has been updated.', 'success')
-            return redirect(url_for('project.detail', project_id=project_id))
+            return redirect(url_for('project.display_project', project_id=project_id))
         else:
             flash(form.errors, 'danger')
     return render_template('project/gantt_activity_edit.html',

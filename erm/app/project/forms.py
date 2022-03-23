@@ -67,6 +67,12 @@ class ProjectMilestoneForm(ModelForm):
         model = ProjectMilestone
 
 
+class ProjectMilestoneUploadForm(ModelForm):
+    class Meta:
+        model = ProjectMilestone
+        only = ['file_url']
+
+
 class ProjectJournalForm(ModelForm):
     class Meta:
         model = ProjectPublicationJournal

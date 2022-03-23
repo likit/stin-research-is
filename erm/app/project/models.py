@@ -296,6 +296,7 @@ class ProjectMilestone(db.Model):
                                  info={'label': 'กิจกรรมอื่นๆ ที่เกี่ยวข้อง'})
     obstacle = db.Column('obstacle', db.Text(), info={'label': 'อุปสรรคในการทำงานและแนวทางแก้ไข'})
     opinion = db.Column('opinion', db.Text(), info={'label': 'ความเห็นของผู้วิจัย'})
+    file_url = db.Column('file_url', db.String())
     status = db.Column('status', db.String(),
                        info={'label': 'สถานะการดำเนินงาน',
                              'choices': [(i, i) for i in

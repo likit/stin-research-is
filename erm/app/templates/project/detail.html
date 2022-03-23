@@ -523,6 +523,19 @@
                                             </span>
                                             <span>ผลการดำเนินงาน</span>
                                         </a>
+                                        <a class="button is-small is-primary is-outlined"
+                                           href="{{ url_for('project.add_milestone_file_upload', project_id=project.id, milestone_id=m.id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-file-upload"></i>
+                                            </span>
+                                            <span>แนบไฟล์</span>
+                                        </a>
+                                        {% if m.file_url %}
+                                        <a class="button is-small is-primary is-outlined"
+                                           href="https://drive.google.com/uc?id={{ m.file_url }}">
+                                            ดูไฟล์แนบ
+                                        </a>
+                                        {% endif %}
                                     </div>
                                 </td>
                             </tr>
