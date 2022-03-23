@@ -33,13 +33,13 @@
                     <div class="field">
                         <label class="label">{{ form.start_date.label }}</label>
                         <div class="control">
-                            {{ form.start_date(class="input") }}
+                            {{ form.start_date(class="input", type="text") }}
                         </div>
                     </div>
                     <div class="field">
                         <label class="label">{{ form.end_date.label }}</label>
                         <div class="control">
-                            {{ form.end_date(class="input") }}
+                            {{ form.end_date(class="input", type="text") }}
                         </div>
                     </div>
                     <div class="field">
@@ -56,11 +56,11 @@
                     </div>
                     <div class="field is-grouped is-grouped-centered">
                         <div class="control">
-                            <button type="submit" class="button is-success">Create</button>
+                            <a href="{{ url_for('project.list_gantt_activity', project_id=project_id, milestone_id=milestone_id) }}"
+                               class="button is-light">Back</a>
                         </div>
                         <div class="control">
-                            <a href="{{ url_for('project.list_gantt_activity', project_id=project_id, milestone_id=milestone_id) }}"
-                               class="button is-light">Cancel</a>
+                            <button type="submit" class="button is-success">Create</button>
                         </div>
                     </div>
                 </form>
