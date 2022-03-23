@@ -31,14 +31,14 @@ gauth.credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile_dic
 drive = GoogleDrive(gauth)
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-GANTT_ACTIVITIES = dict([(1, '1. พัฒนาโครงร่างการวิจัยและเครื่องมือการวิจัย'),
-                         (2, '2. เสนอโครงร่างการวิจัยเพื่อขอรับการพิจารณาจริยธรรมฯ'),
-                         (3, '3. เสนอขอรับทุนอุดหนุนการวิจัย'),
-                         (4, '4. ผู้ทรงคุณวุฒิตรวจสอบและแก้ไข'),
-                         (5, '5. ติดต่อประสานงานเพื่อขอเก็บข้อมูล'),
-                         (6, '6. ดำเนินการเก็บรวบรวมข้อมูล'),
-                         (7, '7. วิเคราะห์ผลการวิจัยและอภิปรายผล'),
-                         (8, '8. จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย')]
+GANTT_ACTIVITIES = dict([(1, 'พัฒนาโครงร่างการวิจัยและเครื่องมือการวิจัย'),
+                         (2, 'เสนอโครงร่างการวิจัยเพื่อขอรับการพิจารณาจริยธรรมฯ'),
+                         (3, 'เสนอขอรับทุนอุดหนุนการวิจัย'),
+                         (4, 'ผู้ทรงคุณวุฒิตรวจสอบและแก้ไข'),
+                         (5, 'ติดต่อประสานงานเพื่อขอเก็บข้อมูล'),
+                         (6, 'ดำเนินการเก็บรวบรวมข้อมูล'),
+                         (7, 'วิเคราะห์ผลการวิจัยและอภิปรายผล'),
+                         (8, 'จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย')]
                         )
 
 
@@ -623,12 +623,12 @@ def add_gantt_activity(project_id, milestone_id):
             db.session.add(new_activity)
             db.session.commit()
             flash('New activity has been added.', 'success')
-            return redirect(url_for('project.list_gantt_activity',
+            return redirect(url_for('project.add_gantt_activity',
                                     project_id=project_id, milestone_id=milestone_id))
         else:
             flash(form.errors, 'danger')
-    return render_template('project/gantt_activity_add.html', form=form,
-                           project_id=project_id, milestone_id=milestone_id)
+    return render_template('project/gantt_activity_add.html',
+                           form=form, project_id=project_id, milestone_id=milestone_id)
 
 
 @project.route('projects/<int:project_id>/milestones/<int:milestone_id>/gantt-activities/<int:record_id>/edit',
@@ -644,9 +644,7 @@ def edit_gantt_activity(project_id, milestone_id, record_id):
             db.session.add(record)
             db.session.commit()
             flash('Activity has been updated.', 'success')
-            return redirect(url_for('project.list_gantt_activity',
-                                    project_id=project_id,
-                                    milestone_id=milestone_id))
+            return redirect(url_for('project.detail', project_id=project_id))
         else:
             flash(form.errors, 'danger')
     return render_template('project/gantt_activity_edit.html',
@@ -1162,7 +1160,6 @@ def remove_supplementary_doc(project_id, doc_id):
     return redirect(url_for('project.display_project', project_id=project_id))
 
 
-
 @project.route('/<int:project_id>/overall_budgets/add', methods=['GET', 'POST'])
 @login_required
 def add_overall_budget_item(project_id):
@@ -1224,7 +1221,7 @@ def add_overall_gantt_activity(project_id):
         db.session.add(new_activity)
         db.session.commit()
         flash('เพิ่มกิจกรรมใหม่เรียบร้อย', 'success')
-        return redirect(url_for('project.display_project', project_id=project.id))
+        return redirect(url_for('project.add_overall_gantt_activity', project_id=project_id))
     return render_template('project/overall_gantt_form.html', form=form, project=project)
 
 
