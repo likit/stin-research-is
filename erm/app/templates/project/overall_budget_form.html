@@ -20,6 +20,7 @@
         <div class="column is-one-third is-offset-4">
             <div class="container has-text-centered">
                 <h1 class="title">Add Overall Budget</h1>
+                {% include "messages.html" %}
                 <div class="box has-text-left">
                     <form method="post">
                         {{ form.csrf_token }}
@@ -44,7 +45,7 @@
                         <div class="field is-grouped is-grouped-centered">
                             <div class="control">
                                 <a href="{{ url_for('project.display_project', project_id=project.id) }}"
-                                   class="button is-light">Cancel</a>
+                                   class="button is-light">Back</a>
                             </div>
                             <div class="control">
                                 <button type="submit" class="button is-success">Save</button>
