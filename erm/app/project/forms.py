@@ -1,10 +1,8 @@
-from app import db
 from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
-from wtforms_components import DateTimeField
 from wtforms.widgets import Select, ListWidget, CheckboxInput
 from wtforms.fields import SelectMultipleField, FileField, SelectField
-from wtforms.validators import Optional, InputRequired
+from wtforms.validators import Optional
 from .models import *
 from app.main.models import User
 
@@ -166,6 +164,7 @@ class ProjectBudgetItemForm(ModelForm):
         model = ProjectBudgetItem
         exclude = ['phase']
 
+    file_upload = FileField('Upload เอกสาร')
     category = QuerySelectField(ProjectBudgetCategory,
                                     query_factory=lambda: ProjectBudgetCategory.query.order_by('category_id').all(),
                                     widget=Select())

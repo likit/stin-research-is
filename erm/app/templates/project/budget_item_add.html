@@ -47,6 +47,27 @@
                             {{ form.detail(class="textarea") }}
                         </div>
                     </div>
+                    {% if item and item.file_name %}
+                    <div class="field">
+                        <label class="label">ไฟล์เอกสารแนบ</label>
+                        {{ item.file_name }}
+                    </div>
+                    {% endif %}
+                    <div class="field">
+                        <label class="label">{{ form.file_upload.label }}</label>
+                        <div class="control">
+                            {{ form.file_upload() }}
+                        </div>
+                        {% if item and item.file_name %}
+                        <p class="help is-info">ไฟล์ใหม่จะแทนที่ไฟล์เดิม</p>
+                        {% endif %}
+                    </div>
+                    <div class="field">
+                        <label class="label">{{ form.file_detail.label }}</label>
+                        <div class="control">
+                            {{ form.file_detail(class="textarea") }}
+                        </div>
+                    </div>
                     <div class="field is-grouped is-grouped-centered">
                         <div class="control">
                             <button type="submit" class="button is-success">Create</button>

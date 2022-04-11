@@ -709,6 +709,18 @@ def add_budget_item(project_id, milestone_id):
             new_item.milestone_id = milestone_id
             new_item.created_at = arrow.now(tz='Asia/Bangkok').datetime
             new_item.edited_at = new_item.created_at
+            if form.file_upload.data:
+                upfile = form.file_upload.data
+                filename = secure_filename(upfile.filename)
+                upfile.save(filename)
+                file_drive = drive.CreateFile({'title': filename})
+                file_drive.SetContentFile(filename)
+                file_drive.Upload()
+                permission = file_drive.InsertPermission({'type': 'anyone',
+                                                          'value': 'anyone',
+                                                          'role': 'reader'})
+                new_item.file_url = file_drive['id']
+                new_item.file_name = filename
             db.session.add(new_item)
             db.session.commit()
             flash('New budget item has been added.', 'success')
@@ -730,6 +742,18 @@ def edit_budget_item(project_id, milestone_id, item_id):
         if form.validate_on_submit():
             form.populate_obj(item)
             item.edited_at = arrow.now(tz='Asia/Bangkok').datetime
+            if form.file_upload.data:
+                upfile = form.file_upload.data
+                filename = secure_filename(upfile.filename)
+                upfile.save(filename)
+                file_drive = drive.CreateFile({'title': filename})
+                file_drive.SetContentFile(filename)
+                file_drive.Upload()
+                permission = file_drive.InsertPermission({'type': 'anyone',
+                                                          'value': 'anyone',
+                                                          'role': 'reader'})
+                item.file_url = file_drive['id']
+                item.file_name = filename
             db.session.add(item)
             db.session.commit()
             flash('The budget item has been updated.', 'success')
@@ -737,7 +761,9 @@ def edit_budget_item(project_id, milestone_id, item_id):
                                     project_id=project_id, milestone_id=milestone_id))
         else:
             flash(form.errors, 'danger')
-    return render_template('project/budget_item_add.html', form=form, project_id=project_id, milestone_id=milestone_id)
+    return render_template('project/budget_item_add.html',
+                           item=item,
+                           form=form, project_id=project_id, milestone_id=milestone_id)
 
 
 @project.route('projects/<int:project_id>/milestones/<int:milestone_id>/summaries')
