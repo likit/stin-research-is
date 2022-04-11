@@ -411,7 +411,10 @@ class ProjectBudgetItem(db.Model):
     edited_at = db.Column('edited_at', db.DateTime(timezone=True))
     milestone_id = db.Column('milestone_id', db.ForeignKey('project_milestone.id'))
     milestone = db.relationship(ProjectMilestone, backref=db.backref('budget_items'))
-    detail = db.Column('detail', db.Text())
+    detail = db.Column('detail', db.Text(), info={'label': 'รายละเอียด'})
+    file_name = db.Column('file_name', db.String(255), nullable=True)
+    file_url = db.Column('file_url', db.Text(), nullable=True)
+    file_detail = db.Column('file_detail', db.Text(), nullable=True, info={'label': 'รายละเอียดเอกสารแนบ'})
 
 
 class ProjectBudgetItemOverall(db.Model):
