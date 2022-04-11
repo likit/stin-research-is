@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Gantt Chart Activities{% endblock %}
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                {% include "message.html" %}
+                <h1 class="title has-text-centered">Project Activities</h1>
+                <h3 class="title is-size-4">รายงานความก้าวหน้า</h3>
+                <h3 class="subtitle is-size-6">วันที่ {{ milestone.created_at|localdate }}</h3>
+                <table class="table is-fullwidth is-bordered is-striped">
+                    <tr>
+                        <td class="title is-size-5">สถานะ</td>
+                        <td class="is-size-5">{{ milestone.status }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">รายละเอียดการเปลี่ยนแปลงแผนงาน</td>
+                        <td class="is-size-5">{{ milestone.detail }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">การดำเนินงานในช่วงต่อไป</td>
+                        <td class="is-size-5">{{ milestone.plan }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">กิจกรรมอื่นๆ ที่เกี่ยวข้อง</td>
+                        <td class="is-size-5">{{ milestone.related_activity }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">อุปสรรคในการดำเนินงานและแนวทางแก้ไข</td>
+                        <td class="is-size-5">{{ milestone.obstacle }}</td>
+                    </tr>
+                    <tr>
+                        <td class="title is-size-5">ความเห็นของผู้วิจัย</td>
+                        <td class="is-size-5">{{ milestone.opinion }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <h1 class="title has-text-centered">Gantt Chart</h1>
+                <div id="chart_div"></div>
+                <h1 class="title has-text-centered">Progress</h1>
+                <table class="table is-fullwidth is-striped">
+                    <thead>
+                    <th>กิจกรรม</th>
+                    <th>วันเริ่มต้น</th>
+                    <th>วันสิ้นสุด</th>
+                    <th>รายละเอียด</th>
+                    <th>ร้อยละความสำเร็จ</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+                    {% for a in milestone.gantt_activities|sort(attribute='task_id') %}
+                    <tr>
+                        <td>{{ a.task_id }}</td>
+                        <td>{{ a.start_date|localdate }}</td>
+                        <td>{{ a.end_date|localdate }}</td>
+                        <td>{{ a.detail }}</td>
+                        <td>{{ a.completion }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column has-text-centered">
+                <a href="{{ url_for('webadmin.list_progress_reports') }}" class="button is-light">Back</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    google.charts.load('current', {'packages':['gantt']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function daysToMilliseconds(days) {
+        return days * 24 * 60 * 60 * 1000;
+    }
+
+    function drawChart() {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Task ID');
+        data.addColumn('string', 'Task Name');
+        data.addColumn('date', 'Start Date');
+        data.addColumn('date', 'End Date');
+        data.addColumn('number', 'Duration');
+        data.addColumn('number', 'Percent Complete');
+        data.addColumn('string', 'Dependencies');
+
+        var activities = {{ gantt_activities|tojson|safe }};
+        var gantt_activities = [];
+        activities.forEach(function(item) {
+            start_date = new Date(item[2]);
+            end_date = new Date(item[3]);
+            gantt_activities.push([item[0],
+                item[1], start_date, end_date,
+                item[4], item[5], item[6]]);
+        });
+        data.addRows(gantt_activities);
+        var options = {
+            height: 275
+        };
+
+        var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+</script>
+{% endblock %}

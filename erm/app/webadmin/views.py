@@ -1057,8 +1057,33 @@ def list_progress_reports():
     return render_template('webadmin/progress_reports.html', milestones=milestone_query)
 
 
+@webadmin.route('/progress-reports/<int:milestone_id>/receive')
+@superuser
+@login_required
+def receive_a_progress(milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    if not milestone.received_at:
+        milestone.received_at = arrow.now(tz='Asia/Bangkok').datetime
+        db.session.add(milestone)
+        db.session.commit()
+        flash('บันทึกข้อมูลเรียบร้อยแล้ว', 'success')
+    return redirect(url_for('webadmin.list_progress_reports'))
+
+
 @webadmin.route('/progress-reports/<int:milestone_id>/gantt-chart')
 @superuser
 @login_required
-def list_gantt_activity():
-    pass
+def list_gantt_activity(milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    gantt_activities = []
+    for a in sorted(milestone.gantt_activities, key=lambda x: x.task_id):
+        gantt_activities.append([
+            str(a.task_id),
+            GANTT_ACTIVITIES.get(a.task_id),
+            a.start_date.isoformat(),
+            a.end_date.isoformat(),
+            None, float(a.completion), None
+        ])
+    print(gantt_activities)
+    return render_template('webadmin/gantt_activities.html',
+                           milestone=milestone, gantt_activities=gantt_activities)
