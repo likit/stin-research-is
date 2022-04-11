@@ -58,18 +58,16 @@
                         </td>
                         <td style="width:20%">{{ milestone.received_at|localdatetime }}</td>
                         <td>
-                            <div class="field has-addons">
-                                <p class="control">
-                                    {% if not milestone.received_at %}
-                                    <a href="{{ url_for('webadmin.receive_a_progress', milestone_id=milestone.id) }}"
-                                            class="button is-small is-outlined is-primary">
-                                        <span>รับทราบ</span>
-                                    </a>
-                                    {% endif %}
-                                    <a class="button is-small is-outlined is-primary">
-                                        <span>รายละเอียด</span>
-                                    </a>
-                                </p>
+                            <div class="buttons">
+                                {% if not milestone.received_at %}
+                                <a href="{{ url_for('webadmin.receive_a_progress', milestone_id=milestone.id) }}"
+                                        class="button is-primary">
+                                    <span>รับทราบ</span>
+                                </a>
+                                {% endif %}
+                                <a class="button is-info">
+                                    <span>ส่งผู้ประเมิน</span>
+                                </a>
                             </div>
                         </td>
                     </tr>
