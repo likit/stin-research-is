@@ -24,7 +24,7 @@
                     {% for milestone in milestones %}
                     <tr>
                         <td>{{ milestone.project.title_th }}</td>
-                        <td style="width:20%"> {{ milestone.created_at|localdatetime }}</td>
+                        <td style="width:20%"> {{ milestone.submitted_at|localdatetime }}</td>
                         <td>
                             <div class="buttons has-addons">
                                 <a href="{{ url_for('webadmin.list_gantt_activity', milestone_id=milestone.id) }}"

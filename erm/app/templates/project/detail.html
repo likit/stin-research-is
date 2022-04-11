@@ -485,6 +485,8 @@
                             <th>สถานะ</th>
                             <th>รายงานเมื่อ</th>
                             <th colspan="2">แก้ไข</th>
+                            <th>ส่ง</th>
+                            <th>รับทราบ</th>
                             </thead>
                             <tbody>
                             {% for m in project.milestones %}
@@ -492,7 +494,7 @@
                                 <td>{{ m.status }}</td>
                                 <td>{{ m.created_at|localdatetime }}</td>
                                 <td>
-                                    {% if current_user == project.creator and project.approved %}
+                                    {% if current_user == project.creator and project.approved and m.is_editable %}
                                     <a href="{{ url_for('project.edit_milestone', project_id=project.id, milestone_id=m.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-pencil-alt"></i>
@@ -538,12 +540,28 @@
                                         {% endif %}
                                     </div>
                                 </td>
+                                <td>
+                                    {% if not m.submitted_at %}
+                                    <a class="button is-primary"
+                                       href="{{ url_for('project.submit_milestone', milestone_id=m.id, project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="far fa-paper-plane"></i>
+                                        </span>
+                                        <span>ส่ง</span>
+                                    </a>
+                                    {% else %}
+                                    {{ m.submitted_at|localdatetime }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ m.received_at|localdatetime }}
+                                </td>
                             </tr>
                             </tbody>
                             {% endfor %}
                             {% if current_user == project.creator and project.approved %}
                             <tr>
-                                <td colspan="4" class="has-text-centered">
+                                <td colspan="6" class="has-text-centered">
                                     <div class="buttons is-centered">
                                     <a href="{{ url_for('project.add_milestone', project_id=project.id) }}"
                                         class="button is-small  is-link is-outlined">

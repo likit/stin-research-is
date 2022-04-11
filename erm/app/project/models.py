@@ -305,7 +305,12 @@ class ProjectMilestone(db.Model):
                                           )]
                              })
     project = db.relationship('ProjectRecord', backref=db.backref('milestones'))
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     received_at = db.Column('received_at', db.DateTime(timezone=True))
+
+    @property
+    def is_editable(self):
+        return False if self.submitted_at else True
 
     @property
     def gantt_activity_count(self):

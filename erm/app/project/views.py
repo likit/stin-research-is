@@ -674,6 +674,20 @@ def edit_gantt_activity(project_id, milestone_id, record_id):
                            form=form, record=record)
 
 
+@project.route('projects/<int:project_id>/milestones/<int:milestone_id>/submit')
+@login_required
+def submit_milestone(project_id, milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    if not milestone.submitted_at:
+        milestone.submitted_at = arrow.now(tz='Asia/Bangkok').datetime
+        db.session.add(milestone)
+        db.session.commit()
+        flash('ส่งความก้าวหน้าเรียบร้อย', 'success')
+    else:
+        flash('รายงานนี้ได้เคยส่งแล้ว', 'warning')
+    return redirect(url_for('project.display_project', project_id=project_id))
+
+
 @project.route('projects/<int:project_id>/milestones/<int:milestone_id>/gantt-activities/<int:record_id>/remove')
 @login_required
 def remove_gantt_activity(project_id, milestone_id, record_id):

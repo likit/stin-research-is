@@ -41,7 +41,6 @@ GANTT_ACTIVITIES = dict([(1, '1. พัฒนาโครงร่างกา�
                          (8, '8. จัดทำรายงานการวิจัยและเตรียมต้นฉบับตีพิมพ์งานวิจัย')]
                         )
 
-
 STIN_EMAIL = os.environ.get('MAIL_USERNAME')
 
 
@@ -321,7 +320,7 @@ def resend_for_review(project_id, record_id):
             url = url_for('webadmin.write_review',
                           project_id=project.id, review_id=send_record.review.id,
                           token=token, _external=True)
-            message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}'\
+            message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
                 .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
             try:
                 send_mail(new_send.to, title=form.title.data, message=message)
@@ -370,7 +369,7 @@ def write_review(project_id, review_id):
             db.session.add(review)
             db.session.commit()
 
-            message = '{} ได้ทำการประเมินและส่งผลการประเมินของโครงการ {} แล้วเมื่อ {}'\
+            message = '{} ได้ทำการประเมินและส่งผลการประเมินของโครงการ {} แล้วเมื่อ {}' \
                 .format(review.reviewer.fullname, project.title_th, review.submitted_at)
 
             send_mail(STIN_EMAIL, title='การตอบกลับการรีวิวของผู้ทรงคุณวุฒิ', message=message)
@@ -405,7 +404,7 @@ def update_status(project_id):
             project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
             db.session.add(project)
             db.session.commit()
-            message = 'เรียนผู้รับผิดชอบโครงการ "{}"\n\nสถานะโครงการได้รับการปรับจาก {} เป็น {} เมื่อ {} นาฬิกา'\
+            message = 'เรียนผู้รับผิดชอบโครงการ "{}"\n\nสถานะโครงการได้รับการปรับจาก {} เป็น {} เมื่อ {} นาฬิกา' \
                 .format(project.title_th, prev_status, project.status, project.updated_at.strftime('%d/%m/%Y %-H:%M'))
             try:
                 send_mail(project.creator.email, title='แจ้งการปรับสถานะโครงการ', message=message)
@@ -532,7 +531,8 @@ def send_for_ethic_reviews(project_id, ethic_id):
             for review in ethic.reviews:
                 serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=1814400)
                 token = serializer.dumps({'review_id': review.id})
-                url = url_for('webadmin.write_ethic_review', project_id=project.id, review_id=review.id, token=token, _external=True)
+                url = url_for('webadmin.write_ethic_review', project_id=project.id, review_id=review.id, token=token,
+                              _external=True)
                 message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
                     .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
                 try:
@@ -581,8 +581,8 @@ def resend_for_ethic_review(project_id, record_id, ethic_id):
             serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=1814400)
             token = serializer.dumps({'review_id': send_record.review.id})
             url = url_for('webadmin.write_ethic_review',
-                              project_id=project.id, review_id=send_record.review.id,
-                              ethic_id=ethic_id, token=token, _external=True)
+                          project_id=project.id, review_id=send_record.review.id,
+                          ethic_id=ethic_id, token=token, _external=True)
             message = '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
                 .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
             try:
@@ -1052,8 +1052,8 @@ def display_detail(project_id):
 @superuser
 @login_required
 def list_progress_reports():
-    milestone_query = ProjectMilestone.query.filter_by(received_at=None)\
-        .order_by(ProjectMilestone.created_at.desc())
+    milestone_query = ProjectMilestone.query.filter(ProjectMilestone.submitted_at != None) \
+        .filter_by(received_at=None).order_by(ProjectMilestone.created_at.desc())
     return render_template('webadmin/progress_reports.html', milestones=milestone_query)
 
 
