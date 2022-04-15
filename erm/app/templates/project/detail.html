@@ -503,6 +503,7 @@
                                     {% endif %}
                                 </td>
                                 <td>
+                                    {% if m.is_editable %}
                                     <div class="buttons has-addons">
                                         <a href="{{ url_for('project.list_gantt_activity', project_id=project.id, milestone_id=m.id) }}"
                                             class="button is-small is-primary is-outlined">
@@ -539,6 +540,7 @@
                                         </a>
                                         {% endif %}
                                     </div>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     {% if not m.submitted_at %}
