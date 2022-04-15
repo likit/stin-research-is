@@ -99,14 +99,14 @@ class ProjectRecord(db.Model):
     expected_benefit = db.Column('expected_benefit', db.Text(), info={'label': 'ประโยชน์ที่คาดว่าจะได้รับ'})
     status = db.Column('status', db.String(),
                        info={'label': 'สถานะโครงการ',
-                             'choices': [(i, i) for i in ['draft',
-                                                          'submitted',
-                                                          'revising',
-                                                          'approved',
-                                                          'rejected',
-                                                          'finish_pending',
-                                                          'finished',
-                                                          'terminated'
+                             'choices': [(i, c) for i, c in [('draft', 'Draft'),
+                                                          ('submitted', 'Submitted'),
+                                                          ('revising', 'Revising'),
+                                                          ('approved', 'Approved'),
+                                                          ('rejected', 'Rejected'),
+                                                          ('finish_pending', 'Finish Pending'),
+                                                          ('finished', 'Finished'),
+                                                          ('terminated', 'Terminated')
                                                          ]
                                         ]
                             })
@@ -315,7 +315,7 @@ class ProjectMilestone(db.Model):
 
     @property
     def is_editable(self):
-        return False if self.submitted_at else True
+        return False if self.submitted_at or self.received_at else True
 
     @property
     def gantt_activity_count(self):
