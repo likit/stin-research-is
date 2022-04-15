@@ -104,6 +104,7 @@ class ProjectRecord(db.Model):
                                                           'revising',
                                                           'approved',
                                                           'rejected',
+                                                          'finish_pending',
                                                           'finished',
                                                           'terminated'
                                                          ]
@@ -160,6 +161,10 @@ class ProjectRecord(db.Model):
     @property
     def approved(self):
         return self.status == 'approved'
+
+    @property
+    def finish_pending(self):
+        return self.status == 'finish_pending'
 
     @property
     def finished(self):

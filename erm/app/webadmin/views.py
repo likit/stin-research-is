@@ -1057,6 +1057,13 @@ def list_progress_reports():
     return render_template('webadmin/progress_reports.html', milestones=milestone_query)
 
 
+@webadmin.route('/close-project-requests')
+@superuser
+@login_required
+def close_project_requests():
+    pass
+
+
 @webadmin.route('/progress-reports/<int:milestone_id>/receive')
 @superuser
 @login_required

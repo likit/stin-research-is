@@ -82,7 +82,7 @@
                 </p>
             </article>
             {% endif %}
-            <div class="box">
+            <div>
             <table class="table is-fullwidth is-bordered">
                 {% if project.parent_project %}
                 <tr>
@@ -1015,24 +1015,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="title is-size-5">รายงานฉบับสมบูรณ์
-                        <p class="help has-text-info">
-                            เพิ่มข้อมูลได้หลังจากสิ้นสุดโครงการ
-                        </p>
-                    </td>
-                    <td>
-                        {% if project.final_report_url %}
-                        <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
-                            target="_blank">
-                            <span class="icon">
-                                <i class="far fa-file-alt"></i>
-                            </span>
-                            <span>ไฟล์รายงาน</span>
-                        </a>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
                     <td class="title is-size-5">เอกสารประกอบการปิดโครงการ</td>
                     <td>
                         <table class="table">
@@ -1083,10 +1065,24 @@
                                     {% endif %}
                                 </td>
                             </tr>
-                            {% if current_user == project.creator and project.finished %}
+                            <tr>
+                                <td>รายงานฉบับสมบูรณ์</td>
+                                <td>
+                                    {% if project.final_report_url %}
+                                    <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
+                                       target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                        <span>รายงานฉบับสมบูรณ์</span>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if current_user == project.creator and project.approved %}
                             <tr>
                                 <td colspan="2" class="has-text-centered">
-                                    <a class="button is-small  is-link is-outlined"
+                                    <a class="button is-link is-outlined"
                                        href="{{ url_for('project.upload_summary_file', project_id=project.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-plus"></i>
@@ -1096,43 +1092,50 @@
                                 </td>
                             </tr>
                             {% endif %}
+                            {% if current_user == project.creator and project.approved %}
+                            <tr>
+                                <td colspan="2" class="has-text-centered">
+                                    <a class="button is-danger"
+                                       href="{{ url_for('project.upload_summary_file', project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-check-circle"></i>
+                                        </span>
+                                        <span>ปิดโครงการ</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endif %}
                             </tbody>
                         </table>
-                        {% if project.final_report_url %}
-                        <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
-                           target="_blank">
-                            <span class="icon">
-                                <i class="far fa-file-alt"></i>
-                            </span>
-                            <span>ไฟล์รายงาน</span>
-                        </a>
-                        {% endif %}
                     </td>
                 </tr>
             </table>
             </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
             <div class="has-text-centered">
                 <a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}"
                    class="button is-light is-medium">Back</a>
                 {% if (project.creator == current_user or current_user.role == 1) %}
                 <a class="button is-link is-medium is-outlined"
-                    {% if project.editable %}
-                        href="{{ url_for('project.edit_project', project_id=project.id) }}"
-                    {% else %}
-                        disabled
-                    {% endif %}
+                   {% if project.editable %}
+                   href="{{ url_for('project.edit_project', project_id=project.id) }}"
+                   {% else %}
+                   disabled
+                   {% endif %}
                 >Edit</a>
-                <a
-                   class="button is-primary is-outlined is-medium"
-                    {% if project.editable and project.get_ethic_status() == 'approved' %}
-                        href="{{ url_for('project.submit_project', project_id=project.id) }}"
-                    {% elif project.editable %}
-                        href="{{ url_for('project.submit_project', project_id=project.id) }}"
-                    {% else %}
-                        disabled
-                    {% endif %}
-                >Submit</a>
+                <a class="button is-primary is-outlined is-medium"
+                {% if project.editable and project.get_ethic_status() == 'approved' %}
+                    href="{{ url_for('project.submit_project', project_id=project.id) }}"
+                {% elif project.editable %}
+                    href="{{ url_for('project.submit_project', project_id=project.id) }}"
+                {% else %}
+                    disabled
                 {% endif %}
+                >Submit</a>
+                    {% endif %}
             </div>
         </div>
     </div>

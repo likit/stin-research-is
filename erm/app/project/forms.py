@@ -224,7 +224,8 @@ class FileUploadForm(FlaskForm):
     file_type = SelectField('File',
                             choices=[('finance', 'ใบสรุปการใช้เงิน'),
                                      ('bookbank_cover', 'หน้าแรกสมุดบัญชี'),
-                                     ('bookbank_last_page', 'หน้าสุดท้ายสมุดบัญชี')
+                                     ('bookbank_last_page', 'หน้าสุดท้ายสมุดบัญชี'),
+                                     ('final_report', 'รายงานฉบับสมบูรณ์')
                                      ])
     file_upload = FileField('Upload')
 

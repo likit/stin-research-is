@@ -420,6 +420,20 @@ def remove_figure(figure_id):
     return redirect(request.referrer)
 
 
+@project.route('/<int:project_id>/finish-pending', methods=['GET'])
+@login_required
+def project_finish_request(project_id):
+    project = ProjectRecord.query.get(project_id)
+    if project.status not in ('draft', 'revising'):
+        project.status = 'finish_pending'
+        db.session.add(project)
+        db.session.commit()
+        flash('ส่งคำขอปิดโครงการเรียบร้อย', 'success')
+    else:
+        flash('โครงการยังไม่สามารถปิดได้', 'warning')
+    return redirect(url_for('project.display_project', project_id=project.id))
+
+
 @project.route('/<int:project_id>/submit', methods=['GET'])
 @login_required
 def submit_project(project_id):
@@ -1336,6 +1350,8 @@ def upload_summary_file(project_id):
                 project.bookbank_cover_file_url = file_drive['id']
             elif form.file_type.data == 'bookbank_last_page':
                 project.bookbank_last_page_file_url = file_drive['id']
+            elif form.file_type.data == 'final_report':
+                project.final_report_url = file_drive['id']
             db.session.add(project)
             db.session.commit()
             flash('อัพโหลดไฟล์เรียบร้อย', 'success')
