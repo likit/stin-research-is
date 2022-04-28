@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 
 {% block title %}Project Review{% endblock %}
+{% block head %}
+{{ super() }}
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+{% endblock %}
 
 {% block page_content %}
 {% include "nav.html" %}
@@ -503,6 +507,39 @@
 {% block scripts %}
 {{ super() }}
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script>
+    let toolbar = [
+        // [groupName, [list of button]]
+        ['style', ['style']],
+        ['table', ['table']],
+        ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+    ]
+    let options = {
+        height: 400,
+        toolbar: toolbar
+    }
+    $(document).ready(function() {
+        $('#alignment_comment').summernote(options)
+        $('#title_comment').summernote(options)
+        $('#importance_comment').summernote(options)
+        $('#objective_comment').summernote(options)
+        $('#idea_comment').summernote(options)
+        $('#sampling_comment').summernote(options)
+        $('#variable_comment').summernote(options)
+        $('#tool_comment').summernote(options)
+        $('#data_collection_comment').summernote(options)
+        $('#data_analyze_comment').summernote(options)
+        $('#plan_comment').summernote(options)
+        $('#outcome_comment').summernote(options)
+        $('#benefit_comment').summernote(options)
+        $('#budget_comment').summernote(options)
+        $('#comment').summernote(options)
+    })
+</script>
 <script>
     google.charts.load('current', {'packages':['gantt']});
     google.charts.setOnLoadCallback(drawChart);

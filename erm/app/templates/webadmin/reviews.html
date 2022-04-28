@@ -1,62 +1,63 @@
 {% extends "base.html" %}
 
 {% block title %}Project Reviews Page{% endblock %}
+{% block head %}
+{{ super() }}
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+{% endblock %}
 
 {% block page_content %}
 {% include "nav.html" %}
 <section class="section">
     <div class="columns">
-        <div class="column has-text-centered is-two-thirds is-offset-2">
+        <div class="column has-text-centered">
             <h1 class="title">Project Reviews</h1>
             {% include "messages.html" %}
             {% for review in project.reviews %}
             <div class="box">
                 <table class="table is-fullwidth">
-                    <col width="40">
-                    <col width="50">
-                    <col width="10">
                     <thead>
                         <th></th>
                         <th>ผลการประเมิน</th>
                         <th>ข้อเสนอแนะ</th>
                     </thead>
                     <tr>
-                        <td class="title is-size-5">ผู้ประเมิน</td>
-                        <td>{{ review.reviewer.academic_title or '' }}{{ review.reviewer.fullname }}</td>
-                        <td></td>
+                        <td style="width: 10%" class="title is-size-5">ผู้ประเมิน</td>
+                        <td style="width: 30%">{{ review.reviewer.academic_title or '' }}{{ review.reviewer.fullname }}</td>
+                        <td style="width: 60%"></td>
                     </tr>
                     <tr>
-                        <td class="title is-size-5">ความสอดคล้องกับยุทธศาตร์ฯ</p></td>
-                        <td>{{ review.alignment|replace('|', ', ') }}, {{ review.alignment_other }}</td>
-                        <td>
-                            {{ review.alignment_comment }}
+                        <td style="width: 10%" class="title is-size-5">ความสอดคล้องกับยุทธศาตร์ฯ</p></td>
+                        <td style="width: 30%" {{ review.alignment|replace('|', ', ') }}, {{ review.alignment_other }}</td>
+                        <td style="width: 60%"
+                            {{ review.alignment_comment|safe }}
                         </td>
                     </tr>
                     <tr>
                         <td class="title is-size-5">ความเห็นเกี่ยวกับชื่อโครงการวิจัย</td>
                         <td colspan="2">
-                            {{ review.title_comment }}
+                            {{ review.title_comment|safe }}
                         </td>
                     </tr>
                     <tr>
                         <td class="title is-size-5">วัตถุประสงค์</p></td>
                         <td>{{ review.objective }}</td>
                         <td>
-                            {{ review.objective_comment }}
+                            {{ review.objective_comment|safe }}
                         </td>
                     </tr>
                     <tr>
                         <td class="title is-size-5">ความสำคัญและที่มาของปัญหาการวิจัย</td>
                         <td>{{ review.importance}}</td>
                         <td>
-                            {{ review.importance_comment }}
+                            {{ review.importance_comment|safe }}
                         </td>
                     </tr>
                     <tr>
                         <td class="title is-size-5">แนวคิดพื้นฐาน/กรอบทฤษฎีที่ใช้ในการวิจัย</td>
                         <td>{{ review.idea}}</td>
                         <td>
-                            {{ review.idea_comment }}
+                            {{ review.idea_comment|safe }}
                         </td>
                     </tr>
                     <tr>
@@ -71,27 +72,27 @@
                                 <tr>
                                     <td><strong>การเลือกกลุ่มตัวอย่าง</strong></td>
                                     <td>{{ review.sampling }}</td>
-                                    <td>{{ review.sampling_comment }}</td>
+                                    <td>{{ review.sampling_comment|safe }}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>การระบุตัวแปรชนิดต่างๆ</strong></td>
                                     <td>{{ review.variable }}</td>
-                                    <td>{{ review.variable_comment }}</td>
+                                    <td>{{ review.variable_comment|safe }}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>เครื่องมือการวิจัยฯ</strong></td>
                                     <td>{{ review.tool }}</td>
-                                    <td>{{ review.tool_comment }}</td>
+                                    <td>{{ review.tool_comment|safe }}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>การเก็บรวบรวมข้อมูล</strong></td>
                                     <td>{{ review.data_collection }}</td>
-                                    <td>{{ review.data_collection_comment }}</td>
+                                    <td>{{ review.data_collection_comment|safe }}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>วิธีการวิเคราะห์ข้อมูล</strong></td>
                                     <td>{{ review.data_analyze }}</td>
-                                    <td>{{ review.data_analyze_comment }}</td>
+                                    <td>{{ review.data_analyze_comment|safe }}</td>
                                 </tr>
                             </table>
                         </td>
@@ -100,7 +101,7 @@
                         <td class="title is-size-5">แผนการดำเนินการวิจัย</td>
                         <td>{{ review.plan}}</td>
                         <td>
-                            {{ review.plan_comment }}
+                            {{ review.plan_comment|safe }}
                         </td>
                     </tr>
                     <tr>
@@ -113,7 +114,7 @@
                         <td class="title is-size-5">รายการผลผลิตจากการวิจัย</td>
                         <td>{{ review.outcome_detail|replace('|', ', ') }}, {{ review.outcome_detail_other }}</td>
                         <td>
-                            {{ review.outcome_comment }}
+                            {{ review.outcome_comment|safe }}
                         </td>
                     </tr>
                     <tr>
@@ -126,12 +127,12 @@
                         <td class="title is-size-5">รายการประโยชน์ที่คาดว่าจะได้รับ</td>
                         <td>{{ review.benefit_detail|replace('|', ', ') }}, {{ review.benefit_detail_other }}</td>
                         <td>
-                            {{ review.benefit_comment }}
+                            {{ review.benefit_comment|safe }}
                         </td>
                     </tr>
                     <tr>
                         <td class="title is-size-5">สรุป</td>
-                        <td>{{ review.comment or '' }}</td>
+                        <td>{{ review.comment|safe or '' }}</td>
                         <td>
                             {% if review.comment %}
                             <span class="icon">
@@ -436,4 +437,40 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script>
+    let toolbar = [
+        // [groupName, [list of button]]
+        ['style', ['style']],
+        ['table', ['table']],
+        ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+    ]
+    let options = {
+        height: 400,
+        toolbar: toolbar
+    }
+    $(document).ready(function() {
+        $('#alignment_comment').summernote(options)
+        $('#title_comment').summernote(options)
+        $('#importance_comment').summernote(options)
+        $('#objective_comment').summernote(options)
+        $('#idea_comment').summernote(options)
+        $('#sampling_comment').summernote(options)
+        $('#variable_comment').summernote(options)
+        $('#tool_comment').summernote(options)
+        $('#data_collection_comment').summernote(options)
+        $('#data_analyze_comment').summernote(options)
+        $('#plan_comment').summernote(options)
+        $('#outcome_comment').summernote(options)
+        $('#benefit_comment').summernote(options)
+        $('#budget_comment').summernote(options)
+        $('#comment').summernote(options)
+    })
+</script>
 {% endblock %}
