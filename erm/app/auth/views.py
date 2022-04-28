@@ -52,7 +52,7 @@ def login():
             email = request.form.get('email')
             password = request.form.get('password')
             user = User.query.filter_by(email=email).first()
-            if user:
+            if user and user.is_activated:
                 if user.check_password(password):
                     login_user(user)
                     if current_user.is_authenticated:
@@ -149,3 +149,20 @@ def reset_password(user_id):
         flash('Password has been reset.', 'success')
         return redirect(url_for('webadmin.list_users', user_id=current_user.id))
     return render_template('auth/reset_password.html', form=form)
+
+
+@auth.route('/users/<int:user_id>/deactivate')
+@superuser
+@login_required
+def deactivate_user(user_id):
+    confirmed = request.args.get('confirmed')
+    if confirmed is None:
+        return render_template('auth/deactivate_confirm.html', user_id=user_id)
+    elif confirmed == 'yes':
+        user = User.query.get(user_id)
+        user.is_activated = not user.is_activated
+        db.session.add(user)
+        db.session.commit()
+        status = 'activated' if user.is_active else 'deactivated'
+        flash('User has been {}'.format(status), 'success')
+    return redirect(url_for('webadmin.list_users'))

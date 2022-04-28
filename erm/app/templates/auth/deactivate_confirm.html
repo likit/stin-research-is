@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block page_content %}
+<section class="hero is-fullheight is-light">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+          {% include "messages.html" %}
+          <div class="box">
+            <h1 class="title">Deactivate/activate User</h1>
+            <div class="notification is-warning is-light">
+              ผู้ใช้ที่ถูก deactivate จะไม่สามารถลงชื่อเข้าใช้งานระบบได้ต่อไป
+            </div>
+            <div class="buttons is-centered">
+              <a href="{{url_for('auth.deactivate_user', user_id=user_id, confirmed='no')}}"
+                      class="button is-light">
+                Back
+              </a>
+              <a href="{{url_for('auth.deactivate_user', user_id=user_id, confirmed='yes')}}"
+                      class="button is-danger">
+                Confirm
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

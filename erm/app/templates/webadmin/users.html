@@ -37,6 +37,7 @@
                             </span>
                         </td>
                         <td>
+                            <!---
                             <a href="">
                                 <span class="icon">
                                     <i class="far fa-eye"></i>
@@ -53,6 +54,7 @@
                                     edit
                                 </span>
                             </a>
+                            -->
                             <a href="{{url_for('auth.reset_password', user_id=user.id)}}">
                                 <span class="icon">
                                     <i class="fas fa-user-lock"></i>
@@ -61,6 +63,25 @@
                                     reset password
                                 </span>
                             </a>
+                            {% if user.is_active %}
+                            <a href="{{url_for('auth.deactivate_user', user_id=user.id)}}">
+                                <span class="icon">
+                                    <i class="far has-text-danger fa-times-circle"></i>
+                                </span>
+                                <span class="has-text-danger">
+                                    deactivate
+                                </span>
+                            </a>
+                            {% else %}
+                            <a href="{{url_for('auth.deactivate_user', user_id=user.id)}}">
+                                <span class="icon">
+                                    <i class="far fa-check-circle"></i>
+                                </span>
+                                <span>
+                                    activate
+                                </span>
+                            </a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
