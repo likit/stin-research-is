@@ -6,7 +6,7 @@ from app.project.models import (ProjectReviewSendRecord,
 from wsgi import db
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
 from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms.fields import SelectMultipleField, BooleanField
+from wtforms.fields import SelectMultipleField, BooleanField, FileField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 
@@ -33,6 +33,8 @@ class ProjectReviewRecordAdminForm(BaseModelForm):
     class Meta:
         model = ProjectReviewRecord
 
+    upload_file = FileField('Upload เอกสารแนบ')
+
     alignment_select = MultiCheckboxField('ความสอดคล้องกับยุทธศาสตร์หรือประเด็นการวิจัยหลักของสถาบัน',
                                           choices=[(i, i) for i in
                                                    ('การวิจัยด้านการพยาบาลผู้สูงอายุ',
@@ -55,6 +57,7 @@ class ProjectReviewRecordAdminForm(BaseModelForm):
                                                          'ประโยชน์เชิงพานิชย์',
                                                          'ประโยชน์ทางอ้อมทางงานสร้างสรรค์',
                                                          'อื่นๆ')])
+
 
 class ProjectReviewRecordForm(ProjectReviewRecordAdminForm):
     class Meta:

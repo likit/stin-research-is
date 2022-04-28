@@ -132,6 +132,18 @@
                         </td>
                     </tr>
                     <tr>
+                        <td class="title is-size-5">เอกสารแนบ</td>
+                        <td colspan="2">
+                            <a href="https://drive.google.com/uc?id={{ review.file_url }}"
+                               target="_blank">
+                                <span class="icon">
+                                    <i class="far fa-file-alt"></i>
+                                </span>
+                                <span>view</span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="title is-size-5">สรุป</td>
                         <td>{{ review.comment|safe or '' }}</td>
                         <td>

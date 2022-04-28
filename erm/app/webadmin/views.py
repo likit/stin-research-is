@@ -398,6 +398,17 @@ def write_review(project_id, review_id):
             review.outcome_detail = '|'.join(form.outcome_detail_select.data)
             review.benefit_detail = '|'.join(form.benefit_detail_select.data)
             review.submitted_at = arrow.now(tz='Asia/Bangkok').datetime
+            if form.upload_file.data:
+                upfile = form.upload_file.data
+                filename = secure_filename(upfile.filename)
+                upfile.save(filename)
+                file_drive = drive.CreateFile({'title': filename})
+                file_drive.SetContentFile(filename)
+                file_drive.Upload()
+                permission = file_drive.InsertPermission({'type': 'anyone',
+                                                          'value': 'anyone',
+                                                          'role': 'reader'})
+                review.file_url = file_drive['id']
             db.session.add(review)
             db.session.commit()
 

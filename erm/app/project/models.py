@@ -423,7 +423,7 @@ class ProjectBudgetItem(db.Model):
     milestone = db.relationship(ProjectMilestone, backref=db.backref('budget_items'))
     detail = db.Column('detail', db.Text(), info={'label': 'รายละเอียด'})
     file_name = db.Column('file_name', db.String(255), nullable=True)
-    file_url = db.Column('file_url', db.Text(), nullable=True)
+    file_url = db.Column('file_url', db.Text(), nullable=True, info={'label': 'URL'})
     file_detail = db.Column('file_detail', db.Text(), nullable=True, info={'label': 'รายละเอียดเอกสารแนบ'})
 
 
@@ -593,6 +593,7 @@ class ProjectReviewRecord(db.Model):
     project = db.relationship('ProjectRecord',
                               backref=db.backref('reviews',
                                                  cascade='all, delete-orphan'))
+    file_url = db.Column('file_url', db.Text(), nullable=True, info={'label': 'URL'})
     summarized = db.Column('summarized', db.Boolean(), default=False)
     released_at = db.Column('released_at', db.DateTime(timezone=True))
 

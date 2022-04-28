@@ -248,7 +248,7 @@
                     <h1 class="title has-text-centered">Write Review</h1>
                     <hr>
                     <p>{{ reviewer }}</p>
-                    <form method="post">
+                    <form method="post" enctype=multipart/form-data>
                         {{ form.csrf_token }}
                         <div class="field">
                             <label class="label">{{ form.alignment_select.label }}</label>
@@ -473,6 +473,10 @@
                             <div class="control">
                                 {{ form.comment(class="textarea") }}
                             </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.upload_file.label }}</label>
+                                {{ form.upload_file() }}
                         </div>
                         <div class="field">
                             <label class="label">{{ form.status.label }}</label>
