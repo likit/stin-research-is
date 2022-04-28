@@ -1110,3 +1110,18 @@ def list_budgets(milestone_id):
 def list_summaries(milestone_id):
     milestone = ProjectMilestone.query.get(milestone_id)
     return render_template('webadmin/progress_summaries.html', milestone=milestone)
+
+@webadmin.route('/progress-reports/<int:milestone_id>/send-to-committee')
+@superuser
+@login_required
+def send_progress_to_committee(milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    for reviewer in milestone.project.reviewers:
+        message = 'เรียนคณะกรรมการโครงการวิจัย'
+        message += '\n\nโครงการ{} ได้ทำการส่งรายงานความก้าวหน้าเมื่อวันที่{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อตรวจสอบรายงานความก้าวหน้าจักเป็นพระคุณยิ่ง\n\n{}'\
+            .format(milestone.project.title_th, milestone.submitted_at.strftime('%d/%m/%Y %H:%M:%S'), 'https://test.com/report')
+        try:
+            send_mail(reviewer.email, title='รายงานความก้าวหน้าโครงการวิจัย', message=message)
+        except:
+            flash('Failed to send an email to {}'.format(reviewer.email))
+    return 'Progress sent.'

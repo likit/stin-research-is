@@ -65,7 +65,8 @@
                                     <span>รับทราบ</span>
                                 </a>
                                 {% endif %}
-                                <a class="button is-info">
+                                <a href="{{url_for('webadmin.send_progress_to_committee', milestone_id=milestone.id)}}"
+                                   class="button is-info">
                                     <span>ส่งผู้ประเมิน</span>
                                 </a>
                             </div>
