@@ -1,9 +1,9 @@
 from flask import request, render_template, flash, redirect, url_for
 from flask_login import login_required, logout_user, login_user, current_user
-from app.auth.forms import RegisterForm, LoginForm, NewUserForm, PasswordChangeForm
+from app.auth.forms import RegisterForm, LoginForm, NewUserForm, PasswordChangeForm, PasswordResetForm
 from app.main.models import User
 from app.researcher.models import Profile
-from app import db, login_manager
+from app import db, login_manager, superuser
 from . import auth_bp as auth
 
 
@@ -82,6 +82,7 @@ def logout():
 
 
 @auth.route('/users/add', methods=['GET', 'POST'])
+@superuser
 @login_required
 def add_user():
     form = NewUserForm()
@@ -133,3 +134,18 @@ def edit_password():
         print(form)
 
     return render_template('auth/edit_password.html', form=form)
+
+
+@auth.route('/users/<int:user_id>/edit-password', methods=['GET', 'POST'])
+@superuser
+@login_required
+def reset_password(user_id):
+    user = User.query.get(user_id)
+    form = PasswordResetForm()
+    if form.validate_on_submit():
+        current_user.password = request.form.get('new_password')
+        db.session.add(current_user)
+        db.session.commit()
+        flash('Password has been reset.', 'success')
+        return redirect(url_for('webadmin.list_users', user_id=current_user.id))
+    return render_template('auth/reset_password.html', form=form)

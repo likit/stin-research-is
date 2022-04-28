@@ -38,3 +38,12 @@ class PasswordChangeForm(FlaskForm):
                               Length(8, 16, message='Password must be between 8-16 characters.')
                               ])
     confirm_new_password = PasswordField('Confirm New Password', [InputRequired()])
+
+
+class PasswordResetForm(FlaskForm):
+    new_password = PasswordField('New Password',
+                                 [InputRequired(),
+                                  EqualTo('confirm_new_password'),
+                                  Length(8, 16, message='Password must be between 8-16 characters.')
+                                  ])
+    confirm_new_password = PasswordField('Confirm New Password', [InputRequired()])

@@ -53,6 +53,14 @@
                                     edit
                                 </span>
                             </a>
+                            <a href="{{url_for('auth.reset_password', user_id=user.id)}}">
+                                <span class="icon">
+                                    <i class="fas fa-user-lock"></i>
+                                </span>
+                                <span>
+                                    reset password
+                                </span>
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}
