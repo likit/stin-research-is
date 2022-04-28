@@ -132,6 +132,11 @@
                         </td>
                     </tr>
                     <tr>
+                        <td class="title is-size-5">งบประมาณ</td>
+                        <td>{{ review.budget }}</td>
+                        <td>{{ review.budget_comment|safe }}</td>
+                    </tr>
+                    <tr>
                         <td class="title is-size-5">เอกสารแนบ</td>
                         <td colspan="2">
                             <a href="https://drive.google.com/uc?id={{ review.file_url }}"
