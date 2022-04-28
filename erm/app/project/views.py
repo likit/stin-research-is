@@ -1196,6 +1196,30 @@ def view_reviews(project_id):
     return render_template('project/summarized_review.html', project=project, review=review)
 
 
+@project.route('/<int:project_id>/contract-doc-upload', methods=['GET', 'POST'])
+@login_required
+def add_contract_doc(project_id):
+    project = ProjectRecord.query.get(project_id)
+    form = ContractDocumentForm()
+    if request.method == 'POST':
+        if form.file_upload.data:
+            upfile = form.file_upload.data
+            filename = secure_filename(upfile.filename)
+            upfile.save(filename)
+            file_drive = drive.CreateFile({'title': filename})
+            file_drive.SetContentFile(filename)
+            file_drive.Upload()
+            permission = file_drive.InsertPermission({'type': 'anyone',
+                                                      'value': 'anyone',
+                                                      'role': 'reader'})
+            project.contract_url = file_drive['id']
+            db.session.add(project)
+            db.session.commit()
+            flash('ไฟล์ได้รับการบันทึกในระบบแล้ว', 'success')
+        return redirect(url_for('project.display_project', project_id=project.id))
+    return render_template('project/contract_upload_form.html', form=form, project=project)
+
+
 @project.route('/<int:project_id>/supplementary', methods=['GET', 'POST'])
 @login_required
 def add_supplementary_doc(project_id):

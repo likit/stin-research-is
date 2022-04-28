@@ -220,6 +220,10 @@ class SupplementaryDocumentForm(ModelForm):
     file_upload = FileField('Upload เอกสาร')
 
 
+class ContractDocumentForm(ModelForm):
+    file_upload = FileField('Upload เอกสาร')
+
+
 class FileUploadForm(FlaskForm):
     file_type = SelectField('File',
                             choices=[('finance', 'ใบสรุปการใช้เงิน'),

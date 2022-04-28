@@ -840,6 +840,19 @@
                             </span>
                             <span>ไฟล์สัญญา</span>
                         </a>
+                        <p class="help is-danger">
+                            หากอัพโหลดซ้ำ ไฟล์ใหม่จะแทนที่ไฟล์เก่า
+                        </p>
+                        {% endif %}
+                        {% if project.approved and current_user == project.creator %}
+                        <div class="buttons">
+                            <a href="{{url_for('project.add_contract_doc', project_id=project.id)}}"
+                               class="button is-success is-outlined">
+                            <span class="icon">
+                                <i class="fas fa-plus"></i>
+                            </span><span>upload file</span>
+                            </a>
+                        </div>
                         {% endif %}
                     </td>
                 </tr>
