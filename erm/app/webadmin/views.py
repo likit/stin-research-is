@@ -1091,7 +1091,6 @@ def list_gantt_activity(milestone_id):
             a.end_date.isoformat(),
             None, float(a.completion), None
         ])
-    print(gantt_activities)
     return render_template('webadmin/gantt_activities.html',
                            milestone=milestone, gantt_activities=gantt_activities)
 
@@ -1119,9 +1118,26 @@ def send_progress_to_committee(milestone_id):
     for reviewer in milestone.project.reviewers:
         message = 'เรียนคณะกรรมการโครงการวิจัย'
         message += '\n\nโครงการ{} ได้ทำการส่งรายงานความก้าวหน้าเมื่อวันที่{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อตรวจสอบรายงานความก้าวหน้าจักเป็นพระคุณยิ่ง\n\n{}'\
-            .format(milestone.project.title_th, milestone.submitted_at.strftime('%d/%m/%Y %H:%M:%S'), 'https://test.com/report')
+            .format(milestone.project.title_th, milestone.submitted_at.strftime('%d/%m/%Y %H:%M:%S'),
+                    url_for('webadmin.display_progress_report_committee', milestone_id=milestone_id, _external=True))
         try:
             send_mail(reviewer.email, title='รายงานความก้าวหน้าโครงการวิจัย', message=message)
         except:
             flash('Failed to send an email to {}'.format(reviewer.email))
     return 'Progress sent.'
+
+
+@webadmin.route('/progress-reports/<int:milestone_id>/committee')
+def display_progress_report_committee(milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    gantt_activities = []
+    for a in sorted(milestone.gantt_activities, key=lambda x: x.task_id):
+        gantt_activities.append([
+            str(a.task_id),
+            GANTT_ACTIVITIES.get(a.task_id),
+            a.start_date.isoformat(),
+            a.end_date.isoformat(),
+            None, float(a.completion), None
+        ])
+    return render_template('webadmin/progress_report_committee.html',
+                           milestone=milestone, gantt_activities=gantt_activities)
