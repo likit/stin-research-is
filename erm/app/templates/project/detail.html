@@ -1094,7 +1094,7 @@
                                     {% endif %}
                                 </td>
                             </tr>
-                            {% if current_user == project.creator and project.approved %}
+                            {% if current_user == project.creator and project.approved and not project.close_requested_at %}
                             <tr>
                                 <td colspan="2" class="has-text-centered">
                                     <a class="button is-link is-outlined"
@@ -1110,13 +1110,16 @@
                             {% if current_user == project.creator and project.approved %}
                             <tr>
                                 <td colspan="2" class="has-text-centered">
+                                    ส่งคำขอปิดโครงการเมื่อ {{project.close_requested_at|localdatetime}}
+                                    {% if project.close_requested_at == None %}
                                     <a class="button is-danger"
-                                       href="{{ url_for('project.upload_summary_file', project_id=project.id) }}">
+                                       href="{{ url_for('project.send_close_request', project_id=project.id) }}">
                                         <span class="icon">
                                             <i class="fas fa-check-circle"></i>
                                         </span>
                                         <span>ปิดโครงการ</span>
                                     </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endif %}

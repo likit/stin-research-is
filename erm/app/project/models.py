@@ -118,6 +118,8 @@ class ProjectRecord(db.Model):
     updated_at = db.Column('updated_at', db.DateTime(timezone=True))
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     approved_at = db.Column('approved_at', db.DateTime(timezone=True))
+    close_requested_at = db.Column('close_requested_at', db.DateTime(timezone=True))
+    closed_at = db.Column('closed_at', db.DateTime(timezone=True))
     denied_at = db.Column('denied_at', db.DateTime(timezone=True))
     #TODO: add cascading and nullable=False
     creator_id = db.Column('creator_id', db.ForeignKey('users.id'))
