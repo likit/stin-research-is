@@ -14,12 +14,13 @@
             <h1 class="title">Project Reviews</h1>
             {% include "messages.html" %}
             {% for review in project.reviews %}
+            {% if review.submitted_at %}
             <div class="box">
                 <table class="table is-fullwidth">
                     <thead>
-                        <th></th>
-                        <th>ผลการประเมิน</th>
-                        <th>ข้อเสนอแนะ</th>
+                    <th></th>
+                    <th>ผลการประเมิน</th>
+                    <th>ข้อเสนอแนะ</th>
                     </thead>
                     <tr>
                         <td style="width: 10%" class="title is-size-5">ผู้ประเมิน</td>
@@ -65,9 +66,9 @@
                         <td colspan="2">
                             <table class="table is-striped">
                                 <thead>
-                                    <th></th>
-                                    <th>ผลการประเมิน</th>
-                                    <th>ข้อแนะนำ</th>
+                                <th></th>
+                                <th>ผลการประเมิน</th>
+                                <th>ข้อแนะนำ</th>
                                 </thead>
                                 <tr>
                                     <td><strong>การเลือกกลุ่มตัวอย่าง</strong></td>
@@ -156,6 +157,7 @@
                     </tr>
                 </table>
             </div>
+            {% endif %}
             {% endfor %}
         </div>
     </div>

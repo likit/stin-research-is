@@ -209,9 +209,38 @@ def send_for_reviews(project_id):
     project = ProjectRecord.query.get(project_id)
     form = ProjectReviewSendRecordForm()
     if request.method == 'POST':
+        serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'),
+                                                     expires_in=1814400)
         if form.validate_on_submit():
-            for review in project.reviews:
-                serializer = TimedJSONWebSignatureSerializer(os.environ.get('SECRET_KEY'), expires_in=1814400)
+            unsubmitted = [r for r in project.reviews if r.submitted_at is None]
+            if not unsubmitted:
+                new_review = ProjectReviewRecord(project_id=project_id,
+                                                 reviewer_id=project.reviews[0].reviewer_id)
+                db.session.add(new_review)
+                db.session.commit()
+                token = serializer.dumps({'review_id': new_review.id})
+                url = url_for('webadmin.write_review',
+                              project_id=project.id,
+                              review_id=new_review.id,
+                              token=token,
+                              _external=True)
+                message =\
+                    '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}' \
+                    '\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
+                    .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
+                try:
+                    send_mail(new_review.reviewer.email, title=form.title.data, message=message)
+                except:
+                    flash('Failed to send an email to {}'.format(new_review.reviewer.email), 'danger')
+                else:
+                    new_send = ProjectReviewSendRecord()
+                    form.populate_obj(new_send)
+                    new_send.review_id = new_review.id
+                    new_send.to = new_review.reviewer.email
+                    new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
+                    db.session.add(new_send)
+
+            for review in unsubmitted:
                 token = serializer.dumps({'review_id': review.id})
                 url = url_for('webadmin.write_review',
                               project_id=project.id,
@@ -232,7 +261,10 @@ def send_for_reviews(project_id):
                     new_send.to = review.reviewer.email
                     new_send.sent_at = arrow.now(tz='Asia/Bangkok').datetime,
                     db.session.add(new_send)
+                # only allow sending one unsubmitted review
+                break
             db.session.commit()
+            print(unsubmitted)
             flash('The project has been sent for all reviewers.', 'success')
             return redirect(url_for('webadmin.submission_detail',
                                     project_id=project.id))
