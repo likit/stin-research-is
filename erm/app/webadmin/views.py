@@ -1073,6 +1073,13 @@ def receive_a_progress(milestone_id):
         milestone.received_at = arrow.now(tz='Asia/Bangkok').datetime
         db.session.add(milestone)
         db.session.commit()
+        try:
+            message = 'เรียนผู้รับผิดชอบโครงการ{}'.format(milestone.project.title_th)
+            message += '\n\nศูนย์วิจัยได้รับรายงานความก้าวหน้าของท่านที่ส่งเมื่อวันที่ {} เรียบร้อยแล้ว'\
+                .format(milestone.submitted_at.strftime('%d/%m/%Y %H:%M:%S'))
+            send_mail(milestone.project.creator.email, 'แจ้งรับรายงานความก้าวหน้าโครงการฯ', message)
+        except:
+            flash('Failed to send an email notification', 'danger')
         flash('บันทึกข้อมูลเรียบร้อยแล้ว', 'success')
     return redirect(url_for('webadmin.list_progress_reports'))
 
