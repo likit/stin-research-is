@@ -35,14 +35,14 @@
                                     <span>Gantt Chart</span>
                                 </a>
                                 <a class="button is-small is-primary is-outlined"
-                                   href="#">
+                                   href="{{url_for('webadmin.list_budgets', milestone_id=milestone.id)}}">
                                     <span class="icon">
                                         <i class="fas fa-dollar-sign"></i>
                                     </span>
                                     <span>งบประมาณ</span>
                                 </a>
                                 <a class="button is-small is-primary is-outlined"
-                                   href="#">
+                                   href="{{url_for('webadmin.list_summaries', milestone_id=milestone.id)}}">
                                     <span class="icon">
                                         <i class="fas fa-flag"></i>
                                     </span>

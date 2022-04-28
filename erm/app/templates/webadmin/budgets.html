@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Budgets{% endblock %}
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                {% include "message.html" %}
+                <h1 class="title has-text-centered">Project Budgets</h1>
+                <h3 class="title is-size-4">รายการค่าใช้จ่าย</h3>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <hr>
+                <table class="table is-fullwidth is-striped">
+                    <thead>
+                    <th>หมวด</th>
+                    <th>ค่าตอบแทน (บาท)</th>
+                    <th>งบที่ใช้ไปแล้ว (บาท)</th>
+                    <th>รายละเอียด</th>
+                    <th colspan="2">แก้ไขเมื่อ</th>
+                    </thead>
+                    <tbody>
+                    {% for item in milestone.budget_items %}
+                    <tr>
+                        <td>{{ item.category.category }}</td>
+                        <td>{{ item.wage }}</td>
+                        <td>{{ item.amount_spent }}</td>
+                        <td>{{ item.detail }}</td>
+                        <td>{{ item.edited_at|localdatetime }} น.</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="buttons is-centered">
+                    <a href="{{url_for('webadmin.list_progress_reports')}}"
+                       class="button is-light">Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

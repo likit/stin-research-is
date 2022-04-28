@@ -1094,3 +1094,19 @@ def list_gantt_activity(milestone_id):
     print(gantt_activities)
     return render_template('webadmin/gantt_activities.html',
                            milestone=milestone, gantt_activities=gantt_activities)
+
+
+@webadmin.route('/progress-reports/<int:milestone_id>/budgets')
+@superuser
+@login_required
+def list_budgets(milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    return render_template('webadmin/budgets.html', milestone=milestone)
+
+
+@webadmin.route('/progress-reports/<int:milestone_id>/summaries')
+@superuser
+@login_required
+def list_summaries(milestone_id):
+    milestone = ProjectMilestone.query.get(milestone_id)
+    return render_template('webadmin/progress_summaries.html', milestone=milestone)
