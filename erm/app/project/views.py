@@ -1420,3 +1420,17 @@ def remove_cv_file(project_id, doc_id):
     db.session.commit()
     flash('ลบไฟล์ออกจากระบบเรียบร้อยแล้ว', 'success')
     return redirect(url_for('project.display_project', project_id=project_id))
+
+
+@project.route('/<int:project_id>/send-close-request')
+@login_required
+def send_close_request(project_id):
+    confirmed = request.args.get('confirmed')
+    project = ProjectRecord.query.get(project_id)
+    if confirmed == 'yes':
+        project.close_requested_at = arrow.now(tz='Asia/Bangkok').datetime
+        db.session.add(project)
+        db.session.commit()
+        flash('คำร้องขอปิดโครงการส่งเรียบร้อยแล้ว', 'success')
+        return redirect(url_for('project.display_project', project_id=project_id))
+    return render_template('project/close_confirmed.html', project_id=project_id)

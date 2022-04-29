@@ -152,6 +152,9 @@
                         <td class="title is-size-5" width="20%">สถานะโครงการ</td>
                         <td>
                             <span class="tag is-medium is-primary">{{ project.status }}</span>
+                            {% if project.closed_at %}
+                            เมื่อ {{ project.closed_at|localdatetime }}
+                            {% endif %}
                         </td>
                     </tr>
                     {% if project.status == 'submitted' %}
@@ -491,6 +494,106 @@
                             </table>
                         </td>
                     </tr>
+                    {% if project.close_requested_at %}
+                    <tr>
+                        <td class="title is-size-5">เอกสารประกอบการปิดโครงการ</td>
+                        <td>
+                            <table class="table">
+                                <thead>
+                                <th>รายการเอกสาร</th>
+                                <th>ไฟล์</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>สรุปรายงานการใช้เงิน</td>
+                                    <td>
+                                        {% if project.finance_summary_file_url %}
+                                        <a href="https://drive.google.com/uc?id={{ project.finance_summary_file_url }}"
+                                           target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                            <span>ดูไฟล์</span>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>หน้าแรกสมุดบัญชีธนาคาร</td>
+                                    <td>
+                                        {% if project.bookbank_cover_file_url %}
+                                        <a href="https://drive.google.com/uc?id={{ project.bookbank_cover_file_url }}"
+                                           target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                            <span>ดูไฟล์</span>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>หน้าสุดท้ายสมุดบัญชีธนาคาร</td>
+                                    <td>
+                                        {% if project.bookbank_last_page_file_url %}
+                                        <a href="https://drive.google.com/uc?id={{ project.bookbank_last_page_file_url }}"
+                                           target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                            <span>ดูไฟล์</span>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>รายงานฉบับสมบูรณ์</td>
+                                    <td>
+                                        {% if project.final_report_url %}
+                                        <a href="https://drive.google.com/uc?id={{ project.final_report_url }}"
+                                           target="_blank">
+                                        <span class="icon">
+                                            <i class="far fa-file-alt"></i>
+                                        </span>
+                                            <span>รายงานฉบับสมบูรณ์</span>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% if current_user == project.creator and project.approved and not project.close_requested_at %}
+                                <tr>
+                                    <td colspan="2" class="has-text-centered">
+                                        <a class="button is-link is-outlined"
+                                           href="{{ url_for('project.upload_summary_file', project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                            <span>เพิ่มไฟล์</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% if current_user == project.creator and project.approved %}
+                                <tr>
+                                    <td colspan="2" class="has-text-centered">
+                                        ส่งคำขอปิดโครงการเมื่อ {{project.close_requested_at|localdatetime}}
+                                        {% if project.close_requested_at == None %}
+                                        <a class="button is-danger"
+                                           href="{{ url_for('project.send_close_request', project_id=project.id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-check-circle"></i>
+                                        </span>
+                                            <span>ปิดโครงการ</span>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    {% endif %}
                 </table>
             </div>
             <div class="has-text-centered">

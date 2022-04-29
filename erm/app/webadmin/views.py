@@ -224,10 +224,10 @@ def send_for_reviews(project_id):
                               review_id=new_review.id,
                               token=token,
                               _external=True)
-                message =\
+                message = \
                     '{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อดำเนินการจักเป็นพระคุณยิ่ง\n\n{}' \
                     '\n\nขอความกรุณาส่งผลการประเมินภายในวันที่ {}\n\n{}' \
-                    .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
+                        .format(form.message.data, url, form.deadline.data.strftime('%d/%m/%Y'), form.footer.data)
                 try:
                     send_mail(new_review.reviewer.email, title=form.title.data, message=message)
                 except:
@@ -445,6 +445,8 @@ def update_status(project_id):
         if form.validate_on_submit():
             form.populate_obj(project)
             project.updated_at = arrow.now(tz='Asia/Bangkok').datetime
+            if project.finished or project.terminated or project.rejected:
+                project.closed_at = arrow.now('Asia/Bangkok').datetime
             db.session.add(project)
             db.session.commit()
             message = 'เรียนผู้รับผิดชอบโครงการ "{}"\n\nสถานะโครงการได้รับการปรับจาก {} เป็น {} เมื่อ {} นาฬิกา' \
@@ -1104,7 +1106,9 @@ def list_progress_reports():
 @superuser
 @login_required
 def close_project_requests():
-    pass
+    projects = ProjectRecord.query.filter(ProjectRecord.close_requested_at != None)\
+        .filter(ProjectRecord.closed_at == None).all()
+    return render_template('webadmin/close_requests.html', requests=projects)
 
 
 @webadmin.route('/progress-reports/<int:milestone_id>/receive')
@@ -1118,7 +1122,7 @@ def receive_a_progress(milestone_id):
         db.session.commit()
         try:
             message = 'เรียนผู้รับผิดชอบโครงการ{}'.format(milestone.project.title_th)
-            message += '\n\nศูนย์วิจัยได้รับรายงานความก้าวหน้าของท่านที่ส่งเมื่อวันที่ {} เรียบร้อยแล้ว'\
+            message += '\n\nศูนย์วิจัยได้รับรายงานความก้าวหน้าของท่านที่ส่งเมื่อวันที่ {} เรียบร้อยแล้ว' \
                 .format(milestone.submitted_at.strftime('%d/%m/%Y %H:%M:%S'))
             send_mail(milestone.project.creator.email, 'แจ้งรับรายงานความก้าวหน้าโครงการฯ', message)
         except:
@@ -1160,6 +1164,7 @@ def list_summaries(milestone_id):
     milestone = ProjectMilestone.query.get(milestone_id)
     return render_template('webadmin/progress_summaries.html', milestone=milestone)
 
+
 @webadmin.route('/progress-reports/<int:milestone_id>/send-to-committee')
 @superuser
 @login_required
@@ -1167,7 +1172,7 @@ def send_progress_to_committee(milestone_id):
     milestone = ProjectMilestone.query.get(milestone_id)
     for reviewer in milestone.project.reviewers:
         message = 'เรียนคณะกรรมการโครงการวิจัย'
-        message += '\n\nโครงการ{} ได้ทำการส่งรายงานความก้าวหน้าเมื่อวันที่{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อตรวจสอบรายงานความก้าวหน้าจักเป็นพระคุณยิ่ง\n\n{}'\
+        message += '\n\nโครงการ{} ได้ทำการส่งรายงานความก้าวหน้าเมื่อวันที่{}\n\nกรุณาคลิกที่ลิงค์ด้านล่างเพื่อตรวจสอบรายงานความก้าวหน้าจักเป็นพระคุณยิ่ง\n\n{}' \
             .format(milestone.project.title_th, milestone.submitted_at.strftime('%d/%m/%Y %H:%M:%S'),
                     url_for('webadmin.display_progress_report_committee', milestone_id=milestone_id, _external=True))
         try:

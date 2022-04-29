@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Close Requests{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="column">
+        <div class="container has-text-centered">
+            <h1 class="title">Close Requests</h1>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            {% include "messages.html" %}
+            <div class="box">
+                <table class="table is-fullwidth is-striped">
+                    <thead>
+                    <th>ชื่อโครงการ</th>
+                    <th>ส่งเมื่อ</th>
+                    <th></th>
+                    </thead>
+                    {% for project in requests %}
+                    <tr>
+                        <td>{{ project.title_th }}</td>
+                        <td style="width:20%">{{ project.close_requested_at|localdatetime}}</td>
+                        <td>
+                            <a href="{{url_for('webadmin.submission_detail', project_id=project.id)}}"
+                               class="button is-primary">
+                                รายละเอียด
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
