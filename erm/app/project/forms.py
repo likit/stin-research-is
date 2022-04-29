@@ -58,6 +58,12 @@ class ProjectMemberForm(ModelForm):
                              widget=Select())
 
 
+class ProjectMemberContributionForm(ModelForm):
+    class Meta:
+        model = ProjectMember
+        only = ['role', 'contribution']
+
+
 class ProjectFigureForm(ModelForm):
     class Meta:
         model = ProjectFigure

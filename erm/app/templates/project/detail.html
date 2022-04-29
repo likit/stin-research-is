@@ -314,8 +314,21 @@
                             {% for member in project.members %}
                             <tr>
                                 <td>{{ member.user.profile or member.fullname }}</td>
-                                <td>{{ member.role }}</td>
-                                <td>{{ member.contribution }}</td>
+                                <td>
+                                    <span>{{ member.role }}</span>
+                                    <a href="{{url_for('project.edit_member', project_id=project.id, member_id=member.id)}}">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                                <td><span>{{ member.contribution }}</span>
+                                    <a href="{{url_for('project.edit_member', project_id=project.id, member_id=member.id)}}">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
+                                    </a>
+                                </td>
                                 <td>{{ member.user.email or member.email or '-' }}</td>
                                 <td>
                                     {% if current_user == project.creator and project.editable %}

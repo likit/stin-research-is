@@ -297,6 +297,20 @@ def add_member(project_id):
     return render_template('project/member_add.html', form=form)
 
 
+@project.route('/<int:project_id>/members/<int:member_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_member(project_id, member_id):
+    member = ProjectMember.query.get(member_id)
+    form = ProjectMemberContributionForm(obj=member)
+    if form.validate_on_submit():
+        form.populate_obj(member)
+        db.session.add(member)
+        db.session.commit()
+        flash('แก้ไขข้อมูลเรียบร้อยแล้ว', 'success')
+        return redirect(url_for('project.display_project', project_id=project_id))
+    return render_template('project/member_edit.html', form=form, project_id=project_id)
+
+
 @project.route('/<int:project_id>/member/<int:member_id>/remove', methods=['GET', 'POST'])
 @login_required
 def remove_member(project_id, member_id):

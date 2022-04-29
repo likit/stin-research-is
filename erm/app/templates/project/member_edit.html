@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Project Member{% endblock %}
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title has-text-centered">New Project Member Record</h1>
+            <form method="post">
+                {{ form.csrf_token }}
+                <article class="message is-primary">
+                    <div class="message-header">หน้าที่</div>
+                    <div class="message-body">
+                        <div class="field">
+                            <label class="label">{{ form.role.label }}</label>
+                            <div class="control">
+                                <div class="select">
+                                    {{ form.role() }}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ form.contribution.label }}</label>
+                            <div class="control">
+                                {{ form.contribution(class="input") }}
+                            </div>
+                        </div>
+                        <div class="field is-grouped is-grouped-centered">
+                            <div class="control">
+                                <button type="submit" class="button is-success">
+                                    Save
+                                </button>
+                            </div>
+                            <div class="control">
+                                <a class="button is-light" href="{{ url_for('project.display_project', project_id=project_id) }}">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
