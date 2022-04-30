@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 
 {% block title %}Add Project Member{% endblock %}
+{% block head %}
+{{super()}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
 {% block page_content %}
 {% include "nav.html" %}
 <section class="section">
@@ -14,7 +18,7 @@
                     <div class="message-body">
                         <div class="field">
                             <label class="label">Researcher List</label>
-                            <div class="select">
+                            <div>
                                 {{ form.users() }}
                             </div>
                         </div>
@@ -92,4 +96,14 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#users').select2();
+    });
+</script>
 {% endblock %}
