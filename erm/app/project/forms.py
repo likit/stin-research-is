@@ -50,7 +50,7 @@ class ProjectMemberForm(ModelForm):
     class Meta:
         model = ProjectMember
 
-    users = QuerySelectField('User', query_factory=lambda: sorted([u for u in User.query.filter_by(role=1)],
+    users = QuerySelectField('User', query_factory=lambda: sorted([u for u in User.query.filter_by(role=2)],
                                                                   key=lambda x: x.fullname_thai),
                              get_label='fullname_thai',
                              allow_blank=True,
