@@ -449,6 +449,10 @@
                                class="button is-link">Release</a>
                         </div>
                         {% endif %}
+                            <a href="{{ url_for('webadmin.export_review', review_id=review.id, project_id=project.id) }}"
+                               class="button is-info">
+                            Export
+                            </a>
                         {% endif %}
                     </div>
                 </form>

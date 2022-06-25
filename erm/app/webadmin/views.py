@@ -1,12 +1,15 @@
 import os
+import uuid
+
 import arrow
+import pypandoc
 import requests
 from collections import defaultdict
 
 from app.webadmin import webadmin_bp as webadmin
 from flask_login import login_required
 from app import superuser
-from flask import render_template, redirect, url_for, request, flash
+from flask import render_template, redirect, url_for, request, flash, send_file
 from werkzeug.utils import secure_filename
 from app import mail
 from app.researcher.forms import IntlConferenceSupportForm
@@ -24,6 +27,8 @@ from flask_mail import Message
 from itsdangerous import TimedJSONWebSignatureSerializer
 
 import pandas as pd
+
+from app.project.models import ProjectRecord, ProjectReviewRecord
 
 gauth = GoogleAuth()
 keyfile_dict = requests.get(os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')).json()
@@ -200,6 +205,146 @@ def view_reviews(project_id):
             # flash('โปรดกรอกข้อมูลที่จำเป็นให้ครบ', 'danger')
             flash(form.errors, 'danger')
     return render_template('webadmin/reviews.html', project=project, form=form, review=review)
+
+
+@webadmin.route('/submissions/<int:project_id>/reviews/<int:review_id>/summary/export')
+@superuser
+@login_required
+def export_review(project_id, review_id):
+    project = ProjectRecord.query.get(project_id)
+    review = ProjectReviewRecord.query.get(review_id)
+    members = []
+    for member in project.members:
+        if member.user:
+            members.append('{} ({})'.format(member.user.profile.fullname_th, member.role))
+        else:
+            members.append('{} ({})'.format(member.fullname, member.affil))
+
+    def generate():
+        content = '<h1>โครงการวิจัย</h1>'
+        content += '<hr>'
+        content += '<h2>ชื่อภาษาไทย</h2>'
+        content += '<p>{}</p>'.format(project.title_th)
+        content += '<h2>ชื่อรองภาษาไทย</h2>'
+        content += '<p>{}</p>'.format(project.subtitle_th)
+        content += '<h2>ชื่อภาษาอังกฤษ</h2>'
+        content += '<p>{}</p>'.format(project.title_en)
+        content += '<h2>ชื่อรองภาษาอังกฤษ</h2>'
+        content += '<p>{}</p>'.format(project.subtitle_en)
+        content += '<h2>แหล่งทุน</h2>'
+        content += '<p>{}</p>'.format(project.fund_source.name)
+        content += '<h2>ที่ปรึกษาโครงการ</h2>'
+        content += '<p>{}</p>'.format(project.mentor)
+        content += '<h2>คณะผู้วิจัย</h2>'
+        content += '<p>{}</p>'.format(', '.join(members))
+        content += '<h2>สรุปผลการประเมิน</h2>'
+        content += '<table border="1">'
+        content += '<thead>'
+        content += '<th>หัวข้อ</th>'
+        content += '<th>ผลการประเมิน</th>'
+        content += '<th>คำแนะนำ</th>'
+        content += '</thead>'
+        content += '<tbody>'
+        content += '<tr><td><strong>ความสอดคล้องกับยุทธศาสตร์</strong></td>'
+        content += '<td>'
+        content += '<ul>'
+        for aln in review.alignment.split('|'):
+            content += '<li>{}</li>'.format(aln)
+        content += '</ul>'
+        content += '</td></tr>'
+        content += '<tr><td><strong>ความเห็นเกี่ยวกับชื่อโครงการวิจัย</strong></td>'
+        content += '<td></td>'
+        content += '<td>{}</td>'.format(review.title_comment)
+        content += '</tr>'
+        content += '<tr><td><strong>วัตถุประสงค์</strong></td>'
+        content += '<td>{}</td>'.format(review.objective)
+        content += '<td>{}</td>'.format(review.objective_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>ความสำคัญและที่มาของปัญหาการวิจัย</strong></td>'
+        content += '<td>{}</td>'.format(review.importance)
+        content += '<td>{}</td>'.format(review.importance_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>แนวคิดพื้นฐาน/กรอบทฤษฎีที่ใช้ในการวิจัย</strong></td>'
+        content += '<td>{}</td>'.format(review.idea)
+        content += '<td>{}</td>'.format(review.idea_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>ระเบียบวิธีวิจัย</strong></td>'
+        content += '<td colspan=2>'
+        content += '<table border="1">'
+        content += '<thead><th></th><th>ผลการประเมิน</th><th>คำแนะนำ</th></thead>'
+        content += '<tbody>'
+        content += '<tr><td><strong>การเลือกกลุ่มตัวอย่าง</strong></td>'
+        content += '<td>{}</td>'.format(review.sampling)
+        content += '<td>{}</td>'.format(review.sampling_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>การกำหนดตัวแปรต่าง ๆ</strong></td>'
+        content += '<td>{}</td>'.format(review.variable)
+        content += '<td>{}</td>'.format(review.variable_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>เครื่องมือการวิจัยฯ</strong></td>'
+        content += '<td>{}</td>'.format(review.tool)
+        content += '<td>{}</td>'.format(review.tool_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>การเก็บรวบรวมข้อมูล</strong></td>'
+        content += '<td>{}</td>'.format(review.data_collection)
+        content += '<td>{}</td>'.format(review.data_collection_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>วิธีการวิเคราะห์ข้อมูล</strong></td>'
+        content += '<td>{}</td>'.format(review.data_analyze)
+        content += '<td>{}</td>'.format(review.data_analyze_comment or '-')
+        content += '</tr>'
+        content += '</tbody>'
+        content += '</table>'
+        content += '</td>'
+        content += '</tr>'
+        content += '<tr><td><strong>แผนการดำเนินการวิจัย</strong></td>'
+        content += '<td>{}</td>'.format(review.plan)
+        content += '<td>{}</td>'.format(review.plan_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>ผลผลิตจากการวิจัย</strong></td>'
+        content += '<td>{}</td>'.format(review.outcome)
+        content += '<td>{}</td>'.format(review.outcome_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>รายการผลผลิตจากการวิจัย</strong></td>'
+        content += '<td>'
+        content += '<ul>'
+        for aln in review.outcome_detail.split('|'):
+            content += '<li>{}</li>'.format(aln)
+        content += '</ul>'
+        content += '<td>{}</td>'.format(review.outcome_detail_other or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>ประโยชน์ที่คาดว่าจะได้รับ</strong></td>'
+        content += '<td>{}</td>'.format(review.benefit)
+        content += '<td>{}</td>'.format(review.benefit_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>รายการประโยชน์ที่คาดว่าจะได้รับ</strong></td>'
+        content += '<td>'
+        content += '<ul>'
+        for aln in review.benefit_detail.split('|'):
+            content += '<li>{}</li>'.format(aln)
+        content += '</ul>'
+        content += '<td>{}</td>'.format(review.benefit_detail_other or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>งบประมาณ</strong></td>'
+        content += '<td>{}</td>'.format(review.budget)
+        content += '<td>{}</td>'.format(review.budget_comment or '-')
+        content += '</tr>'
+        content += '<tr><td><strong>สรุป</strong></td>'
+        content += '<td colspan=2>{}</td>'.format(review.comment)
+        content += '</tr>'
+        content += '<tr><td><strong>ผลการตัดสิน</strong></td>'
+        content += '<td colspan=2>{}</td>'.format(review.status)
+        content += '</tr>'
+        content += '</tbody>'
+        content += '</table>'
+
+        pypandoc.convert_text(content, 'docx',
+                              format='html',
+                              outputfile='app/summary.docx')
+
+    generate()
+
+    return send_file('summary.docx')
 
 
 @webadmin.route('/submissions/<int:project_id>/reviews/send', methods=['GET', 'POST'])
@@ -1106,7 +1251,7 @@ def list_progress_reports():
 @superuser
 @login_required
 def close_project_requests():
-    projects = ProjectRecord.query.filter(ProjectRecord.close_requested_at != None)\
+    projects = ProjectRecord.query.filter(ProjectRecord.close_requested_at != None) \
         .filter(ProjectRecord.closed_at == None).all()
     return render_template('webadmin/close_requests.html', requests=projects)
 
