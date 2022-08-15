@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Academic Supports Index Page{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="columns">
+        <div class="column is-2">
+            <aside class="menu">
+                <p class="menu-label">Supports</p>
+                <ul class="menu-list">
+                    <li><a>Conference</a></li>
+                    <li><a>Publication Processing Fee</a></li>
+                    <li><a>Competency Development</a></li>
+                </ul>
+                <p class="menu-label">Settings</p>
+                <ul class="menu-list">
+                    <li><a>Competency Development</a></li>
+                    <li>
+                        <ul>
+                            <li><a>Category</a></li>
+                            <li><a>Sub Category</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+        <div class="column">
+            {% block academic_support_content %}
+            {% endblock %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+{% endblock %}

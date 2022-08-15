@@ -24,6 +24,9 @@
               <a class="navbar-item" href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">
                 Your Projects
               </a>
+              <a class="navbar-item" href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">
+                Academic Support
+              </a>
             </div>
           </div>
           <a class="navbar-item" href="{{ url_for('project.list_projects') }}">
@@ -55,6 +58,9 @@
               </a>
               <a class="navbar-item" href="{{ url_for('webadmin.list_users') }}">
                   Users
+              </a>
+              <a class="navbar-item" href="{{ url_for('webadmin.academic_support_index') }}">
+                Academic Supports
               </a>
               <a class="navbar-item" href="{{ url_for('webadmin.list_lang_edit_requests') }}">
                   Language Edit Supports

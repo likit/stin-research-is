@@ -1341,3 +1341,9 @@ def display_progress_report_committee(milestone_id):
         ])
     return render_template('webadmin/progress_report_committee.html',
                            milestone=milestone, gantt_activities=gantt_activities)
+
+
+@webadmin.route('/academic-supports')
+@superuser
+def academic_support_index():
+    return render_template('webadmin/academic_support_index.html')
