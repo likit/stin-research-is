@@ -12,8 +12,8 @@ from app import superuser
 from flask import render_template, redirect, url_for, request, flash, send_file
 from werkzeug.utils import secure_filename
 from app import mail
-from app.researcher.forms import IntlConferenceSupportForm
-from app.researcher.models import IntlConferenceSupport
+from app.researcher.forms import IntlConferenceSupportForm, DevelopmentTypeForm
+from app.researcher.models import IntlConferenceSupport, DevelopmentType, DevelopmentCategory
 from app.project.models import *
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
                                 ProjectEthicReviewSendRecordForm,
@@ -1347,3 +1347,42 @@ def display_progress_report_committee(milestone_id):
 @superuser
 def academic_support_index():
     return render_template('webadmin/academic_support_index.html')
+
+
+@webadmin.route('/academic-supports/development-types', methods=['GET', 'POST'])
+@superuser
+def manage_development_types():
+    form = DevelopmentTypeForm()
+    if form.validate_on_submit():
+        new_type = DevelopmentType()
+        form.populate_obj(new_type)
+        db.session.add(new_type)
+        db.session.commit()
+        flash('New development type has been added.', 'success')
+    dev_types = DevelopmentType.query.all()
+    return render_template('webadmin/development_types.html', dev_types=dev_types, form=form)
+
+
+@webadmin.route('/academic-supports/development-types/<int:dev_type_id>', methods=['GET', 'POST'])
+@superuser
+def edit_development_type(dev_type_id):
+    t = DevelopmentType.query.get(dev_type_id)
+    form = DevelopmentTypeForm(obj=t)
+    if form.validate_on_submit():
+        form.populate_obj(t)
+        db.session.add(t)
+        db.session.commit()
+        flash('New development type has been added.', 'success')
+    dev_types = DevelopmentType.query.all()
+    return render_template('webadmin/edit_development_type.html', form=form, t=t)
+
+
+@webadmin.route('/academic-supports/development-types/<int:dev_type_id>/delete')
+@superuser
+def delete_development_type(dev_type_id):
+    t = DevelopmentType.query.get(dev_type_id)
+    if t:
+        db.session.delete(t)
+        db.session.commit()
+        flash('The development type has been deleted.', 'success')
+    return redirect(url_for('webadmin.manage_development_types'))

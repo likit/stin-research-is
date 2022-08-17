@@ -97,3 +97,15 @@ class IntlConferenceSupport(db.Model):
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     edited_at = db.Column('edited_at', db.DateTime(timezone=True))
     approved_at = db.Column('approved_at', db.DateTime(timezone=True))
+
+
+class DevelopmentType(db.Model):
+    __tablename__ = 'researcher_development_types'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column('name', db.String(), nullable=False, info={'label': 'ประเภท'})
+
+
+class DevelopmentCategory(db.Model):
+    __tablename__ = 'researcher_development_categories'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column('name', db.String(), nullable=False, info={'label': 'หมวด'})

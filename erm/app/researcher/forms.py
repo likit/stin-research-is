@@ -50,3 +50,13 @@ class IntlConferenceSupportForm(ModelForm):
                        'เป็นผู้เขียนชื่อแรกและหรือผู้รับผิดชอบหลัก')]
     qualification_select = MultiCheckboxField('คุณสมบัติของผู้ขอรับการสนับสนุนตามประกาศฯ',
                                               choices=qualifications)
+
+
+class DevelopmentTypeForm(ModelForm):
+    class Meta:
+        model = DevelopmentType
+
+
+class DevelopmentCategoryForm(ModelForm):
+    class Meta:
+        model = DevelopmentCategory
