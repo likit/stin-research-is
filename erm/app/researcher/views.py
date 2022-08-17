@@ -12,10 +12,10 @@ from app import db
 from . import researcher_bp as researcher
 from app.project.models import (ProjectPublication,
                                 ProjectPublicationAuthor,
-                                ProjectPublicationJournal, ProjectPublishedReward)
+                                ProjectPublicationJournal, ProjectPublishedReward, ProjectLanguageEditingSupport)
 from app.project.forms import (ProjectPublicationForm,
                                ProjectJournalForm,
-                               ProjectPublicationAuthorForm, ProjectPublishedRewardForm)
+                               ProjectPublicationAuthorForm, ProjectPublishedRewardForm, ProjectLanguageEditSupportForm)
 from pydrive.auth import ServiceAccountCredentials, GoogleAuth
 from pydrive.drive import GoogleDrive
 
@@ -322,7 +322,28 @@ def add_pub_reward(pub_id):
             db.session.add(new_record)
             db.session.commit()
             flash('Reward/Fee request has been added.', 'success')
-            return redirect(url_for('researcher.show_profile', user_id=current_user.id))
+            return redirect(url_for('researcher.show_pub', pub_id=pub_id))
         else:
             flash(form.errors, 'danger')
     return render_template('project/reward_add.html', pub=pub, form=form)
+
+
+@researcher.route('/pubs/<int:pub_id>/language-support-request', methods=['GET', 'POST'])
+@login_required
+def add_lang_support(pub_id):
+    form = ProjectLanguageEditSupportForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_support = ProjectLanguageEditingSupport()
+            form.populate_obj(new_support)
+            new_support.qualification = '|'.join(form.qualification_select.data)
+            new_support.criteria = '|'.join(form.criteria_select.data)
+            new_support.docs = '|'.join(form.docs_select.data)
+            new_support.request = '|'.join(form.request_select.data)
+            new_support.pub_id = pub_id
+            new_support.submitted_at = arrow.now(tz='Asia/Bangkok').datetime,
+            db.session.add(new_support)
+            db.session.commit()
+            flash('New language edit request added.')
+            return redirect(url_for('researcher.show_pub', pub_id=pub_id))
+    return render_template('project/lang_support_add.html', form=form)

@@ -63,7 +63,7 @@
                        class="button is-text">
                         <span>ขออนุมัติค่าตีพิมพ์ผลงาน</span>
                     </a>
-                    <a href="{{ url_for('researcher.edit_pub', pub_id=pub.id) }}"
+                    <a href="{{ url_for('researcher.add_lang_support', pub_id=pub.id) }}"
                        class="button is-text">
                         <span>ขออนุมัติค่าตรวจภาษา</span>
                     </a>
@@ -92,7 +92,7 @@
         </div>
     </div>
 </section>
-<section>
+<section class="section">
     <div class="columns">
         <div class="column is-half is-offset-one-quarter">
             <h1 class="title">Reward</h1>
@@ -111,6 +111,23 @@
                     <td>{{ reward.submitted_at|localdatetime }}</td>
                     <td>{{ reward.apc }}</td>
                     <td>{{ reward.reward }}</td>
+                    <td>{{ reward.status }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <h1 class="title">English Language Editing Support</h1>
+            <table class="table is-striped is-bordered is-fullwidth">
+                <thead>
+                <th>จำนวน</th>
+                <th>ส่งเมื่อ</th>
+                <th>สถานะ</th>
+                </thead>
+                <tbody>
+                {% for reward in pub.language_editing_supports %}
+                <tr>
+                    <td>{{ reward.amount }}</td>
+                    <td>{{ reward.submitted_at|localdatetime }}</td>
                     <td>{{ reward.status }}</td>
                 </tr>
                 {% endfor %}
