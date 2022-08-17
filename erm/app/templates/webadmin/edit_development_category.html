@@ -1,0 +1,26 @@
+{% extends "webadmin/academic_support_index.html" %}
+
+{% block academic_support_content %}
+<div class="container">
+  {% include "messages.html" %}
+  <div class="columns">
+    <div class="column is-one-third is-offset-2">
+      <form method="post">
+        {{ form.hidden_tag() }}
+        <div class="field">
+          <label class="label">{{ form.name.label }}</label>
+          <div class="control">
+            {{ form.name(class="input") }}
+          </div>
+        </div>
+        <div class="field is-grouped is-grouped-centered">
+          <div class="control">
+            <a class="button is-danger" href="{{ url_for('webadmin.delete_development_category', dev_cat_id=c.id) }}">Delete</a>
+            <input type="submit" value="Save" class="button is-success">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

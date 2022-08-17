@@ -12,7 +12,7 @@ from app import superuser
 from flask import render_template, redirect, url_for, request, flash, send_file
 from werkzeug.utils import secure_filename
 from app import mail
-from app.researcher.forms import IntlConferenceSupportForm, DevelopmentTypeForm
+from app.researcher.forms import IntlConferenceSupportForm, DevelopmentTypeForm, DevelopmentCategoryForm
 from app.researcher.models import IntlConferenceSupport, DevelopmentType, DevelopmentCategory
 from app.project.models import *
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
@@ -1359,6 +1359,7 @@ def manage_development_types():
         db.session.add(new_type)
         db.session.commit()
         flash('New development type has been added.', 'success')
+        return redirect(url_for('webadmin.manage_development_types'))
     dev_types = DevelopmentType.query.all()
     return render_template('webadmin/development_types.html', dev_types=dev_types, form=form)
 
@@ -1373,7 +1374,6 @@ def edit_development_type(dev_type_id):
         db.session.add(t)
         db.session.commit()
         flash('New development type has been added.', 'success')
-    dev_types = DevelopmentType.query.all()
     return render_template('webadmin/edit_development_type.html', form=form, t=t)
 
 
@@ -1386,3 +1386,42 @@ def delete_development_type(dev_type_id):
         db.session.commit()
         flash('The development type has been deleted.', 'success')
     return redirect(url_for('webadmin.manage_development_types'))
+
+
+@webadmin.route('/academic-supports/development-categories', methods=['GET', 'POST'])
+@superuser
+def manage_development_categories():
+    form = DevelopmentCategoryForm()
+    if form.validate_on_submit():
+        new_cat = DevelopmentCategory()
+        form.populate_obj(new_cat)
+        db.session.add(new_cat)
+        db.session.commit()
+        flash('New development category has been added.', 'success')
+        return redirect(url_for('webadmin.manage_development_categories'))
+    dev_cats = DevelopmentCategory.query.all()
+    return render_template('webadmin/development_categories.html', dev_cats=dev_cats, form=form)
+
+
+@webadmin.route('/academic-supports/development-categories/<int:dev_cat_id>', methods=['GET', 'POST'])
+@superuser
+def edit_development_category(dev_cat_id):
+    c = DevelopmentCategory.query.get(dev_cat_id)
+    form = DevelopmentCategoryForm(obj=c)
+    if form.validate_on_submit():
+        form.populate_obj(c)
+        db.session.add(c)
+        db.session.commit()
+        flash('New development category has been added.', 'success')
+    return render_template('webadmin/edit_development_category.html', form=form, c=c)
+
+
+@webadmin.route('/academic-supports/development-categories/<int:dev_cat_id>/delete')
+@superuser
+def delete_development_category(dev_cat_id):
+    t = DevelopmentCategory.query.get(dev_cat_id)
+    if t:
+        db.session.delete(t)
+        db.session.commit()
+        flash('The development category has been deleted.', 'success')
+    return redirect(url_for('webadmin.manage_development_categories'))

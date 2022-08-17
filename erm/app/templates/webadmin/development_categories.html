@@ -1,0 +1,35 @@
+{% extends "webadmin/academic_support_index.html" %}
+
+{% block academic_support_content %}
+<div class="container">
+    {% include "messages.html" %}
+    <div class="columns">
+        <div class="column is-one-third is-offset-2">
+            <nav class="panel">
+                <p class="panel-heading">
+                    หมวดการพัฒนา
+                </p>
+                {% for dev_cat in dev_cats %}
+                <a class="panel-block" href="{{ url_for('webadmin.edit_development_category', dev_cat_id=dev_cat.id) }}">
+                    {{ dev_cat.name }}
+                </a>
+                {% endfor %}
+            </nav>
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="field">
+                    <label class="label">{{ form.name.label }}</label>
+                    <div class="control">
+                        {{ form.name(class="input") }}
+                    </div>
+                </div>
+                <div class="field is-grouped is-grouped-centered">
+                    <div class="control">
+                        <input type="submit" value="Add" class="button is-success">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
