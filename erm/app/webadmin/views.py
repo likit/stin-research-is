@@ -13,7 +13,7 @@ from flask import render_template, redirect, url_for, request, flash, send_file
 from werkzeug.utils import secure_filename
 from app import mail
 from app.researcher.forms import IntlConferenceSupportForm, DevelopmentTypeForm, DevelopmentCategoryForm
-from app.researcher.models import IntlConferenceSupport, DevelopmentType, DevelopmentCategory
+from app.researcher.models import IntlConferenceSupport, DevelopmentType, DevelopmentCategory, DevelopmentRecord
 from app.project.models import *
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
                                 ProjectEthicReviewSendRecordForm,
@@ -1425,3 +1425,32 @@ def delete_development_category(dev_cat_id):
         db.session.commit()
         flash('The development category has been deleted.', 'success')
     return redirect(url_for('webadmin.manage_development_categories'))
+
+
+@webadmin.route('/academic-supports/development-requests')
+@superuser
+def manage_development_requests():
+    dev_requests = DevelopmentRecord.query.filter(DevelopmentRecord.approved_at.is_(None)).\
+        filter(DevelopmentRecord.rejected_at.is_(None))
+    return render_template('webadmin/development_support_requests.html', dev_requests=dev_requests)
+
+
+@webadmin.route('/academic-supports/development-requests/<int:req_id>')
+@superuser
+def view_development_request(req_id):
+    rec = DevelopmentRecord.query.get(req_id)
+    return render_template('webadmin/development_request_detail.html', rec=rec)
+
+
+@webadmin.route('/academic-supports/development-requests/<int:req_id>/update-status')
+@superuser
+def approve_development_request(req_id):
+    rec = DevelopmentRecord.query.get(req_id)
+    status = request.args.get('status')
+    if status == 'approve':
+        rec.approved_at = arrow.now(tz='Asia/Bangkok').datetime
+    elif status == 'reject':
+        rec.rejected_at = arrow.now(tz='Asia/Bangkok').datetime
+    db.session.add(rec)
+    db.session.commit()
+    return redirect(url_for('webadmin.view_development_request', req_id=rec.id))

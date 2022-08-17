@@ -1,0 +1,36 @@
+{% extends "webadmin/academic_support_index.html" %}
+
+{% block academic_support_content %}
+<div class="container">
+    {% include "messages.html" %}
+    <div class="columns">
+        <div class="column">
+            <table class="table is-striped is-fullwidth">
+                <thead>
+                <th>หัวข้อ</th>
+                <th>ผู้ขออนุมัติ</th>
+                <th>สถานที่</th>
+                <th>วันที่</th>
+                <th>ส่งเมื่อ</th>
+                <th></th>
+                </thead>
+                <tbody>
+                {% for rec in dev_requests %}
+                <tr>
+                    <td>{{ rec.topic }}</td>
+                    <td>{{ rec.researcher.profile.fullname_th }}</td>
+                    <td>{{ rec.venue }}</td>
+                    <td>{{ rec.start_date|localdate }} - {{ rec.end_date|localdate }}</td>
+                    <td>{{ rec.submitted_at|localdatetime }}</td>
+                    <td>
+                        <a class="button is-info"
+                           href="{{ url_for('webadmin.view_development_request', req_id=rec.id) }}">detail</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

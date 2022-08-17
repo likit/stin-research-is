@@ -123,6 +123,7 @@ class DevelopmentRecord(db.Model):
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     edited_at = db.Column('edited_at', db.DateTime(timezone=True))
     approved_at = db.Column('approved_at', db.DateTime(timezone=True))
+    rejected_at = db.Column('rejected_at', db.DateTime(timezone=True))
     development_type_id = db.Column(db.ForeignKey('researcher_development_types.id'))
     development_type = db.relationship(DevelopmentType, backref=db.backref('records'))
     development_category_id = db.Column(db.ForeignKey('researcher_development_categories.id'))

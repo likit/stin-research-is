@@ -1,0 +1,53 @@
+{% extends "webadmin/academic_support_index.html" %}
+
+{% block academic_support_content %}
+<div class="container">
+    {% include "messages.html" %}
+    <div class="columns">
+        <div class="column">
+            <table class="table is-bordered is-fullwidth">
+                <tr>
+                    <td>ผู้ขออนุมัติ</td>
+                    <td>{{ rec.researcher.profile.fullname_th }}</td>
+                </tr>
+                <tr>
+                    <td>หัวข้อ</td>
+                    <td>{{ rec.topic }}</td>
+                </tr>
+                <tr>
+                    <td>สถานที่</td>
+                    <td>{{ rec.venue }}</td>
+                </tr>
+                <tr>
+                    <td>ประเภท</td>
+                    <td>{{ rec.development_type.name }}</td>
+                </tr>
+                <tr>
+                    <td>หมวด</td>
+                    <td>{{ rec.development_category.name }}</td>
+                </tr>
+                <tr>
+                    <td>วันที่</td>
+                    <td>{{ rec.start_date|localdate }} - {{ rec.end_date|localdate }}</td>
+                </tr>
+                <tr>
+                    <td>ส่งวันที่</td>
+                    <td>{{ rec.submitted_at|localdatetime }}</td>
+                </tr>
+                <tr>
+                    <td>อนุมัติเมื่อ</td>
+                    <td>{{ rec.approved_at|localdatetime }}</td>
+                </tr>
+                <tr>
+                    <td>ไม่อนุมัติเมื่อ</td>
+                    <td>{{ rec.rejected_at|localdatetime }}</td>
+                </tr>
+            </table>
+            <div class="buttons is-centered">
+                <a class="button is-danger" href="{{ url_for('webadmin.approve_development_request', status='reject', req_id=rec.id) }}">Reject</a>
+                <a class="button is-success" href="{{ url_for('webadmin.approve_development_request', status='approve', req_id=rec.id) }}">Approve</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
