@@ -59,9 +59,19 @@
                     </tbody>
                 </table>
                 <div class="buttons is-centered">
+                    <a href="{{ url_for('researcher.add_pub_reward', pub_id=pub.id) }}"
+                       class="button is-text">
+                        <span>ขออนุมัติค่าตีพิมพ์ผลงาน</span>
+                    </a>
+                    <a href="{{ url_for('researcher.edit_pub', pub_id=pub.id) }}"
+                       class="button is-text">
+                        <span>ขออนุมัติค่าตรวจภาษา</span>
+                    </a>
+                </div>
+                <div class="buttons is-centered">
                     <a href="{{ url_for('researcher.show_profile', user_id=current_user.id) }}"
                        class="button is-medium is-light">Back</a>
-                    {% if current_user.is_authenticated and current_user==user %}
+                    {% if current_user.is_authenticated and current_user==pub.creator %}
                     <a href="{{ url_for('researcher.remove_pub', pub_id=pub.id) }}"
                        class="button is-danger is-medium">
                         <span class="icon">
@@ -79,6 +89,33 @@
                     {% endif %}
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            <h1 class="title">Reward</h1>
+            <table class="table is-striped is-bordered is-fullwidth">
+                <thead>
+                <th>จำนวน</th>
+                <th>ส่งเมื่อ</th>
+                <th>ค่าตีพิมพ์ผลงาน</th>
+                <th>รางวัล</th>
+                <th>สถานะ</th>
+                </thead>
+                <tbody>
+                {% for reward in pub.pub_rewards %}
+                <tr>
+                    <td>{{ reward.amount }}</td>
+                    <td>{{ reward.submitted_at|localdatetime }}</td>
+                    <td>{{ reward.apc }}</td>
+                    <td>{{ reward.reward }}</td>
+                    <td>{{ reward.status }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

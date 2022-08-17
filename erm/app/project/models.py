@@ -702,6 +702,8 @@ class ProjectPublication(db.Model):
                                                                     ('บทความวิจัย',
                                                                      'บทความวิชาการหรือบทความปริทัศน์'
                                                                      )]})
+    creator_id = db.Column(db.ForeignKey('users.id'))
+    creator = db.relationship(User)
 
     @property
     def authors_list(self):

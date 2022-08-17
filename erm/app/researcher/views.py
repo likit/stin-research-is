@@ -12,10 +12,10 @@ from app import db
 from . import researcher_bp as researcher
 from app.project.models import (ProjectPublication,
                                 ProjectPublicationAuthor,
-                                ProjectPublicationJournal)
+                                ProjectPublicationJournal, ProjectPublishedReward)
 from app.project.forms import (ProjectPublicationForm,
                                ProjectJournalForm,
-                               ProjectPublicationAuthorForm)
+                               ProjectPublicationAuthorForm, ProjectPublishedRewardForm)
 from pydrive.auth import ServiceAccountCredentials, GoogleAuth
 from pydrive.drive import GoogleDrive
 
@@ -153,6 +153,7 @@ def add_pub():
             author = ProjectPublicationAuthor()
             author.user = current_user
             new_pub.authors.append(author)
+            new_pub.creator = current_user
             db.session.add(author)
             db.session.add(new_pub)
             db.session.commit()
@@ -295,3 +296,33 @@ def add_development_support():
         for err in form.errors:
             flash('{}'.format(form.errors[err]), 'danger')
     return render_template('researcher/add_development_support.html', form=form)
+
+
+@researcher.route('/pubs/<int:pub_id>/reward-request', methods=['GET', 'POST'])
+@login_required
+def add_pub_reward(pub_id):
+    pub = ProjectPublication.query.get(pub_id)
+    form = ProjectPublishedRewardForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_record = ProjectPublishedReward()
+            form.populate_obj(new_record)
+            new_record.pub_id = pub_id
+            new_record.qualification = '|'.join(form.qualification_select.data)
+            new_record.submitted_at = arrow.now(tz='Asia/Bangkok').datetime,
+            if new_record.reward:
+                reward_amt = float(new_record.reward.split()[-2])
+            else:
+                reward_amt = 0.0
+            if new_record.apc:
+                apc_amt = float(new_record.apc.split()[-2])
+            else:
+                apc_amt = 0.0
+            new_record.amount = reward_amt + apc_amt
+            db.session.add(new_record)
+            db.session.commit()
+            flash('Reward/Fee request has been added.', 'success')
+            return redirect(url_for('researcher.show_profile', user_id=current_user.id))
+        else:
+            flash(form.errors, 'danger')
+    return render_template('project/reward_add.html', pub=pub, form=form)
