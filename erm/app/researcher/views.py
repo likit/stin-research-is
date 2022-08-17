@@ -276,8 +276,6 @@ def add_development_support():
         form.populate_obj(new_support)
         new_support.researcher = current_user
         new_support.submitted_at = arrow.now(tz='Asia/Bangkok').datetime,
-        # new_support.start_date = datetime.datetime.strptime(form.start_date.data, '%d/%m/%Y')
-        # new_support.end_date = datetime.datetime.strptime(form.end_date.data, '%d/%m/%Y')
         file_upload = form.file_upload.data
         if file_upload:
             filename = secure_filename(file_upload.filename)
@@ -295,5 +293,5 @@ def add_development_support():
         return redirect(url_for('researcher.show_profile', user_id=current_user.id))
     else:
         for err in form.errors:
-            flash(err, 'danger')
+            flash('{}'.format(form.errors[err]), 'danger')
     return render_template('researcher/add_development_support.html', form=form)

@@ -114,12 +114,12 @@ class DevelopmentCategory(db.Model):
 class DevelopmentRecord(db.Model):
     __tablename__ = 'researcher_development_records'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
-    topic = db.Column('topic', db.String(), nullable=False)
+    topic = db.Column('topic', db.String(), nullable=False, info={'label': 'หัวข้อ'})
     researcher_id = db.Column('researcher_id', db.ForeignKey('users.id'))
     researcher = db.relationship(User, backref=db.backref('development_records'))
     venue = db.Column('venue', db.String(), info={'label': 'สถานที่จัดประชุม'})
-    start_date = db.Column('start_date', db.Date())
-    end_date = db.Column('end_date', db.Date())
+    start_date = db.Column('start_date', db.Date(), info={'label': 'วันที่เริ่มต้น'})
+    end_date = db.Column('end_date', db.Date(), info={'label': 'วันที่สิ้นสุด'})
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     edited_at = db.Column('edited_at', db.DateTime(timezone=True))
     approved_at = db.Column('approved_at', db.DateTime(timezone=True))
@@ -130,3 +130,11 @@ class DevelopmentRecord(db.Model):
     development_category = db.relationship(DevelopmentCategory, backref=db.backref('records'))
     file_url = db.Column('file_url', db.String())
 
+
+class DevelopmentExpenseItem(db.Model):
+    __tablename__ = 'researcher_development_expense_items'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    item = db.Column('item', db.String(), nullable=True, info={'label': 'รายการ'})
+    amount = db.Column('amount', db.Float(), info={'label': 'จำนวนเงิน'})
+    record_id = db.Column(db.ForeignKey('researcher_development_records.id'))
+    record = db.relationship(DevelopmentRecord, backref=db.backref('items'))

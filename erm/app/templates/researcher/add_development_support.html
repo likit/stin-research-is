@@ -55,6 +55,22 @@
             {{ form.file_upload }}
           </div>
         </div>
+        <hr>
+        <h1 class="title is-size-5">รายการค่าใช้จ่าย</h1>
+        {% for item in form.items %}
+        <div class="field">
+          <label class="label">รายการที่ {{ loop.index }}</label>
+          <div class="control">
+            {{ item.item(class="input") }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{{ item.amount.label }}</label>
+          <div class="control">
+            {{ item.amount(class="input") }}
+          </div>
+        </div>
+        {% endfor %}
         <div class="field is-grouped is-grouped-centered">
           <div class="control">
             <a class="button is-light">Cancel</a>

@@ -7,39 +7,62 @@
         <div class="column">
             <table class="table is-bordered is-fullwidth">
                 <tr>
-                    <td>ผู้ขออนุมัติ</td>
+                    <td class="title is-size-6">ผู้ขออนุมัติ</td>
                     <td>{{ rec.researcher.profile.fullname_th }}</td>
                 </tr>
                 <tr>
-                    <td>หัวข้อ</td>
+                    <td class="title is-size-6">หัวข้อ</td>
                     <td>{{ rec.topic }}</td>
                 </tr>
                 <tr>
-                    <td>สถานที่</td>
+                    <td class="title is-size-6">สถานที่</td>
                     <td>{{ rec.venue }}</td>
                 </tr>
                 <tr>
-                    <td>ประเภท</td>
+                    <td class="title is-size-6">ประเภท</td>
                     <td>{{ rec.development_type.name }}</td>
                 </tr>
                 <tr>
-                    <td>หมวด</td>
+                    <td class="title is-size-6">หมวด</td>
                     <td>{{ rec.development_category.name }}</td>
                 </tr>
                 <tr>
-                    <td>วันที่</td>
+                    <td class="title is-size-6">วันที่</td>
                     <td>{{ rec.start_date|localdate }} - {{ rec.end_date|localdate }}</td>
                 </tr>
                 <tr>
-                    <td>ส่งวันที่</td>
+                    <td class="title is-size-6">ค่าใช้จ่าย</td>
+                    <td>
+                        <table class="table is-bordered is-striped">
+                            <thead>
+                            <th>No.</th>
+                            <th>รายการ</th>
+                            <th>จำนวนเงิน</th>
+                            </thead>
+                            <tbody>
+                            {% for item in rec.items %}
+                            {% if item.item %}
+                            <tr>
+                                <th>{{ loop.index }}</th>
+                                <td>{{ item.item }}</td>
+                                <td>{{ item.amount }}</td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title is-size-6">ส่งวันที่</td>
                     <td>{{ rec.submitted_at|localdatetime }}</td>
                 </tr>
                 <tr>
-                    <td>อนุมัติเมื่อ</td>
+                    <td class="title is-size-6">อนุมัติเมื่อ</td>
                     <td>{{ rec.approved_at|localdatetime }}</td>
                 </tr>
                 <tr>
-                    <td>ไม่อนุมัติเมื่อ</td>
+                    <td class="title is-size-6">ไม่อนุมัติเมื่อ</td>
                     <td>{{ rec.rejected_at|localdatetime }}</td>
                 </tr>
             </table>

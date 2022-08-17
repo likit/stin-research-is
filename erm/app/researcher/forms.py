@@ -1,3 +1,5 @@
+from wtforms import FieldList, FormField
+
 from app import db
 from flask_wtf import FlaskForm
 from wtforms_alchemy import (model_form_factory, QuerySelectField)
@@ -62,6 +64,12 @@ class DevelopmentCategoryForm(ModelForm):
         model = DevelopmentCategory
 
 
+class DevelopmentExpenseItemForm(ModelForm):
+    class Meta:
+        model = DevelopmentExpenseItem
+        csrf = False
+
+
 class DevelopmentRecordForm(ModelForm):
     class Meta:
         model = DevelopmentRecord
@@ -71,3 +79,4 @@ class DevelopmentRecordForm(ModelForm):
     development_category = QuerySelectField('หมวดการพัฒนา', query_factory=lambda: DevelopmentCategory.query.all(),
                                         get_label='name', allow_blank=False, blank_text='เลือกหมวด')
     file_upload = FileField('Upload หนังสืออนุมัติ')
+    items = FieldList(FormField(DevelopmentExpenseItemForm, default=DevelopmentExpenseItem), min_entries=5)
