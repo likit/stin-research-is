@@ -60,3 +60,14 @@ class DevelopmentTypeForm(ModelForm):
 class DevelopmentCategoryForm(ModelForm):
     class Meta:
         model = DevelopmentCategory
+
+
+class DevelopmentRecordForm(ModelForm):
+    class Meta:
+        model = DevelopmentRecord
+
+    development_type = QuerySelectField('ประเภทการพัฒนา', query_factory=lambda: DevelopmentType.query.all(),
+                                        get_label='name', allow_blank=False, blank_text='เลือกประเภท')
+    development_category = QuerySelectField('หมวดการพัฒนา', query_factory=lambda: DevelopmentCategory.query.all(),
+                                        get_label='name', allow_blank=False, blank_text='เลือกหมวด')
+    file_upload = FileField('Upload หนังสืออนุมัติ')

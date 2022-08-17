@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Development Support Page{% endblock %}
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+  <div class="columns">
+    <div class="column is-three-fifths is-offset-one-fifth">
+      {% include "messages.html" %}
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column is-one-third is-offset-4">
+      <form method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="field">
+          <label class="label">{{ form.topic.label }}</label>
+          <div class="control">
+            {{ form.topic(class="input") }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{{ form.venue.label }}</label>
+          <div class="control">
+            {{ form.venue(class="input") }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{{ form.start_date.label }}</label>
+          <div class="control">
+            {{ form.start_date(class="input", type="text") }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{{ form.end_date.label }}</label>
+          <div class="control">
+            {{ form.end_date(class="input", type="text") }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{{ form.development_type.label }}</label>
+          <div class="select">
+            {{ form.development_type }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{{ form.development_category.label }}</label>
+          <div class="select">
+            {{ form.development_category }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{{ form.file_upload.label }}</label>
+          <div class="control">
+            {{ form.file_upload }}
+          </div>
+        </div>
+        <div class="field is-grouped is-grouped-centered">
+          <div class="control">
+            <a class="button is-light">Cancel</a>
+            <input type="submit" value="Submit" class="button is-success">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+  $('input[name="start_date"]').daterangepicker({
+    singleDatePicker: true,
+    locale: {
+      format: 'YYYY-MM-DD'
+    }
+  });
+  $('input[name="end_date"]').daterangepicker({
+    singleDatePicker: true,
+    locale: {
+      format: 'YYYY-MM-DD'
+    }
+  });
+</script>
+{% endblock %}

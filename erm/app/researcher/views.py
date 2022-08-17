@@ -1,3 +1,4 @@
+import datetime
 import os
 import requests
 import arrow
@@ -5,8 +6,8 @@ from flask import render_template, flash, request, redirect, url_for, session
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from app.main.models import User
-from app.researcher.models import Profile, Education, IntlConferenceSupport
-from app.researcher.forms import ProfileForm, EducationForm, IntlConferenceSupportForm
+from app.researcher.models import Profile, Education, IntlConferenceSupport, DevelopmentRecord
+from app.researcher.forms import ProfileForm, EducationForm, IntlConferenceSupportForm, DevelopmentRecordForm
 from app import db
 from . import researcher_bp as researcher
 from app.project.models import (ProjectPublication,
@@ -264,3 +265,35 @@ def add_intl_conference_support():
             flash('New request for international conference support has been added.')
             return redirect(url_for('researcher.show_profile', user_id=current_user.id))
     return render_template('researcher/intl_conference_support_add.html', form=form)
+
+
+@researcher.route('/development-support/add', methods=['GET', 'POST'])
+@login_required
+def add_development_support():
+    form = DevelopmentRecordForm()
+    if form.validate_on_submit():
+        new_support = DevelopmentRecord()
+        form.populate_obj(new_support)
+        new_support.researcher = current_user
+        new_support.submitted_at = arrow.now(tz='Asia/Bangkok').datetime,
+        # new_support.start_date = datetime.datetime.strptime(form.start_date.data, '%d/%m/%Y')
+        # new_support.end_date = datetime.datetime.strptime(form.end_date.data, '%d/%m/%Y')
+        file_upload = form.file_upload.data
+        if file_upload:
+            filename = secure_filename(file_upload.filename)
+            file_upload.save(filename)
+            file_drive = drive.CreateFile({'title': filename})
+            file_drive.SetContentFile(filename)
+            file_drive.Upload()
+            permission = file_drive.InsertPermission({'type': 'anyone',
+                                                      'value': 'anyone',
+                                                      'role': 'reader'})
+            new_support.file_url = file_drive['id']
+        db.session.add(new_support)
+        db.session.commit()
+        flash('New request for development support has been added.')
+        return redirect(url_for('researcher.show_profile', user_id=current_user.id))
+    else:
+        for err in form.errors:
+            flash(err, 'danger')
+    return render_template('researcher/add_development_support.html', form=form)

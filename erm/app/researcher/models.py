@@ -109,3 +109,23 @@ class DevelopmentCategory(db.Model):
     __tablename__ = 'researcher_development_categories'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     name = db.Column('name', db.String(), nullable=False, info={'label': 'หมวด'})
+
+
+class DevelopmentRecord(db.Model):
+    __tablename__ = 'researcher_development_records'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    topic = db.Column('topic', db.String(), nullable=False)
+    researcher_id = db.Column('researcher_id', db.ForeignKey('users.id'))
+    researcher = db.relationship(User, backref=db.backref('development_records'))
+    venue = db.Column('venue', db.String(), info={'label': 'สถานที่จัดประชุม'})
+    start_date = db.Column('start_date', db.Date())
+    end_date = db.Column('end_date', db.Date())
+    submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
+    edited_at = db.Column('edited_at', db.DateTime(timezone=True))
+    approved_at = db.Column('approved_at', db.DateTime(timezone=True))
+    development_type_id = db.Column(db.ForeignKey('researcher_development_types.id'))
+    development_type = db.relationship(DevelopmentType, backref=db.backref('records'))
+    development_category_id = db.Column(db.ForeignKey('researcher_development_categories.id'))
+    development_category = db.relationship(DevelopmentCategory, backref=db.backref('records'))
+    file_url = db.Column('file_url', db.String())
+

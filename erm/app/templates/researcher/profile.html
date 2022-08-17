@@ -235,4 +235,61 @@
         </div>
     </div>
 </section>
+<section class="section">
+    <div class="columns">
+        <div class="column is-three-fifths is-offset-one-fifth">
+            <div class="box has-text-centered">
+                <h2 class="title">Development Supports</h2>
+                {% if current_user.is_authenticated and current_user.id == user.id %}
+                <a href="{{ url_for('researcher.add_development_support') }}"
+                   class="button is-rounded is-success">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                    <span>ยื่นขออนุมัติเงินสนับสนุนการพัฒนาตนเอง</span>
+                </a>
+                {% endif %}
+                <table class="table is-striped is-fullwidth">
+                    <thead>
+                    <th>No.</th>
+                    <th>หัวข้อ</th>
+                    <th>ประเภท</th>
+                    <th>หมวด</th>
+                    <th>สถานที่</th>
+                    <th>ยื่นวันที่</th>
+                    <th>สถานะ</th>
+                    <th>อนุมัติวันที่</th>
+                    </thead>
+                    <tbody>
+                    {% for support in user.development_records %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ support.topic }}</td>
+                        <td>{{ support.development_type.name }}</td>
+                        <td>{{ support.development_category.name }}</td>
+                        <td>{{ support.venue }}</td>
+                        <td>{{ support.submitted_at|localdatetime }}</td>
+                        <td>
+                            {% if support.approved_at %}
+                            <span class="icon">
+                                <i class="far fa-check-circle has-text-success"></i>
+                            </span>
+                            <span>อนุมัติ</span>
+                            {% else %}
+                            pending
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if support.approved_at %}
+                            {{ support.approved_at|localdatetime }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
