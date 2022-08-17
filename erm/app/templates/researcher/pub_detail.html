@@ -59,6 +59,7 @@
                     </tbody>
                 </table>
                 <div class="buttons is-centered">
+                    {% if current_user.is_authenticated and current_user==pub.creator %}
                     <a href="{{ url_for('researcher.add_pub_reward', pub_id=pub.id) }}"
                        class="button is-text">
                         <span>ขออนุมัติค่าตีพิมพ์ผลงาน</span>
@@ -67,6 +68,7 @@
                        class="button is-text">
                         <span>ขออนุมัติค่าตรวจภาษา</span>
                     </a>
+                    {% endif %}
                 </div>
                 <div class="buttons is-centered">
                     <a href="{{ url_for('researcher.show_profile', user_id=current_user.id) }}"
