@@ -1205,8 +1205,7 @@ def export_docx(project_id):
 @login_required
 def view_reviews(project_id):
     project = ProjectRecord.query.get(project_id)
-    review = ProjectReviewRecord.query.filter_by(
-        project_id=project.id, summarized=True).first()
+    review = ProjectReviewRecord.query.filter_by(project_id=project.id, summarized=True).first()
     return render_template('project/summarized_review.html', project=project, review=review)
 
 
