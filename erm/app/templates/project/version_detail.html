@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}Project Version Detail{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+              <ul>
+                <li><a href="{{ url_for('project.list_created_projects', user_id=current_user.id) }}">Your projects</a></li>
+                <li class="is-active"><a aria-current="page">Project detail</a></li>
+              </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="container has-text-centered">
+                <h1 class="title">Project Detail</h1>
+                <h2 class="subtitle is-size-4">{{ project.title_th }}</h2>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-users"></i>
+                    </span>
+                {% if project.members %}
+                    {% for member in project.members %}
+                    {% if member.user %}
+                        {{ member.user.profile.fullname_th }} ({{ member.role }}),
+                    {% else %}
+                        {{ member.fullname }} ({{ member.role }}),
+                    {% endif %}
+                    {% endfor %}
+                {% else %}
+                โครงการยังไม่มีสมาชิก <a href="{{ url_for('project.add_member', project_id=project.id) }}">เพิ่มสมาชิกที่นี่</a>
+                {% endif %}
+                </p>
+                <br>
+                <div class="tags has-addons is-centered">
+                    <span class="tag is-medium is-primary is-outlined">สถานะ</span>
+                    <span class="tag is-medium">{{ project.status }}</span>
+                </div>
+                <div>
+                    <a class="is-text" href="{{ url_for('project.list_revisions', project_id=project.id) }}">
+                        <span class="icon">
+                            <i class="fas fa-history"></i>
+                        </span>
+                        <span>
+                            Revision {{ project.transaction_id }}
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-four-fifths is-offset-1">
+            {% include "messages.html" %}
+            {% if project.approved %}
+            <article class="message is-success">
+                <div class="message-header">
+                    Action Required
+                    <span class="icon">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </div>
+                {% if project.ethics and project.get_ethic_status() == 'approved' %}
+                <p class="message-body">
+                    การขออนุมัติจริยธรรมวิจัยของโครงการของท่านได้รับการอนุมัติแล้ว กรุณา submit โครงการฉบับเต็มเพื่อเข้ารับการพิจารณาต่อไป
+                </p>
+                {% elif not project.ethics %}
+                <p class="message-body">
+                    โครงการของท่านได้รับการพิจารณาและอนุมัติในระดับแนวคิดแล้ว ท่านสามารถยื่นขอพิจารณาอนุมัติจริยธรรมวิจัยได้ตั้งแต่วันนี้
+                </p>
+                {% else %}
+                <p class="message-body">
+                    โปรดรอผลการอนุมัติจริยธรรมงานวิจัย
+                </p>
+                {% endif %}
+            </article>
+            {% elif project.revising %}
+            <article class="message is-success">
+                <div class="message-header">
+                    Action Required
+                    <span class="icon">
+                    <i class="fas fa-info-circle"></i>
+                </span>
+                </div>
+                <p class="message-body">
+                    โครงการของท่านได้รับการพิจารณาแล้วโปรดแก้ไขเพิ่มเติมตามคำแนะนำและส่งใหม่อีกครั้ง
+                </p>
+            </article>
+            {% endif %}
+            <div>
+            <table class="table is-fullwidth is-bordered">
+                {% if project.parent_project %}
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ชุดโครงการ</td><td>{{ project.parent_project }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ชื่อรองภาษาไทย</td><td>{{ project.subtitle_th }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ชื่อภาษาอังกฤษ</td><td>{{ project.title_en }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ชื่อรองภาษาอังกฤษ</td><td>{{ project.subtitle_en }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ที่ปรึกษาโครงการ</td><td>{{ project.mentor }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ประเภทของงานวิจัย</td>
+                    <td class="content">{{ project.research_type }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">สาขาวิชาการและกลุ่มที่ทำวิจัย</td>
+                    <td class="content">{{ project.research_cluster }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">คำสำคัญของโครงการวิจัย</td>
+                    <td class="content">{{ project.keywords|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">บทคัดย่อ</td>
+                    <td class="content">{{ project.abstract|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ความสำคัญและที่มาของปัญหาที่ทำการวิจัย</td>
+                    <td class="content">{{ project.intro|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">วัตถุประสงค์ของโครงการวิจัย</td>
+                    <td class="content">{{ project.objective|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ขอบเขตของโครงงานวิจัย</td>
+                    <td class="content">{{ project.scope|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">นิยามคำศัพท์</td>
+                    <td class="content">{{ project.glossary|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ทฤษฎี สมมุติฐานและกรอบแนวคิด</td>
+                    <td class="content">{{ project.conceptual_framework|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง</td>
+                    <td class="content">{{ project.literature_review|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">เอกสารอ้างอิง</td>
+                    <td class="content">{{ project.references|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ประโยชน์ที่คาดว่าจะได้รับ</td>
+                    <td class="content">{{ project.expected_benefit|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">ระเบียบวิธีวิจัย</td>
+                    <td class="content">{{ project.method|safe }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">เพิ่มโครงวันที่</td><td>วันที่ {{ project.created_at|localdatetime }} นาฬิกา</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">แก้ไขวันที่</td><td> วันที่ {{ project.updated_at|localdatetime }} นาฬิกา</td>
+                </tr>
+                {% if project.creator == current_user %}
+                <tr>
+                    <td class="title is-size-5" style="width:20%">วารสารที่คาดว่าจะเผยแพร่</td><td>{{ project.prospected_journals or '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5" style="width:20%">การนำไปใช้ประโยชน์</td><td>{{ project.use_applications or '-' }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td class="title is-size-5" style="width:20%">หมวดหมู่</td>
+                    <td>
+                        <div class="field is-grouped is-grouped-multiline">
+                            {% for cat in project.subcategories %}
+                            <div class="control">
+                                <div class="tags has-addons">
+                                    <p class="tag is-light is-medium is-info">{{ cat.category }}</p>
+                                    <p class="tag is-light is-medium">{{ cat.parent }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title is-size-5">สร้างไฟล์</td>
+                    <td>
+                        <a class="button is-primary is-outlined"
+                           href="{{ url_for('project.export_docx', project_id=project.id) }}">
+                            <span class="icon">
+                                <i class="far fa-file-word"></i>
+                            </span>
+                            <span>Export DOCX</span>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="has-text-centered">
+                <a href="{{ url_for('project.list_revisions', project_id=project.id) }}"
+                   class="button is-light is-medium">Back</a>
+                {% if (project.creator == current_user or current_user.role == 1) %}
+                <a class="button is-warning is-medium"
+                   href="{{ url_for('project.revert_project_version', project_id=project.id, tx_id=project.transaction_id) }}"
+                >
+                    <span class="icon">
+                        <i class="fas fa-backward"></i>
+                    </span>
+                    <span>Revert</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

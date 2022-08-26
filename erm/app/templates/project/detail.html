@@ -41,6 +41,16 @@
                     <span class="tag is-medium is-primary is-outlined">สถานะ</span>
                     <span class="tag is-medium">{{ project.status }}</span>
                 </div>
+                <div>
+                    <a class="is-text" href="{{ url_for('project.list_revisions', project_id=project.id) }}">
+                        <span class="icon">
+                            <i class="fas fa-history"></i>
+                        </span>
+                        <span>
+                            {{ project.versions.all()|length }} Revisions
+                        </span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

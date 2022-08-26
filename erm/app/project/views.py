@@ -5,6 +5,7 @@ import wtforms
 import pypandoc
 from flask import render_template, request, redirect, url_for, flash, Response, send_file
 from flask_login import login_required, current_user
+from sqlalchemy_continuum import version_class
 from werkzeug.utils import secure_filename
 from . import project_bp as project
 from .forms import *
@@ -467,8 +468,9 @@ def submit_project(project_id):
         for member in project.members:
             mail = member.user.email if member.user else member.email
             if mail:
-                message = ('ศูนย์วิจัยได้รับโครงการวิจัยเรื่อง{} ที่ท่านร่วมทำวิจัยในฐานะ {} เพื่อพิจารณาแล้วเมื่อวันที่ {}'\
-                          ' หากท่านไม่ได้เข้าร่วมทำวิจัยในโครงการนี้ กรุณาแจ้งให้ทางศูนย์ทราบทันที')\
+                message = (
+                    'ศูนย์วิจัยได้รับโครงการวิจัยเรื่อง{} ที่ท่านร่วมทำวิจัยในฐานะ {} เพื่อพิจารณาแล้วเมื่อวันที่ {}' \
+                    ' หากท่านไม่ได้เข้าร่วมทำวิจัยในโครงการนี้ กรุณาแจ้งให้ทางศูนย์ทราบทันที') \
                     .format(project.title_th, member.role, project.submitted_at.strftime('%d/%m/%Y %H:%M'))
                 send_mail(mail, 'โครงการวิจัยที่ท่านเข้าร่วมได้ยื่นขอรับการพิจารณาแล้ว', message)
         flash('ยื่นขอพิจารณาโครงการเรียบร้อยแล้ว', 'success')
@@ -1097,107 +1099,117 @@ def add_proposal_development_support(project_id):
                            project_id=project_id, form=form)
 
 
+def generate_docx(project):
+    members = []
+    for member in project.members:
+        if member.user:
+            members.append('{} ({})'.format(member.user.profile.fullname_th, member.role))
+        else:
+            members.append('{} ({})'.format(member.fullname, member.affil))
+
+    content = '<h1>โครงการวิจัย</h1>'
+    content += '<hr>'
+    content += '<h2>ชื่อภาษาไทย</h2>'
+    content += '<h3>{}</h3><br>'.format(project.title_th)
+    content += '<h2>ชื่อรองภาษาไทย</h2>'
+    content += '<h3>{}</h3><br>'.format(project.subtitle_th)
+    content += '<h2>ชื่อภาษาอังกฤษ</h2>'
+    content += '<h3>{}</h3><br>'.format(project.title_en)
+    content += '<h2>ชื่อรองภาษาอังกฤษ</h2>'
+    content += '<h3>{}</h3><br>'.format(project.subtitle_en)
+    content += '<h2>แหล่งทุน</h2>'
+    content += '<h3>{}</h3><br>'.format(project.fund_source.name)
+    content += '<h2>ที่ปรึกษาโครงการ</h2>'
+    content += '<h3>{}</h3><br>'.format(project.mentor)
+    content += '<h2>คณะผู้วิจัย</h2>'
+    content += '<h3>{}</h3><br>'.format(', '.join(members))
+    content += '<h2>คำสำคัญ</h2>'
+    content += '<p>{}</p>'.format(', '.join(project.keywords.split(';')))
+    content += '<h2>บทคัดย่อ</h2>'
+    content += project.abstract
+    content += '<h2>ความสำคัญและที่มาของงานวิจัย</h2>'
+    content += project.intro
+    content += '<h2>วัตถุประสงค์</h2>'
+    content += project.objective
+    content += '<h2>ขอบเขตงานวิจัย</h2>'
+    content += project.scope
+    content += '<h2>นิยามคำศัพท์</h2>'
+    content += project.glossary
+    content += '<h2>ทฤษฎี สมมุติฐาน (ถ้ามี) กรอบแนวคิดของโครงการวิจัย</h2>'
+    content += project.conceptual_framework
+    content += '<h2>การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง</h2>'
+    content += project.literature_review
+    content += '<h2>เอกสารอ้างอิง</h2>'
+    content += project.references
+    content += '<h2>ประโยชน์ที่คาดว่าจะได้รับ</h2>'
+    content += project.expected_benefit
+    content += '<h2>ระเบียบวิธีวิจัย</h2>'
+    content += project.method
+    content += '<h2>วารสารที่คาดว่าจะเผยแพร่</h2>'
+    content += project.prospected_journals
+    content += '<h2>การนำไปใช้ประโยชน์</h2>'
+    content += project.use_applications
+    content += '<h2>แผนการดำเนินงาน</h2>'
+    content += ('<table border="1"><tbody>'
+                '<tr><td>ลำดับที่</td>'
+                '<td>กิจกรรม</td>'
+                '<td>วันที่เริ่มต้น</td>'
+                '<td>วันที่สิ้นสุด</td></tr>')
+    for a in sorted(project.gantt_activities, key=lambda x: x.task_id):
+        content += '<tr>'
+        content += '<td>{}</td>'.format(a.task_id)
+        content += '<td>{}</td>'.format(GANTT_ACTIVITIES.get(a.task_id))
+        content += '<td>{}</td>'.format(a.start_date.strftime('%d-%m-%Y'))
+        content += '<td>{}</td>'.format(a.end_date.strftime('%d-%m-%Y'))
+        content += '</tr>'
+    content += '</tbody></table>'
+
+    content += '<h2>งบประมาณ</h2>'
+    content += ('<table border="1"><tbody>'
+                '<tr><td>ลำดับ</td>'
+                '<td>หมวด</td>'
+                '<td>รายการ</td>'
+                '<td>จำนวนเงิน</td>'
+                '<td>หมายเหตุ</td></tr>')
+    for n, budget in enumerate(sorted(project.overall_budgets, key=lambda x: x.category_ref), start=1):
+        content += '<tr>'
+        content += '<td>{}</td>'.format(n)
+        content += '<td>{}</td>'.format(budget.sub_category.category.category)
+        content += '<td>{}</td>'.format(budget.sub_category.sub_category)
+        content += '<td>{}</td>'.format(budget.wage)
+        content += '<td>{}</td>'.format(budget.item)
+        content += '</tr>'
+    content += '</tbody></table>'
+
+    content += '<h2>แก้ไขล่าสุดเมื่อวันที่</h2>'
+    content += '<p>{}</p>'.format(project.updated_at.strftime('วันที่ %d-%m-%Y เวลา %H:%M นาฬิกา'))
+    content += '<h2>ผู้ส่งโครงการ</h2>'
+    content += '<p>{} {}</p>'.format(current_user.profile.title_th, current_user.profile.fullname_th)
+    content += '<h2>สถานะโครงการ</h2>'
+    content += '<p>{}</p>'.format(project.status)
+
+    content += '<h2>รูปภาพ</h2>'
+    for fig in project.figures:
+        imgUrl = 'https://drive.google.com/uc?id={}'.format(fig.url)
+        content += '<br><img src="{}">'.format(imgUrl)
+        content += '<br>{}) {}<br>'.format(fig.fignum, fig.title)
+    pypandoc.convert_text(content, 'docx', format='html', outputfile='app/export.docx')
+
+
+@project.route('/<int:project_id>/export/version/<int:tx_id>')
+@login_required
+def export_version_docx(tx_id):
+    ProjectVersion = version_class(ProjectRecord)
+    version = ProjectVersion.query.filter_by(transaction_id=tx_id).first()
+    generate_docx(version)
+    return send_file('export.docx')
+
+
 @project.route('/<int:project_id>/export')
 @login_required
 def export_docx(project_id):
-    def generate():
-        project = ProjectRecord.query.get(project_id)
-        members = []
-        for member in project.members:
-            if member.user:
-                members.append('{} ({})'.format(member.user.profile.fullname_th, member.role))
-            else:
-                members.append('{} ({})'.format(member.fullname, member.affil))
-
-        content = '<h1>โครงการวิจัย</h1>'
-        content += '<hr>'
-        content += '<h2>ชื่อภาษาไทย</h2>'
-        content += '<h3>{}</h3><br>'.format(project.title_th)
-        content += '<h2>ชื่อรองภาษาไทย</h2>'
-        content += '<h3>{}</h3><br>'.format(project.subtitle_th)
-        content += '<h2>ชื่อภาษาอังกฤษ</h2>'
-        content += '<h3>{}</h3><br>'.format(project.title_en)
-        content += '<h2>ชื่อรองภาษาอังกฤษ</h2>'
-        content += '<h3>{}</h3><br>'.format(project.subtitle_en)
-        content += '<h2>แหล่งทุน</h2>'
-        content += '<h3>{}</h3><br>'.format(project.fund_source.name)
-        content += '<h2>ที่ปรึกษาโครงการ</h2>'
-        content += '<h3>{}</h3><br>'.format(project.mentor)
-        content += '<h2>คณะผู้วิจัย</h2>'
-        content += '<h3>{}</h3><br>'.format(', '.join(members))
-        content += '<h2>คำสำคัญ</h2>'
-        content += '<p>{}</p>'.format(', '.join(project.keywords.split(';')))
-        content += '<h2>บทคัดย่อ</h2>'
-        content += project.abstract
-        content += '<h2>ความสำคัญและที่มาของงานวิจัย</h2>'
-        content += project.intro
-        content += '<h2>วัตถุประสงค์</h2>'
-        content += project.objective
-        content += '<h2>ขอบเขตงานวิจัย</h2>'
-        content += project.scope
-        content += '<h2>นิยามคำศัพท์</h2>'
-        content += project.glossary
-        content += '<h2>ทฤษฎี สมมุติฐาน (ถ้ามี) กรอบแนวคิดของโครงการวิจัย</h2>'
-        content += project.conceptual_framework
-        content += '<h2>การทบทวนวรรณกรรม/สารสนเทศที่เกี่ยวข้อง</h2>'
-        content += project.literature_review
-        content += '<h2>เอกสารอ้างอิง</h2>'
-        content += project.references
-        content += '<h2>ประโยชน์ที่คาดว่าจะได้รับ</h2>'
-        content += project.expected_benefit
-        content += '<h2>ระเบียบวิธีวิจัย</h2>'
-        content += project.method
-        content += '<h2>วารสารที่คาดว่าจะเผยแพร่</h2>'
-        content += project.prospected_journals
-        content += '<h2>การนำไปใช้ประโยชน์</h2>'
-        content += project.use_applications
-        content += '<h2>แผนการดำเนินงาน</h2>'
-        content += ('<table border="1"><tbody>'
-                    '<tr><td>ลำดับที่</td>'
-                    '<td>กิจกรรม</td>'
-                    '<td>วันที่เริ่มต้น</td>'
-                    '<td>วันที่สิ้นสุด</td></tr>')
-        for a in sorted(project.gantt_activities, key=lambda x: x.task_id):
-            content += '<tr>'
-            content += '<td>{}</td>'.format(a.task_id)
-            content += '<td>{}</td>'.format(GANTT_ACTIVITIES.get(a.task_id))
-            content += '<td>{}</td>'.format(a.start_date.strftime('%d-%m-%Y'))
-            content += '<td>{}</td>'.format(a.end_date.strftime('%d-%m-%Y'))
-            content += '</tr>'
-        content += '</tbody></table>'
-
-        content += '<h2>งบประมาณ</h2>'
-        content += ('<table border="1"><tbody>'
-                    '<tr><td>ลำดับ</td>'
-                    '<td>หมวด</td>'
-                    '<td>รายการ</td>'
-                    '<td>จำนวนเงิน</td>'
-                    '<td>หมายเหตุ</td></tr>')
-        for n, budget in enumerate(sorted(project.overall_budgets, key=lambda x: x.category_ref), start=1):
-            content += '<tr>'
-            content += '<td>{}</td>'.format(n)
-            content += '<td>{}</td>'.format(budget.sub_category.category.category)
-            content += '<td>{}</td>'.format(budget.sub_category.sub_category)
-            content += '<td>{}</td>'.format(budget.wage)
-            content += '<td>{}</td>'.format(budget.item)
-            content += '</tr>'
-        content += '</tbody></table>'
-
-        content += '<h2>แก้ไขล่าสุดเมื่อวันที่</h2>'
-        content += '<p>{}</p>'.format(project.updated_at.strftime('วันที่ %d-%m-%Y เวลา %H:%M นาฬิกา'))
-        content += '<h2>ผู้ส่งโครงการ</h2>'
-        content += '<p>{} {}</p>'.format(current_user.profile.title_th, current_user.profile.fullname_th)
-        content += '<h2>สถานะโครงการ</h2>'
-        content += '<p>{}</p>'.format(project.status)
-
-        content += '<h2>รูปภาพ</h2>'
-        for fig in project.figures:
-            imgUrl = 'https://drive.google.com/uc?id={}'.format(fig.url)
-            content += '<br><img src="{}">'.format(imgUrl)
-            content += '<br>{}) {}<br>'.format(fig.fignum, fig.title)
-        pypandoc.convert_text(content, 'docx', format='html', outputfile='app/export.docx')
-
-    generate()
+    project = ProjectRecord.query.get(project_id)
+    generate_docx(project)
     return send_file('export.docx')
 
 
@@ -1447,3 +1459,42 @@ def send_close_request(project_id):
         flash('คำร้องขอปิดโครงการส่งเรียบร้อยแล้ว', 'success')
         return redirect(url_for('project.display_project', project_id=project_id))
     return render_template('project/close_confirmed.html', project_id=project_id)
+
+
+@project.route('/<int:project_id>/versions')
+@login_required
+def list_revisions(project_id):
+    project = ProjectRecord.query.get(project_id)
+    return render_template('project/project_revisions.html', project=project)
+
+
+@project.route('/<int:project_id>/versions/<int:tx_id>')
+@login_required
+def display_project_version(project_id, tx_id):
+    ProjectVersion = version_class(ProjectRecord)
+    version = ProjectVersion.query.filter_by(transaction_id=tx_id).first()
+
+    gantt_activities = []
+    for a in sorted(version.gantt_activities, key=lambda x: x.task_id):
+        gantt_activities.append([
+            str(a.task_id),
+            GANTT_ACTIVITIES.get(a.task_id),
+            a.start_date.isoformat(),
+            a.end_date.isoformat(),
+            None, 0, None,
+            a.start_date,
+            a.end_date,
+            a.id
+        ])
+    return render_template('project/version_detail.html', project=version, gantt_activities=gantt_activities)
+
+
+@project.route('/<int:project_id>/versions/<int:tx_id>/revert')
+@login_required
+def revert_project_version(project_id, tx_id):
+    ProjectVersion = version_class(ProjectRecord)
+    version = ProjectVersion.query.filter_by(transaction_id=tx_id).first()
+    version.revert()
+    db.session.commit()
+    flash('โครงการได้แก้ไขกลับมาเป็นการแก้ไขครั้งที่ {} เรียบร้อย'.format(tx_id), 'warning')
+    return redirect(url_for('project.display_project', project_id=project_id))

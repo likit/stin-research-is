@@ -1,6 +1,12 @@
+import sqlalchemy
+from sqlalchemy_continuum import make_versioned
+from sqlalchemy_continuum.plugins import FlaskPlugin
+
 from app import db
 from app.main.models import User
 from datetime import datetime
+
+make_versioned(plugins=[FlaskPlugin()])
 
 
 class ProjectMember(db.Model):
@@ -70,6 +76,7 @@ class ProjectFundSource(db.Model):
 
 class ProjectRecord(db.Model):
     __tablename__ = 'projects'
+    __versioned__ = {}
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     fund_source_id = db.Column('fund_source_id',
                                        db.ForeignKey('project_fund_sources.id'))
@@ -854,3 +861,6 @@ class ProjectCVFile(db.Model):
     filename = db.Column('filename', db.String(), info={'label': 'ชื่อไฟล์'})
     file_url = db.Column('file_url', db.String(), info={'label': 'URL'})
     project = db.relationship('ProjectRecord', backref=db.backref('cv_files'))
+
+
+sqlalchemy.orm.configure_mappers()

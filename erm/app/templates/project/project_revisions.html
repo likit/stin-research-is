@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Project Revision History{% endblock %}
+
+{% block page_content %}
+{% include "nav.html" %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column has-text-centered">
+                <h1 class="title">ประวัติการแก้ไขโครงการวิจัยของคุณ</h1>
+                {% include "messages.html" %}
+                <hr>
+                <table class="table is-striped is-narrow" id="projectTable">
+                    <thead>
+                    <th>ลำดับ</th>
+                    <th>Version</th>
+                    <th>แก้ไขเมื่อ</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+                    {% for version in project.versions.all() %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ version.transaction_id }}</td>
+                        <td>{{ version.updated_at|localdatetime }}</td>
+                        <td>
+                            <a href="{{ url_for('project.display_project_version', tx_id=version.transaction_id, project_id=project.id) }}"
+                               class="button is-small is-primary">
+                                <span class="icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                                <span>
+                                    ดูรายละเอียด
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <a class="button is-light" href="{{ url_for('project.display_project', project_id=project.id) }}">
+                    Back
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $(document).ready(function() {
+        $('#projectTable').DataTable();
+    })
+</script>
+{% endblock %}
