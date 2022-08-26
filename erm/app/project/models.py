@@ -76,7 +76,12 @@ class ProjectFundSource(db.Model):
 
 class ProjectRecord(db.Model):
     __tablename__ = 'projects'
-    __versioned__ = {}
+    __versioned__ = {
+        'exclude': ['submitted_at', 'approved_at', 'close_requested_at',
+                    'denied_at', 'contract_no', 'contract_url',
+                    'final_report_url', 'finance_summary_file_url', 'book_bank_cover_file_url',
+                    'book_bank_last_page_file_url', 'status', 'updated_at']
+    }
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     fund_source_id = db.Column('fund_source_id',
                                        db.ForeignKey('project_fund_sources.id'))
