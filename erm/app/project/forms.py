@@ -216,7 +216,7 @@ class ProjectProposalDevelopmentSupportForm(ModelForm):
                                               'สำเนาหนังสือรับรองจริยธรรมวิจัยในคน',
                                               'สำเนาโครงการวิจัยหรือแผนงานวิจัยที่ผ่านการพิจารณาจากคณะกรรมการจริยธรรมการวิจัยในคน',
                                               )])
-    contract_upload = FileField('Upload เอกสารสัญญา')
+    contract_upload = FileField('Upload เอกสาร')
 
 
 class EthicRecordForm(ModelForm):
