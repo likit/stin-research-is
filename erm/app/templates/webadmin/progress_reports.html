@@ -68,6 +68,10 @@
                                    class="button is-danger">
                                     <span>ไม่อนุมัติ</span>
                                 </a>
+                                <a href="{{ url_for('webadmin.receive_a_progress', milestone_id=milestone.id, approved='revise') }}"
+                                   class="button is-warning">
+                                    <span>ส่งคืน</span>
+                                </a>
                                 {% endif %}
                                 <a href="{{url_for('webadmin.send_progress_to_committee', milestone_id=milestone.id)}}"
                                    class="button is-info">
