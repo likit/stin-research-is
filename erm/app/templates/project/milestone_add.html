@@ -12,6 +12,12 @@
                 <form class="box" method="post" enctype=multipart/form-data>
                     {{ form.csrf_token }}
                     <div class="field">
+                        <label class="label">{{ form.funding_status.label }}</label>
+                        <div class="select">
+                            {{ form.funding_status() }}
+                        </div>
+                    </div>
+                    <div class="field">
                         <label class="label">{{ form.status.label }}</label>
                         <div class="select">
                             {{ form.status() }}
@@ -27,12 +33,6 @@
                         <label class="label">{{ form.plan.label }}</label>
                         <div class="control">
                             {{ form.plan(class="textarea") }}
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">{{ form.related_activity.label }}</label>
-                        <div class="control">
-                            {{ form.related_activity(class="textarea") }}
                         </div>
                     </div>
                     <div class="field">
