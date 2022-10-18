@@ -514,7 +514,7 @@
                             <tbody>
                             {% for m in project.milestones %}
                             <tr>
-                                <td>{{ m.status }}</td>
+                                <td>{{ m.funding_status }}</td>
                                 <td>{{ m.created_at|localdatetime }}</td>
                                 <td>
                                     {% if current_user == project.creator and project.approved and m.is_editable %}
@@ -886,18 +886,18 @@
                     <td>
                         <table class="table is-striped is-narrow">
                             <thead>
-                            <th>องค์กร สถานที่ ชุมชน</th>
+                            <th>ผลงานวิจัย/สร้างสรรค์เรื่อง</th>
                             <th>รายละเอียดการใช้งานวิจัย</th>
                             <th>วันที่และเวลา</th>
                             </thead>
                             <tbody>
                             {% for app in project.applications %}
                             <tr>
-                                <td>{{ app.org }}</td>
-                                <td>{{ app.detail }}</td>
+                                <td>{{ app.title }}</td>
+                                <td>{{ app.public_how or app.policy_how or app.commercial_how or app.indirect_how }}</td>
                                 <td>{{ app.date|localdate }}</td>
                                 <td>
-                                    {% if current_user == project.creator and project.finished %}
+                                    {% if current_user == project.creator %}
                                     <a href="{{ url_for('project.edit_application', app_id=app.id) }}">
                                             <span class="icon">
                                                 <i class="fas fa-pencil-alt"></i>
@@ -914,7 +914,7 @@
                                 </td>
                             </tr>
                             {% endfor %}
-                            {% if current_user == project.creator and project.finished %}
+                            {% if current_user == project.creator %}
                             <tr>
                                 <td colspan="4" class="has-text-centered">
                                     <a href="{{ url_for('project.add_application', project_id=project.id) }}"
