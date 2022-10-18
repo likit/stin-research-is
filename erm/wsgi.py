@@ -46,7 +46,10 @@ def local_datetime(dt):
 def local_datetime(dt):
     bangkok = timezone('Asia/Bangkok')
     datetime_format = '%d/%m/%Y'
-    return dt.strftime(datetime_format)
+    if dt:
+        return dt.strftime(datetime_format)
+    else:
+        return ''
 
 
 @app.context_processor
