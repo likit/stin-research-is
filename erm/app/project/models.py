@@ -316,6 +316,15 @@ class ProjectMilestone(db.Model):
     obstacle = db.Column('obstacle', db.Text(), info={'label': 'อุปสรรคในการทำงานและแนวทางแก้ไข'})
     opinion = db.Column('opinion', db.Text(), info={'label': 'ความเห็นของผู้วิจัย'})
     file_url = db.Column('file_url', db.String())
+    funding_status = db.Column('funding_status', db.String(), info={'label': 'สถานะ',
+                                                                    'choices': [(c, c) for c in [
+                                                                        'ขออนุมัติเบิกเงินงวดที่ 1',
+                                                                        'ขออนุมัติเบิกเงินงวดที่ 2',
+                                                                        'ขออนุมัติเบิกเงินงวดที่ 3',
+                                                                        'ขออนุมัติเบิกเงินงวดที่ 4',
+                                                                        'ขออนุมัติเบิกเงินงวดที่ 4 และค่าตอบแทนนักวิจัย',
+                                                                        'ขออนุมัติเบิกเงินงวดที่ 5 และค่าตอบแทนนักวิจัย',
+                                                                    ]]})
     status = db.Column('status', db.String(),
                        info={'label': 'สถานะการดำเนินงาน',
                              'choices': [(i, i) for i in
