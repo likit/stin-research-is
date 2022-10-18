@@ -331,6 +331,17 @@ def add_application(project_id):
             new_app = Application()
             form.populate_obj(new_app)
             new_app.project = project
+            if form.file_upload.data:
+                upfile = form.file_upload.data
+                filename = secure_filename(upfile.filename)
+                upfile.save(filename)
+                file_drive = drive.CreateFile({'title': filename})
+                file_drive.SetContentFile(filename)
+                file_drive.Upload()
+                permission = file_drive.InsertPermission({'type': 'anyone',
+                                                          'value': 'anyone',
+                                                          'role': 'reader'})
+                new_app.file_url = file_drive['id']
             db.session.add(new_app)
             db.session.commit()
             flash('Application has been recorded.', 'success')
