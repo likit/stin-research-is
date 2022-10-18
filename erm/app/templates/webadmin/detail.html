@@ -349,13 +349,27 @@
                                 <thead>
                                 <th>สถานะ</th>
                                 <th>รายงานเมื่อ</th>
+                                <th>ผลการพิจารณา</th>
                                 <th></th>
                                 </thead>
                                 <tbody>
                                 {% for m in project.milestones %}
                                 <tr>
-                                    <td>{{ m.status }}</td>
+                                    <td>{{ m.funding_status }}</td>
                                     <td>{{ m.created_at|localdatetime }}</td>
+                                    <td>
+                                        {% if m.approved %}
+                                        <p class="tag is-success">
+                                            อนุมัติ
+                                        </p>
+                                        {{ m.approved_at|localdatetime }}
+                                        {% else %}
+                                        <p class="tag is-danger">
+                                            ไม่อนุมัติ
+                                        </p>
+                                        {{ m.approved_at|localdatetime }}
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         <div class="buttons has-addons">
                                             <a href="{{ url_for('project.list_gantt_activity', project_id=project.id, milestone_id=m.id) }}"
@@ -385,6 +399,14 @@
                                 </tbody>
                                 {% endfor %}
                             </table>
+                            <div class="buttons is-centered">
+                                <a class="button is-warning is-outlined" href="{{ url_for('webadmin.progress_report_reminder', project_id=project.id) }}">
+                                    <span class="icon">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </span>
+                                    <span>ส่งคำเตือน</span>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 </table>

@@ -1,3 +1,5 @@
+from wtforms import SelectField, StringField, TextAreaField
+
 from app.project.models import (ProjectReviewSendRecord,
                                 ProjectReviewRecord,
                                 ProjectEthicReviewRecord,
@@ -80,3 +82,17 @@ class ProjectEthicReviewRecordForm(BaseModelForm):
 class ProjectEthicRecordForm(BaseModelForm):
     class Meta:
         model = ProjectEthicRecord
+
+
+class ProjectProgressReminderForm(FlaskForm):
+    funding_status = SelectField('สำหรับ', choices=[(c, c) for c in
+                                                           [
+                                                               'ขออนุมัติเบิกเงินงวดที่ 1',
+                                                               'ขออนุมัติเบิกเงินงวดที่ 2',
+                                                               'ขออนุมัติเบิกเงินงวดที่ 3',
+                                                               'ขออนุมัติเบิกเงินงวดที่ 4',
+                                                               'ขออนุมัติเบิกเงินงวดที่ 4 และค่าตอบแทนนักวิจัย',
+                                                               'ขออนุมัติเบิกเงินงวดที่ 5 และค่าตอบแทนนักวิจัย',
+                                                           ]])
+    deadline = StringField('ภายในวันที่')
+    comment = TextAreaField('หมายเหตุ')

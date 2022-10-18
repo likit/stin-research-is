@@ -19,7 +19,7 @@
                     <th>ชื่อโครงการ</th>
                     <th>รายงานเมื่อ</th>
                     <th></th>
-                    <th colspan="2">รับเมื่อ</th>
+                    <th colspan="2">อนุมัติเมื่อ</th>
                     </thead>
                     {% for milestone in milestones %}
                     <tr>
@@ -56,13 +56,17 @@
                                 {% endif %}
                             </div>
                         </td>
-                        <td style="width:20%">{{ milestone.received_at|localdatetime }}</td>
+                        <td style="width:20%">{{ milestone.approved_at|localdatetime }}</td>
                         <td>
                             <div class="buttons">
-                                {% if not milestone.received_at %}
-                                <a href="{{ url_for('webadmin.receive_a_progress', milestone_id=milestone.id) }}"
+                                {% if not milestone.approved_at %}
+                                <a href="{{ url_for('webadmin.receive_a_progress', milestone_id=milestone.id, approved='yes') }}"
                                         class="button is-primary">
-                                    <span>รับทราบ</span>
+                                    <span>อนุมัติ</span>
+                                </a>
+                                <a href="{{ url_for('webadmin.receive_a_progress', milestone_id=milestone.id, approved='no') }}"
+                                   class="button is-danger">
+                                    <span>ไม่อนุมัติ</span>
                                 </a>
                                 {% endif %}
                                 <a href="{{url_for('webadmin.send_progress_to_committee', milestone_id=milestone.id)}}"

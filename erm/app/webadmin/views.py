@@ -18,6 +18,7 @@ from app.project.models import *
 from app.webadmin.forms import (ProjectReviewSendRecordForm, ProjectReviewRecordForm,
                                 ProjectEthicReviewSendRecordForm,
                                 ProjectEthicReviewRecordForm, ProjectEthicRecordForm, ProjectReviewRecordAdminForm,
+                                ProjectProgressReminderForm,
                                 )
 from app.project.forms import *
 from app.main.models import User, MailInfo
@@ -1260,15 +1261,18 @@ def close_project_requests():
 @superuser
 @login_required
 def receive_a_progress(milestone_id):
+    approved = request.args.get('approved')
     milestone = ProjectMilestone.query.get(milestone_id)
-    if not milestone.received_at:
-        milestone.received_at = arrow.now(tz='Asia/Bangkok').datetime
+    if not milestone.approved_at:
+        milestone.approved_at = arrow.now(tz='Asia/Bangkok').datetime
+        milestone.approved = True if approved == 'yes' else False
         db.session.add(milestone)
         db.session.commit()
         try:
             message = 'เรียนผู้รับผิดชอบโครงการ{}'.format(milestone.project.title_th)
             message += '\n\nศูนย์วิจัยได้รับรายงานความก้าวหน้าของท่านที่ส่งเมื่อวันที่ {} เรียบร้อยแล้ว' \
                 .format(milestone.submitted_at.strftime('%d/%m/%Y %H:%M:%S'))
+            message += '\n\nกรุณาตรวจสอบผลการอนุมัติในระบบสารสนเทศงานวิจัย'
             send_mail(milestone.project.creator.email, 'แจ้งรับรายงานความก้าวหน้าโครงการฯ', message)
         except:
             flash('Failed to send an email notification', 'danger')
@@ -1454,3 +1458,26 @@ def approve_development_request(req_id):
     db.session.add(rec)
     db.session.commit()
     return redirect(url_for('webadmin.view_development_request', req_id=rec.id))
+
+
+@webadmin.route('/progress-report-reminder/<int:project_id>', methods=['GET', 'POST'])
+def progress_report_reminder(project_id):
+    form = ProjectProgressReminderForm()
+    project = ProjectRecord.query.get(project_id)
+    if form.validate_on_submit():
+        comment = form.comment.data
+        status = form.funding_status.data
+        message = 'เรียนผู้ประสานงานโครงการ {}'.format(project.title_th)
+        message += '\n\nโปรดส่งรายงานความก้าวหน้าเพื่อ{}'.format(status)
+        message += ' ภายในวันที่ {}'.format(form.deadline.data)
+        if comment:
+            message += '\n\nหมายเหตุ {}'.format(comment)
+        try:
+            send_mail(project.creator.email, title='เตือนส่งรายงานความก้าวหน้าโครงการวิจัย', message=message)
+        except:
+            flash('Failed to send an email to {}'.format(project.creator.email), 'danger')
+        else:
+            flash('The reminder has been sent out.', 'success')
+            return redirect(url_for('webadmin.display_detail', project_id=project.id))
+    return render_template('webadmin/progress-reminder.html', form=form)
+
