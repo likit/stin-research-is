@@ -1263,6 +1263,23 @@ def close_project_requests():
 def receive_a_progress(milestone_id):
     approved = request.args.get('approved')
     milestone = ProjectMilestone.query.get(milestone_id)
+    if approved == 'revise':
+        submitted_datetime = milestone.submitted_at
+        milestone.submitted_at = None
+        db.session.add(milestone)
+        db.session.commit()
+        try:
+            message = 'เรียนผู้รับผิดชอบโครงการ{}'.format(milestone.project.title_th)
+            message += '\n\nศูนย์วิจัยได้รับรายงานความก้าวหน้าของท่านที่ส่งเมื่อวันที่ {} เรียบร้อยแล้ว พบว่ายังขาดความสมบูรณ์บางประการ' \
+                .format(submitted_datetime.strftime('%d/%m/%Y %H:%M:%S'))
+            message += '\n\nกรุณาตรวจสอบรายงานเพื่อปรับปรุงแก้ไขและส่งกลับมาอีกครั้งในระบบสารสนเทศงานวิจัย'
+            send_mail(milestone.project.creator.email, 'แจ้งปรับแก้ไขรายงานความก้าวหน้าโครงการฯ', message)
+        except:
+            flash('Failed to send an email notification', 'danger')
+        else:
+            flash('ส่งรายงานคืนเพื่อแก้ไขแล้ว', 'success')
+        return redirect(url_for('webadmin.list_progress_reports'))
+
     if not milestone.approved_at:
         milestone.approved_at = arrow.now(tz='Asia/Bangkok').datetime
         milestone.approved = True if approved == 'yes' else False
@@ -1273,7 +1290,7 @@ def receive_a_progress(milestone_id):
             message += '\n\nศูนย์วิจัยได้รับรายงานความก้าวหน้าของท่านที่ส่งเมื่อวันที่ {} เรียบร้อยแล้ว' \
                 .format(milestone.submitted_at.strftime('%d/%m/%Y %H:%M:%S'))
             message += '\n\nกรุณาตรวจสอบผลการอนุมัติในระบบสารสนเทศงานวิจัย'
-            send_mail(milestone.project.creator.email, 'แจ้งรับรายงานความก้าวหน้าโครงการฯ', message)
+            send_mail(milestone.project.creator.email, 'แจ้งผลพิจารณารายงานความก้าวหน้าโครงการฯ', message)
         except:
             flash('Failed to send an email notification', 'danger')
         flash('บันทึกข้อมูลเรียบร้อยแล้ว', 'success')
