@@ -744,13 +744,13 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        <p class="help has-text-danger">
+                            เพิ่มข้อมูลได้หลังจากเพิ่มข้อมูลผลงานวิจัยตีพิมพ์
+                        </p>
                     </td>
                 </tr>
                 <tr>
                     <td class="title is-size-5">รางวัลค่าตีพิมพ์หรือทุนสนับสนุนการตีพิมพ์
-                        <p class="help has-text-info">
-                            เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว
-                        </p>
                     </td>
                     <td>
                         <table class="table is-striped is-narrow">
@@ -802,14 +802,14 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        <p class="help has-text-danger">
+                            เพิ่มข้อมูลได้หลังจากเพิ่มข้อมูลผลงานวิจัยตีพิมพ์
+                        </p>
                     </td>
                 </tr>
                 {% endif %}
                 <tr>
                     <td class="title is-size-5">เงินสนับสนุนโครงการให้คำปรึกษาเพื่อพัฒนาข้อเสนอโครงการวิจัยหรือแผนงานวิจัยและสถิติวิจัย
-                        <p class="help has-text-info">
-                            เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว
-                        </p>
                     </td>
                     <td>
                         <table class="table is-striped is-narrow">
@@ -856,13 +856,13 @@
                             {% endif %}
                             </tbody>
                         </table>
+                        <p class="help has-text-danger">
+                            เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว
+                        </p>
                     </td>
                 </tr>
                 <tr>
                     <td class="title is-size-5">หมายเลขสัญญา
-                        <p class="help has-text-info">
-                            เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว
-                        </p>
                     </td>
                     <td>
                         {% if project.contract_url %}
@@ -887,11 +887,13 @@
                             </a>
                         </div>
                         {% endif %}
+                        <p class="help has-text-danger">
+                            เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว
+                        </p>
                     </td>
                 </tr>
                 <tr>
                     <td class="title is-size-5">การนำงานวิจัยไปใช้ประโยชน์
-                        <span class="help has-text-info">เพิ่มรายการได้หลังจบโครงการ</span>
                     </td>
                     <td>
                         <table class="table is-striped is-narrow">
@@ -938,6 +940,7 @@
                             {% endif %}
                             </tbody>
                         </table>
+                        <span class="help has-text-danger">เพิ่มข้อมูลได้หลังจากโครงการได้รับการอนุมัติแล้ว</span>
                     </td>
                 </tr>
                 {% endif %}
