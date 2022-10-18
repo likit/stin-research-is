@@ -336,7 +336,7 @@ class ProjectMilestone(db.Model):
     project = db.relationship('ProjectRecord', backref=db.backref('milestones'))
     submitted_at = db.Column('submitted_at', db.DateTime(timezone=True))
     received_at = db.Column('received_at', db.DateTime(timezone=True))
-    approved = db.Column('approved', db.Boolean(), default=False)
+    approved = db.Column('approved', db.Boolean())
     approved_at = db.Column('approved_at', db.DateTime(timezone=True))
 
     @property
