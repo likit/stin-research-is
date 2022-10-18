@@ -44,6 +44,7 @@ class ProjectRecordForm(ModelForm):
 class ApplicationForm(ModelForm):
     class Meta:
         model = Application
+    file_upload = FileField('เอกสารแนบ')
 
 
 class ProjectMemberForm(ModelForm):

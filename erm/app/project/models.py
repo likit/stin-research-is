@@ -284,6 +284,7 @@ class Application(db.Model):
     indirect_outcome = db.Column('indirect_outcome', db.Text(), info={'label': 'ผลที่ได้'})
     project_id = db.Column('project_id', db.ForeignKey('projects.id'))
     project = db.relationship(ProjectRecord, backref=db.backref('applications'))
+    file_url = db.Column('file_url', db.String(), info={'label': 'File Upload'})
 
 
 class ProjectEthicRecord(db.Model):

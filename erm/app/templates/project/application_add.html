@@ -7,7 +7,7 @@
     <div class="columns">
         <div class="column is-half is-offset-one-quarter">
             <h1 class="title has-text-centered">เพิ่มข้อมูลการนำผลงานวิจัย/งานสร้างสรรค์ไปใช้ประโยชน์</h1>
-            <form method="post" class="box">
+            <form method="post" class="box" enctype="multipart/form-data">
                 {{ form.csrf_token }}
                 <div class="field">
                     <label class="label">{{ form.title.label }}</label>
@@ -80,6 +80,17 @@
                     <div class="control">
                         {{ form.indirect_outcome(class="textarea") }}
                     </div>
+                </div>
+                <div class="field">
+                    <label class="label">{{ form.file_upload.label }}</label>
+                    <div class="control">
+                        {{ form.file_upload() }}
+                    </div>
+                    {% if form.file_url.data %}
+                    <p class="help is-danger">
+                        ท่านมีไฟล์แนบแล้ว หากแนบไฟล์ใหม่จะแทนที่ไฟล์เก่า <a href="https://drive.google.com/uc?id={{ form.file_url.data }}">คลิกเพื่อดูไฟล์แนบ</a>
+                    </p>
+                    {% endif %}
                 </div>
                 <div class="field is-grouped is-grouped-centered">
                     <div class="control">
