@@ -579,7 +579,17 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {{ m.received_at|localdatetime }}
+                                    {% if m.approved %}
+                                    <p class="tag is-success">
+                                        อนุมัติ
+                                    </p>
+                                    {{ m.approved_at|localdatetime }}
+                                    {% else %}
+                                    <p class="tag is-danger">
+                                        ไม่อนุมัติ
+                                    </p>
+                                    {{ m.approved_at|localdatetime }}
+                                    {% endif %}
                                 </td>
                             </tr>
                             </tbody>
